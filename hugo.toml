@@ -53,7 +53,7 @@ term = ["HTML", "RSS"]
 
   [[params.additional_menus]]
   title = "POSTS"
-  href = "/post/"
+  href = "/posts/"
   [[params.additional_menus]]
   title = "TAGS"
   href = "/tags/"
