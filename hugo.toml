@@ -1,5 +1,5 @@
 baseurl = "https://brightonxx.github.io/"
-title = "Brighton's Blog"
+title = "Yi Xu's Blog"
 theme = "hugo-theme-cleanwhite"
 languageCode = "en-us"
 preserveTaxonomyNames = true
@@ -15,19 +15,19 @@ taxonomy = ["HTML", "RSS"]
 term = ["HTML", "RSS"]
 
 [params]
-  header_image = "img/home-bg-jeep.jpg"
-  SEOTitle = "Brighton's Blog"
+  header_image = "img/home-bg.jpg"
+  SEOTitle = "Yi Xu's Blog"
   description = "Welcome to my personal blog"
   keyword = "blog, personal website, technology, life"
-  slogan = "Recording Life, Sharing Technology"
+  slogan = "Move Fast and Break Things"
   upstreamAttribution = true
 
   image_404 = "img/404-bg.jpg"
-  title_404 = "你来到了没有知识的荒原 :("
+  title_404 = "Lost in the Digital Void"
   omit_categories = false
 
   # Sidebar settings
-  sidebar_about_description = "Software Developer, Open Source Enthusiast and Life Adventurer"
+  sidebar_about_description = "Junior CS Student in SUSTech. Passionate about this world."
   sidebar_avatar = "img/avatar.png"
 
   featured_tags = true
@@ -42,9 +42,9 @@ term = ["HTML", "RSS"]
 
   [params.social]
   rss = true
-  email = "youremail@gmail.com"
-  linkedin = "https://www.linkedin.com/in/yourlinkedinid"
-  stackoverflow = "https://stackoverflow.com/users/yourstackoverflowid"
+  email = "x2005jiay@gmail.com"
+  # linkedin = ""  # Uncomment and add your LinkedIn if needed
+  # stackoverflow = ""  # Uncomment and add your StackOverflow if needed
   github = "https://github.com/BrightonXX"
 
   [[params.friend_link]]
