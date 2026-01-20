@@ -28,6 +28,10 @@ Feel free to reach out!
 - Email: [x2005jiay@gmail.com](mailto:x2005jiay@gmail.com)
 - GitHub: [BrightonXX](https://github.com/BrightonXX)
 
+## Resume
+
+[Download My CV](/cv/CV.pdf)
+
 ---
 
 *Thanks for visiting my blog!*
