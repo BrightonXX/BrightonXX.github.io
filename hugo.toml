@@ -5,6 +5,10 @@ languageCode = "en-us"
 preserveTaxonomyNames = true
 hasCJKLanguage = true
 
+[services]
+  [services.googleAnalytics]
+    id = "G-LQJH3PGC48"
+
 [pagination]
 pagerSize = 5
 
