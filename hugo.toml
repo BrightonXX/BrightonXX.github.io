@@ -10,6 +10,9 @@ pagerSize = 5
 
 [outputs]
 home = ["HTML", "RSS"]
+section = ["HTML", "RSS"]
+taxonomy = ["HTML", "RSS"]
+term = ["HTML", "RSS"]
 
 [params]
   header_image = "img/home-bg-jeep.jpg"
