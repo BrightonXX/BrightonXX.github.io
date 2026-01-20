@@ -48,20 +48,19 @@ term = ["HTML", "RSS"]
   # Last posts
   last_posts = true
 
-  # Giscus Comments (Visit https://giscus.app to get your configuration)
-  # After configuration, uncomment and fill in the values below
+  # Giscus Comments Configuration
   [params.giscus]
-    repo = "BrightonXX/BrightonXX.github.io"           # Your GitHub repo
-    # repoId = "R_kgDON..."                              # From Giscus setup
-    # category = "Announcements"                          # Discussion category
-    # categoryId = "DIC_kwDON..."                         # From Giscus setup
-    mapping = "pathname"                                 # How comments are mapped
-    theme = "light"                                     # Theme: light/dark/dim
-    lang = "en"                                         # Language
+    repo = "BrightonXX/BrightonXX.github.io"
+    repoId = "R_kgDONNknwQ"
+    category = "Announcements"
+    categoryId = "DIC_kwDONNknwc4C1Mlq"
+    mapping = "pathname"
+    theme = "preferred_color_scheme"
+    lang = "en"
     strict = "0"
     reactionsEnabled = "1"
     emitMetadata = "0"
-    inputPosition = "bottom"
+    inputPosition = "top"
 
   [params.social]
   rss = true
