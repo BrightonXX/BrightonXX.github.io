@@ -23,7 +23,6 @@
 {{ end }}
 
 {{ partial "footer.html" . }}
-{{ partial "cookie-consent.html" . }}
 {{ if .Store.Get "hasMermaid" }}
   <!-- Use the UMD build instead of ESM so Cloudflare won't rewrite it -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
