@@ -48,6 +48,21 @@ term = ["HTML", "RSS"]
   # Last posts
   last_posts = true
 
+  # Giscus Comments (Visit https://giscus.app to get your configuration)
+  # After configuration, uncomment and fill in the values below
+  [params.giscus]
+    repo = "BrightonXX/BrightonXX.github.io"           # Your GitHub repo
+    # repoId = "R_kgDON..."                              # From Giscus setup
+    # category = "Announcements"                          # Discussion category
+    # categoryId = "DIC_kwDON..."                         # From Giscus setup
+    mapping = "pathname"                                 # How comments are mapped
+    theme = "light"                                     # Theme: light/dark/dim
+    lang = "en"                                         # Language
+    strict = "0"
+    reactionsEnabled = "1"
+    emitMetadata = "0"
+    inputPosition = "bottom"
+
   [params.social]
   rss = true
   email = "x2005jiay@gmail.com"
@@ -58,6 +73,9 @@ term = ["HTML", "RSS"]
   [[params.additional_menus]]
   title = "TAGS"
   href = "/tags/"
+  [[params.additional_menus]]
+  title = "PROJECTS"
+  href = "/projects/"
   [[params.additional_menus]]
   title = "ARCHIVE"
   href = "/archive/"

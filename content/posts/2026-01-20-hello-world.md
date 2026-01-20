@@ -8,6 +8,8 @@ description: "My first blog post"
 tags: ["introduction", "thoughts"]
 categories: []
 author: "Brighton"
+image: "img/hello-world-cover.jpg"
+thumbnail: "img/hello-world-cover.jpg"
 
 # You can also close the summary by putting `&nbsp;` or `<!-- more -->` at the end
 ---
