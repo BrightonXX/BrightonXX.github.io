@@ -1,0 +1,115 @@
+{{ define "main" }}
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1>All Tags</h1>
+                <p>Total tags: {{ len .Site.Taxonomies.tags }}</p>
+
+                <div class="tags-list">
+                    {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+                        {{ $count := len $taxonomy.Pages }}
+                        {{ $.Scratch.SetInMap "tags" $name (slice $count $name) }}
+                    {{ end }}
+
+                    {{ range $.Scratch.GetSortedMapValues "tags" }}
+                        {{ $count := index . 0 }}
+                        {{ $name := index . 1 }}
+                        {{ $url := $name | urlize }}
+                        <div class="tag-item">
+                            <a href="{{ "/tags/" | relLangURL }}{{ $url }}" class="tag-link">
+                                <span class="tag-name">{{ $name }}</span>
+                                <span class="tag-count">{{ $count }} {{ if eq $count 1 }}post{{ else }}posts{{ end }}</span>
+                            </a>
+                        </div>
+                    {{ end }}
+                </div>
+
+                <style>
+                    .tags-list {
+                        margin-top: 30px;
+                    }
+                    .tag-item {
+                        margin-bottom: 15px;
+                        padding: 10px;
+                        border: 1px solid #eaeaea;
+                        border-radius: 5px;
+                        transition: all 0.3s ease;
+                    }
+                    .tag-item:hover {
+                        background-color: #f8f8f8;
+                        border-color: #0085a1;
+                    }
+                    .tag-link {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        text-decoration: none;
+                        color: #333;
+                    }
+                    .tag-link:hover {
+                        text-decoration: none;
+                    }
+                    .tag-name {
+                        font-size: 18px;
+                        font-weight: bold;
+                        color: #0085a1;
+                    }
+                    .tag-count {
+                        font-size: 14px;
+                        color: #888;
+                        background-color: #f0f0f0;
+                        padding: 3px 10px;
+                        border-radius: 15px;
+                    }
+                </style>
+
+            </div>
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                {{ if .Site.Params.featured_tags }}
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        {{ $featured_condition_size := .Site.Params.featured_condition_size }}
+                        {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+                        {{ if gt (len $taxonomy.Pages) $featured_condition_size }}
+                        <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" title="{{ $name }}">
+                        {{ $name }}
+                        </a>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+                </section>
+                {{ end }}
+
+                <!-- Friends Blog -->
+                {{ if .Site.Params.friends }}
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        {{ range .Site.Params.friend_link }}
+                        <li><a target="_blank" href="{{.href}}">{{.title}}</a></li>
+                        {{ end }}
+                    </ul>
+                </section>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</article>
+
+{{ end }}
