@@ -12,6 +12,10 @@ hasCJKLanguage = true
 [pagination]
 pagerSize = 5
 
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
 [outputs]
 home = ["HTML", "RSS"]
 section = ["HTML", "RSS"]
