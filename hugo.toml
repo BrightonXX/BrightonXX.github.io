@@ -52,9 +52,6 @@ term = ["HTML", "RSS"]
   github = "https://github.com/BrightonXX"
 
   [[params.additional_menus]]
-  title = "POSTS"
-  href = "/posts/"
-  [[params.additional_menus]]
   title = "TAGS"
   href = "/tags/"
   [[params.additional_menus]]
