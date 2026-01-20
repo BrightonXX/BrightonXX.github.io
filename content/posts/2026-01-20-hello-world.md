@@ -8,6 +8,7 @@ description: "My first blog post"
 tags: ["introduction", "thoughts"]
 categories: []
 author: "Brighton"
+header_image: "img/hello-world-cover.jpg"
 image: "img/hello-world-cover.jpg"
 thumbnail: "img/hello-world-cover.jpg"
 

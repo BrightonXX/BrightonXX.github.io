@@ -73,8 +73,8 @@ term = ["HTML", "RSS"]
   title = "TAGS"
   href = "/tags/"
   [[params.additional_menus]]
-  title = "PROJECTS"
-  href = "/projects/"
+  title = "WORKS"
+  href = "/works/"
   [[params.additional_menus]]
   title = "ARCHIVE"
   href = "/archive/"

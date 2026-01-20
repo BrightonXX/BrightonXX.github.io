@@ -1,5 +1,5 @@
 <!-- Giscus Comments -->
-{{ if .Site.Params.giscus }}
+{{ if and .Site.Params.giscus (eq .Kind "page") (eq .Section "posts") }}
 <script src="https://giscus.app/client.js"
         data-repo="{{ .Site.Params.giscus.repo }}"
         data-repo-id="{{ .Site.Params.giscus.repoId }}"
