@@ -7,14 +7,14 @@ keywords: []
 description: ""
 tags: []
 categories: []
-author: "Yi Xu"
+author: "Brighton"
 
 # You can also close the summary by putting `&nbsp;` or `<!-- more -->` at the end
 ---
 
 # Hello World!
 
-Welcome to my blog! I'm Yi Xu, a junior CS student at SUSTech.
+Welcome to my blog! I'm Brighton (Yi Xu), a junior CS student at SUSTech.
 
 This is my first post, marking the beginning of my blogging journey. I plan to share my thoughts on:
 

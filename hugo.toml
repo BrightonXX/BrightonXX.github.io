@@ -1,5 +1,5 @@
 baseurl = "https://brightonxx.github.io/"
-title = "Yi Xu's Blog"
+title = "Brighton's Blog"
 theme = "hugo-theme-cleanwhite"
 languageCode = "en-us"
 preserveTaxonomyNames = true
@@ -16,11 +16,11 @@ term = ["HTML", "RSS"]
 
 [params]
   header_image = "img/home-bg.jpg"
-  SEOTitle = "Yi Xu's Blog"
+  SEOTitle = "Brighton's Blog"
   description = "Welcome to my personal blog"
   keyword = "blog, personal website, technology, life"
   slogan = "Move Fast and Break Things"
-  upstreamAttribution = true
+  upstreamAttribution = false
 
   image_404 = "img/404-bg.jpg"
   title_404 = "Lost in the Digital Void"
@@ -33,7 +33,7 @@ term = ["HTML", "RSS"]
   featured_tags = true
   featured_condition_size = 1
 
-  friends = true
+  friends = false
   bookmarks = false
   about_me = true
 
@@ -47,10 +47,12 @@ term = ["HTML", "RSS"]
   # stackoverflow = ""  # Uncomment and add your StackOverflow if needed
   github = "https://github.com/BrightonXX"
 
-  [[params.friend_link]]
-  title = "Example Friend Link"
-  href = "https://example.com"
-
+  [[params.additional_menus]]
+  title = "POSTS"
+  href = "/post/"
+  [[params.additional_menus]]
+  title = "TAGS"
+  href = "/tags/"
   [[params.additional_menus]]
   title = "ARCHIVE"
   href = "/archive/"

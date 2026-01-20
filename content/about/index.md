@@ -5,7 +5,7 @@ multilingual: true
 
 ## About Me
 
-Hi! I'm **Yi Xu**, a junior CS student at SUSTech (Southern University of Science and Technology).
+Hi! I'm **Brighton** (Yi Xu), a junior CS student at SUSTech (Southern University of Science and Technology).
 
 I'm passionate about technology and the world we live in. This blog is where I share my journey in computer science, projects I'm working on, and things I'm learning.
 
