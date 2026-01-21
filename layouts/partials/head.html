@@ -157,30 +157,43 @@
     <!-- Typing Effect Script -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Typing effect for homepage slogan
+      // Typing effect for site slogan
       const subheading = document.querySelector('.site-heading .subheading');
-      if (subheading && window.location.pathname === '/') {
+      if (subheading) {
         const text = subheading.textContent;
-        subheading.innerHTML = '<span class="typing-cursor"></span>';
+        const wasOnSloganPage = sessionStorage.getItem('onSloganPage') === 'true';
 
+        subheading.innerHTML = '<span class="typing-cursor"></span>';
         const cursor = subheading.querySelector('.typing-cursor');
         const textSpan = document.createElement('span');
         subheading.insertBefore(textSpan, cursor);
 
-        let index = 0;
-        const speed = 100; // ms per character
+        // Mark that we're now on a slogan page
+        sessionStorage.setItem('onSloganPage', 'true');
 
-        // Blink cursor for 1 second before typing
-        setTimeout(function() {
-          function typeWriter() {
-            if (index < text.length) {
-            textSpan.textContent += text.charAt(index);
-            index++;
-            setTimeout(typeWriter, speed);
+        if (wasOnSloganPage) {
+          // Coming from another slogan page, show immediately
+          textSpan.textContent = text;
+        } else {
+          // Coming from non-slogan page, play animation
+          let index = 0;
+          const speed = 100; // ms per character
+
+          // Blink cursor for 1 second before typing
+          setTimeout(function() {
+            function typeWriter() {
+              if (index < text.length) {
+                textSpan.textContent += text.charAt(index);
+                index++;
+                setTimeout(typeWriter, speed);
+              }
             }
-          }
-        typeWriter();
-        }, 1000);
+            typeWriter();
+          }, 1000);
+        }
+      } else {
+        // Not on a slogan page, reset the flag
+        sessionStorage.setItem('onSloganPage', 'false');
       }
     });
     </script>
