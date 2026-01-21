@@ -13,21 +13,32 @@
                 <p>Total tags: {{ len .Site.Taxonomies.tags }}</p>
 
                 <div class="tags-list">
+                    <!-- Tags with 2+ posts -->
                     {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
                         {{ $count := len $taxonomy.Pages }}
-                        {{ $.Scratch.SetInMap "tags" $name (slice $count $name) }}
+                        {{ if ge $count 2 }}
+                            {{ $url := $name | urlize }}
+                            <div class="tag-item tag-2">
+                                <a href="{{ "/tags/" | relLangURL }}{{ $url }}" class="tag-link">
+                                    <span class="tag-name">{{ $name }}</span>
+                                    <span class="tag-count">{{ $count }} posts</span>
+                                </a>
+                            </div>
+                        {{ end }}
                     {{ end }}
 
-                    {{ range $.Scratch.GetSortedMapValues "tags" }}
-                        {{ $count := index . 0 }}
-                        {{ $name := index . 1 }}
-                        {{ $url := $name | urlize }}
-                        <div class="tag-item">
-                            <a href="{{ "/tags/" | relLangURL }}{{ $url }}" class="tag-link">
-                                <span class="tag-name">{{ $name }}</span>
-                                <span class="tag-count">{{ $count }} {{ if eq $count 1 }}post{{ else }}posts{{ end }}</span>
-                            </a>
-                        </div>
+                    <!-- Tags with 1 post -->
+                    {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+                        {{ $count := len $taxonomy.Pages }}
+                        {{ if eq $count 1 }}
+                            {{ $url := $name | urlize }}
+                            <div class="tag-item tag-1">
+                                <a href="{{ "/tags/" | relLangURL }}{{ $url }}" class="tag-link">
+                                    <span class="tag-name">{{ $name }}</span>
+                                    <span class="tag-count">{{ $count }} post</span>
+                                </a>
+                            </div>
+                        {{ end }}
                     {{ end }}
                 </div>
 
@@ -39,7 +50,6 @@
                         gap: 12px;
                     }
                     .tag-item {
-                        flex: 0 0 auto;
                         padding: 8px 16px;
                         border: 1px solid #eaeaea;
                         border-radius: 5px;
@@ -71,6 +81,11 @@
                         background-color: #f0f0f0;
                         padding: 2px 8px;
                         border-radius: 12px;
+                    }
+                    /* Highlight tags with 2+ posts */
+                    .tag-2 {
+                        background-color: #fff9e6;
+                        border-color: #ffe082;
                     }
                 </style>
 

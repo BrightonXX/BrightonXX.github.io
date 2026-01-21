@@ -4,7 +4,7 @@ date: 2026-01-19T18:00:00+08:00
 draft: false
 keywords: ["Claude Code", "Vibe Coding","Workflow"]
 description: "也有可能是CC变成我的形状了"
-tags: ["工具", "Claude Code", "AI"]
+tags: ["Claude Code", "Vibe Coding","Workflow"]
 categories: []
 author: "Brighton"
 header_image: "img/about-blog.jpg"
