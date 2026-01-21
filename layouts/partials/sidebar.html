@@ -20,6 +20,9 @@
             {{ with .Site.Params.sidebar_about_description }}
                 <p>{{ . | safeHTML }}</p>
             {{ end }}
+            <p style="font-size: 0.9em; color: #777;">
+                <span id="busuanzi_value_site_pv">Loading</span> views · <span id="busuanzi_value_site_uv">Loading</span> visitors
+            </p>
            <!-- SNS Link -->
            <ul class="list-inline">
                {{ if .Site.Params.social.email }}
