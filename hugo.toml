@@ -48,6 +48,7 @@ term = ["HTML", "RSS"]
 
   # Last posts
   last_posts = true
+  last_posts_count = 3
 
   # Giscus Comments Configuration
   [params.giscus]
