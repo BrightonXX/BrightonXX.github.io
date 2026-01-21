@@ -29,6 +29,7 @@ term = ["HTML", "RSS"]
   keyword = "blog, personal website, technology, life"
   slogan = "Move Fast and Break Things"
   upstreamAttribution = false
+  mainSections = ["posts"]
 
   image_404 = "img/404-bg.jpg"
   title_404 = "Lost in the Digital Void"
