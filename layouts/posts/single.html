@@ -49,6 +49,8 @@
                             {{ end }}
                             on
                             {{ .Date.Format "Monday, January 2, 2006" }}
+                            {{ $readingTime := div (add .WordCount 279) 280 }}
+                            <span class="reading-time"> · {{ $readingTime }} min read</span>
                             {{ if .Site.Params.page_view_counter }}
                                 {{ partial "page_view_counter.html" . }}
                             {{ end }}
