@@ -14,7 +14,7 @@ image_size: "contain"
 image_position: "center center"
 ---
 
-# 已经变成CC的形状了
+<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">也有可能是CC变成我的形状了</div>
 
 经常视奸我电脑屏幕的朋友都知道，我的电脑在大多数时间左上角都挂着 `Google AI Studio` 的logo。我的工作和学习 pipeline 从使用到 `Gemini 2.5 Pro` 那个时刻就注定会被深深的改造，懂的人一定知道一个神秘数字 —— `0325`。虽然有时候会被吐槽是不是太 vibe 了，但是我认为我对我在干什么的理解还是很到位的，只是在实现层面借助了好用的工具而已。
 

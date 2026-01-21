@@ -11,7 +11,7 @@ image: "img/getting-started-hugo.jpg"
 thumbnail: "img/getting-started-hugo.jpg"
 ---
 
-# Getting Started with Hugo: Build Your Static Blog
+<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">从安装到部署GitHub Pages的完整指南</div>
 
 Hugo is a fast and flexible static site generator that makes building websites fun again. In this post, I'll share my experience of setting up this blog with Hugo and deploying it to GitHub Pages.
 

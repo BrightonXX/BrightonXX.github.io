@@ -13,7 +13,7 @@ image: "img/hello-world.jpg"
 thumbnail: "img/hello-world.jpg"
 ---
 
-# Hello World!
+<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">My first blog post</div>
 
 Welcome to my blog! I'm Brighton (Yi Xu), a junior CS student at SUSTech.
 
