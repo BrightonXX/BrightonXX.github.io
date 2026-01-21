@@ -1,0 +1,19 @@
+{{ define "main" }}
+<!-- Tag Page with Title -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 post-container">
+
+            <h1>Searched for "{{ .Title }}"</h1>
+            <p class="lead">Tag · {{ len .Data.Pages }} {{ if eq (len .Data.Pages) 1 }}post{{ else }}posts{{ end }}</p>
+
+            <hr>
+
+            {{ $paginator := .Paginate (where .Data.Pages "Type" "posts") }}
+            {{ partial "post_list.html" . }}
+            {{ partial "pagination.html" . }}
+
+        </div>
+    </div>
+</div>
+{{ end }}
