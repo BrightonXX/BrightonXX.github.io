@@ -23,12 +23,16 @@
       <img src="{{ .Get "image" | relURL }}" alt="{{ .Get "album" }} cover">
     </div>
     <div class="album-info">
-      <div class="album-score" style="color: {{ $color }};">{{ $score }}</div>
-      <h3 class="album-artist">{{ .Get "artist" }}</h3>
-      <h2 class="album-title">{{ .Get "album" }}</h2>
-      <div class="album-meta">
-        {{ if .Get "year" }}<span class="album-year">{{ .Get "year" }}</span>{{ end }}
-        {{ if .Get "genre" }}<span class="album-genre">{{ .Get "genre" }}</span>{{ end }}
+      <div class="score-wrapper">
+        <div class="album-score" style="color: {{ $color }};">{{ $score }}</div>
+      </div>
+      <div class="album-details">
+        <div class="album-artist">{{ .Get "artist" }}</div>
+        <div class="album-title">{{ .Get "album" }}</div>
+        <div class="album-meta">
+          {{ if .Get "year" }}<span class="album-year">{{ .Get "year" }}</span>{{ end }}
+          {{ if .Get "genre" }}<span class="album-genre">{{ .Get "genre" }}</span>{{ end }}
+        </div>
       </div>
     </div>
   </div>
@@ -69,17 +73,50 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 280px;
+}
+
+.score-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  margin-bottom: 15px;
 }
 
 .album-score {
-  font-size: 68px;
+  font-size: 100px;
   font-weight: bold;
-  line-height: 1;
-  margin-bottom: 5px;
+  display: inline-block;
+  width: 180px;
+  height: 180px;
+  text-align: center;
+  line-height: 170px;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.album-score::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0.6;
+}
+
+.album-details {
+  flex-shrink: 0;
+  text-align: center;
 }
 
 .album-artist {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   margin: 0;
   color: #666;
@@ -88,7 +125,7 @@
 }
 
 .album-title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: bold;
   margin: 2px 0 6px 0;
   color: #000;
@@ -101,6 +138,7 @@
   font-size: 13px;
   color: #888;
   margin: 0;
+  justify-content: center;
 }
 
 .album-year,
