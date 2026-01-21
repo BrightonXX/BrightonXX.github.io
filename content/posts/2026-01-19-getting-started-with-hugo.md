@@ -1,14 +1,14 @@
 ---
 title: "Getting Started with Hugo: Build Your Static Blog"
-date: 2026-01-20T20:45:00+08:00
+date: 2026-01-18T20:45:00+08:00
 draft: false
 keywords: ["Hugo", "Static Site Generator", "Web Development", "Blogging"]
 description: "Learn how to create a static blog with Hugo, from installation to deployment on GitHub Pages."
 tags: ["tutorial", "hugo", "web development"]
 categories: []
 author: "Brighton"
-image: "img/hugo-blog-cover.jpg"
-thumbnail: "img/hugo-blog-cover.jpg"
+image: "img/getting-started-hugo.jpg"
+thumbnail: "img/getting-started-hugo.jpg"
 ---
 
 # Getting Started with Hugo: Build Your Static Blog
