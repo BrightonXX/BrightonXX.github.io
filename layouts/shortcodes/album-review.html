@@ -1,3 +1,21 @@
+{{ $score := .Get "score" }}
+{{ $color := "#000" }}
+{{ if in $score "10" }}
+  {{ $color = "#d32f2f" }}
+{{ else if or (in $score "9.") (eq $score "9") }}
+  {{ $color = "#e53935" }}
+{{ else if or (in $score "8.") (eq $score "8") }}
+  {{ $color = "#f44336" }}
+{{ else if or (in $score "7.") (eq $score "7") }}
+  {{ $color = "#ff5722" }}
+{{ else if or (in $score "6.") (eq $score "6") }}
+  {{ $color = "#ff9800" }}
+{{ else if or (in $score "5.") (eq $score "5") }}
+  {{ $color = "#ffc107" }}
+{{ else }}
+  {{ $color = "#424242" }}
+{{ end }}
+
 <!-- Album Review Shortcode - Pitchfork Style -->
 <div class="album-review-container">
   <div class="album-review-wrapper">
@@ -5,7 +23,7 @@
       <img src="{{ .Get "image" | relURL }}" alt="{{ .Get "album" }} cover">
     </div>
     <div class="album-info">
-      <div class="album-score">{{ .Get "score" }}</div>
+      <div class="album-score" style="color: {{ $color }};">{{ $score }}</div>
       <h3 class="album-artist">{{ .Get "artist" }}</h3>
       <h2 class="album-title">{{ .Get "album" }}</h2>
       <div class="album-meta">
@@ -48,7 +66,7 @@
 
 .album-info {
   flex: 1;
-  padding-top: 10px;
+  padding-top: 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -58,14 +76,13 @@
   font-size: 72px;
   font-weight: bold;
   line-height: 1;
-  margin-bottom: 12px;
-  color: #000;
+  margin-bottom: 8px;
 }
 
 .album-artist {
   font-size: 18px;
   font-weight: 500;
-  margin: 0 0 4px 0;
+  margin: 0 0 2px 0;
   color: #666;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -74,9 +91,9 @@
 .album-title {
   font-size: 32px;
   font-weight: bold;
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
   color: #000;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .album-meta {
