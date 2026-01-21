@@ -1,0 +1,109 @@
+<!-- Album Review Shortcode - Pitchfork Style -->
+<div class="album-review-container">
+  <div class="album-review-wrapper">
+    <div class="album-cover">
+      <img src="{{ .Get "image" | relURL }}" alt="{{ .Get "album" }} cover">
+    </div>
+    <div class="album-info">
+      <div class="album-score">{{ .Get "score" }}</div>
+      <h3 class="album-artist">{{ .Get "artist" }}</h3>
+      <h2 class="album-title">{{ .Get "album" }}</h2>
+      <div class="album-meta">
+        {{ if .Get "year" }}<span class="album-year">{{ .Get "year" }}</span>{{ end }}
+        {{ if .Get "genre" }}<span class="album-genre">{{ .Get "genre" }}</span>{{ end }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.album-review-container {
+  margin: 40px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.album-review-wrapper {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.album-cover {
+  flex-shrink: 0;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.album-cover img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
+
+.album-info {
+  flex: 1;
+  padding-top: 10px;
+}
+
+.album-score {
+  font-size: 72px;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.album-artist {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.album-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 0 15px 0;
+  color: #000;
+  line-height: 1.2;
+}
+
+.album-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  color: #888;
+}
+
+.album-year,
+.album-genre {
+  padding: 4px 12px;
+  background: #e9ecef;
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  .album-review-wrapper {
+    flex-direction: column;
+  }
+
+  .album-cover {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .album-score {
+    font-size: 56px;
+  }
+
+  .album-title {
+    font-size: 24px;
+  }
+}
+</style>
