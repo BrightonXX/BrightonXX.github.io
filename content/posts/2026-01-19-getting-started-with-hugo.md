@@ -57,16 +57,6 @@ hugo new posts/my-first-post.md
 
 Edit the markdown file with your content. Remember to add a cover image:
 
-```yaml
----
-title: "Your Post Title"
-date: 2026-01-20T23:45:00+08:00
-draft: false
-image: "img/your-cover-image.jpg"
-tags: ["tag1", "tag2"]
----
-```
-
 <!-- more -->
 
 ## Building and Deployment
