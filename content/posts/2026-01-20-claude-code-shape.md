@@ -28,6 +28,8 @@ image_position: "center center"
 
 CC 的启动仅需启动 terminal 并且输入 `claude`，启动之后感觉自己在用超级 terminal，不仅快，而且给人的心理体验极其清爽。这种感觉就像是用了一辈子 `Pycharm` 的人开始用 `VSCode`，我很喜欢。
 
+![Claude Code Terminal](/img/ccterminal.png)
+
 ## 自动化工作流
 
 其次，他的自动化确实做得好。程序本身应该是会先用某种 prompt 设计好针对这个任务的流程，就像人类工程师一样，然后像是 FSM 一样一个一个的去执行。
@@ -38,6 +40,8 @@ CC 的启动仅需启动 terminal 并且输入 `claude`，启动之后感觉自�
 
 唯一值得吐槽的可能还是 `Anthropic` 诡异的有钱不赚的商业策略了，订阅起来比其他境外网站都难，而且官方价值观也是反的，但显然的是他 infra 的贡献估计却大多来自某 T 校或者合肥某学校，的确是有点讽刺。
 
-无论如何，我用不到才是大事，只能丑丑用国产平替`GLM`，但说实话体验不错。虽说肯定和在 `Copilot` 里面的 Opus 比不了，但是偷偷替换个 `Sonnet` 也许我感受不出来，更何况我一个月的几乎无限 api 也只要十几块人民币，我这两天用了快一亿 token！
+无论如何，我用不到才是大事，只能丑丑用国产平替`GLM`，但说实话体验不错。虽说肯定和在 `Copilot` 里面的 Opus 比不了，但是偷偷替换个 `Sonnet` 也许我感受不出来，更何况我一个月的几乎无限 api 也只要十几块人民币，我全力vibe一天就能用一亿token！
+
+![Token Usage](/img/token.png)
 
 Stay tuned！
