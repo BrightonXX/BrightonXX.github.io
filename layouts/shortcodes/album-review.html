@@ -1,19 +1,19 @@
 {{ $score := .Get "score" }}
-{{ $color := "#000" }}
+{{ $color := "#000000" }}
 {{ if in $score "10" }}
   {{ $color = "#d32f2f" }}
 {{ else if or (in $score "9.") (eq $score "9") }}
-  {{ $color = "#e53935" }}
+  {{ $color = "#b71c1c" }}
 {{ else if or (in $score "8.") (eq $score "8") }}
-  {{ $color = "#f44336" }}
+  {{ $color = "#880e4f" }}
 {{ else if or (in $score "7.") (eq $score "7") }}
-  {{ $color = "#ff5722" }}
+  {{ $color = "#4a148c" }}
 {{ else if or (in $score "6.") (eq $score "6") }}
-  {{ $color = "#ff9800" }}
+  {{ $color = "#311b92" }}
 {{ else if or (in $score "5.") (eq $score "5") }}
-  {{ $color = "#ffc107" }}
+  {{ $color = "#1a237e" }}
 {{ else }}
-  {{ $color = "#424242" }}
+  {{ $color = "#000000" }}
 {{ end }}
 
 <!-- Album Review Shortcode - Pitchfork Style -->
@@ -36,24 +36,24 @@
 
 <style>
 .album-review-container {
-  margin: 40px 0;
-  padding: 20px;
+  margin: 30px 0;
+  padding: 15px;
   background: #f8f9fa;
   border-radius: 8px;
 }
 
 .album-review-wrapper {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   align-items: center;
   justify-content: center;
-  max-width: 800px;
+  max-width: 750px;
   margin: 0 auto;
 }
 
 .album-cover {
   flex-shrink: 0;
-  width: 300px;
+  width: 280px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
@@ -66,48 +66,48 @@
 
 .album-info {
   flex: 1;
-  padding-top: 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .album-score {
-  font-size: 72px;
+  font-size: 68px;
   font-weight: bold;
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .album-artist {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  margin: 0 0 2px 0;
+  margin: 0;
   color: #666;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .album-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
-  margin: 0 0 8px 0;
+  margin: 2px 0 6px 0;
   color: #000;
   line-height: 1.1;
 }
 
 .album-meta {
   display: flex;
-  gap: 15px;
-  font-size: 14px;
+  gap: 12px;
+  font-size: 13px;
   color: #888;
+  margin: 0;
 }
 
 .album-year,
 .album-genre {
-  padding: 4px 12px;
+  padding: 3px 10px;
   background: #e9ecef;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 @media (max-width: 768px) {
@@ -117,16 +117,16 @@
 
   .album-cover {
     width: 100%;
-    max-width: 300px;
+    max-width: 280px;
     margin: 0 auto;
   }
 
   .album-score {
-    font-size: 56px;
+    font-size: 52px;
   }
 
   .album-title {
-    font-size: 24px;
+    font-size: 22px;
   }
 }
 </style>
