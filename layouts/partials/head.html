@@ -266,8 +266,14 @@
     </script>
 
     <style>
-    pre code { padding: 16px; border-radius: 6px; font-size: 14px; background: #f6f8fa; }
-    .post-container code:not(pre code) { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; color: #0085a1; font-size: 0.9em; }
+    pre {
+      padding: 10px 16px !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    pre:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
     </style>
 
 </head>
