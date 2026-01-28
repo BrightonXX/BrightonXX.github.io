@@ -26,7 +26,7 @@ thumbnail: "img/google_heading.png"
 
 ## Proof 2：Google One 学生一年试用
 
-13块在麦当劳吃不到一个1+1。但在闲鱼可以搞定sheerid认证和绑卡。我可以享用一年时长的学生试用Pro待遇，包括Antigravity（我这两天在尝试反向API弄到CC，但是我的账号地区一直有问题），几乎用不完的Gemini官网使用，以及2TB的网盘。
+13块在麦当劳吃不到一个1+1，但在闲鱼可以搞定sheerid认证和绑卡。我可以享用一年时长的学生试用Pro待遇，包括Antigravity（我这两天在尝试反向API弄到CC，但是我的账号地区一直有问题），几乎用不完的Gemini官网使用，以及2TB的网盘。
 
 说实话，虽然我这样操作有欺诈嫌疑，但难道我不是大学生吗？（逃）
 
@@ -67,4 +67,4 @@ thumbnail: "img/google_heading.png"
 <img src="/img/demo_pre.png" alt="流程图生成示例" style="max-width: 80%; height: auto;">
 </div>
 
-好吧。白嫖了谷歌这么多，的确是有点羞愧，要是以后有机会被谷歌剥削回去就能让我不这么羞愧了吧。
+好吧。白嫖了谷歌这么多，的确是有点羞愧。要是以后有机会被谷歌剥削回去，也许就能让我不那么羞愧了吧。(幻想连吃带拿中...)

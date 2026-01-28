@@ -1,10 +1,12 @@
 {{ $score := .Get "score" }}
 {{ $color := "#000000" }}
-{{ if in $score "10" }}
+{{ if eq $score "11" }}
+  {{ $color = "#ff0000" }}
+{{ else if or (in $score "10-") (eq $score "10") }}
   {{ $color = "#d32f2f" }}
-{{ else if or (in $score "9.") (eq $score "9") }}
+{{ else if or (in $score "9+") (in $score "9.") (eq $score "9") }}
   {{ $color = "#b71c1c" }}
-{{ else if or (in $score "8.") (eq $score "8") }}
+{{ else if or (in $score "8.5+") (in $score "8.5-") (in $score "8.") (in $score "8+") (eq $score "8") }}
   {{ $color = "#880e4f" }}
 {{ else if or (in $score "7.") (eq $score "7") }}
   {{ $color = "#4a148c" }}
@@ -16,7 +18,28 @@
   {{ $color = "#000000" }}
 {{ end }}
 
-<!-- Album Review Shortcode - Pitchfork Style -->
+{{ $favoriteTrack := .Get "favorite_track" }}
+{{ $favoriteTrackScore := .Get "favorite_track_score" }}
+{{ $trackColor := "#000000" }}
+{{ if $favoriteTrackScore }}
+  {{ if eq $favoriteTrackScore "11" }}
+    {{ $trackColor = "#ff0000" }}
+  {{ else if or (in $favoriteTrackScore "10-") (eq $favoriteTrackScore "10") }}
+    {{ $trackColor = "#d32f2f" }}
+  {{ else if or (in $favoriteTrackScore "9+") (in $favoriteTrackScore "9.") (eq $favoriteTrackScore "9") }}
+    {{ $trackColor = "#b71c1c" }}
+  {{ else if or (in $favoriteTrackScore "8.5+") (in $favoriteTrackScore "8.5-") (in $favoriteTrackScore "8.") (in $favoriteTrackScore "8+") (eq $favoriteTrackScore "8") }}
+    {{ $trackColor = "#880e4f" }}
+  {{ else if or (in $favoriteTrackScore "7.") (eq $favoriteTrackScore "7") }}
+    {{ $trackColor = "#4a148c" }}
+  {{ else if or (in $favoriteTrackScore "6.") (eq $favoriteTrackScore "6") }}
+    {{ $trackColor = "#311b92" }}
+  {{ else if or (in $favoriteTrackScore "5.") (eq $favoriteTrackScore "5") }}
+    {{ $trackColor = "#1a237e" }}
+  {{ end }}
+{{ end }}
+
+<!-- Album Review Shortcode - Pitchfork Style with Favorite Track -->
 <div class="album-review-container">
   <div class="album-review-wrapper">
     <div class="album-cover">
@@ -33,6 +56,13 @@
           {{ if .Get "year" }}<span class="album-year">{{ .Get "year" }}</span>{{ end }}
           {{ if .Get "genre" }}<span class="album-genre">{{ .Get "genre" }}</span>{{ end }}
         </div>
+        {{ if $favoriteTrack }}
+        <div class="album-favorite-track">
+          <span class="track-label">Best Track</span>
+          <span class="track-divider">|</span>
+          <span class="track-name">{{ $favoriteTrack }}</span>
+        </div>
+        {{ end }}
       </div>
     </div>
   </div>
@@ -51,7 +81,7 @@
   gap: 25px;
   align-items: center;
   justify-content: center;
-  max-width: 750px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -73,7 +103,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 280px;
+  min-height: 292px;
 }
 
 .score-wrapper {
@@ -81,7 +111,8 @@
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  margin-bottom: 15px;
+  margin-bottom: 3px;
+  margin-top: 10px;
 }
 
 .album-score {
@@ -113,12 +144,14 @@
 .album-details {
   flex-shrink: 0;
   text-align: center;
+  margin-top: 12px;
 }
 
 .album-artist {
   font-size: 15px;
   font-weight: 500;
   margin: 0;
+  margin-top: 8px;
   color: #666;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -134,18 +167,64 @@
 
 .album-meta {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   font-size: 13px;
   color: #888;
   margin: 0;
   justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .album-year,
 .album-genre {
-  padding: 3px 10px;
+  padding: 4px 10px;
   background: #e9ecef;
-  border-radius: 10px;
+  border-radius: 12px;
+}
+
+/* Favorite Track Styles - Separate Line */
+.album-favorite-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 18px;
+  background: #fff0f5;
+  border-radius: 15px;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.track-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d32f2f;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.track-divider {
+  font-size: 14px;
+  color: #ddd;
+  line-height: 1;
+}
+
+.album-favorite-track .track-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #d32f2f;
+  line-height: 1;
+  font-style: italic;
+}
+
+.album-favorite-track .track-score {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
 }
 
 @media (max-width: 768px) {
@@ -165,6 +244,29 @@
 
   .album-title {
     font-size: 22px;
+  }
+
+  .album-meta {
+    gap: 6px;
+  }
+
+  .album-year,
+  .album-genre {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .album-favorite-track {
+    margin-top: 10px;
+    padding: 7px 12px;
+  }
+
+  .album-favorite-track .track-name {
+    font-size: 13px;
+  }
+
+  .album-favorite-track .track-score {
+    font-size: 16px;
   }
 }
 </style>
