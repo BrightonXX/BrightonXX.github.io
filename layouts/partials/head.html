@@ -127,6 +127,14 @@
       margin: 30px 0 20px 0;
       font-weight: 500;
     }
+
+    /* Paragraph首行缩进 - 只在文章单页生效 */
+    {{ if .IsPage }}
+    .post-container p,
+    .post-container .article-content p {
+      text-indent: 1.3em;
+    }
+    {{ end }}
     </style>
 
     <!-- Prevent title from wrapping awkwardly -->
