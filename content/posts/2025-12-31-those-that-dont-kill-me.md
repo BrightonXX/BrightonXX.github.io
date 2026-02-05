@@ -1,9 +1,9 @@
 ---
-title: "[公众号搬运] 那些打不死我的一直在打我"
+title: "那些打不死我的一直在打我"
 date: 2025-12-31T23:50:00+08:00
 draft: false
 keywords: ["Life", "年终", "反思"]
-description: "展望2026"
+description: "[公众号搬运] 展望2026"
 tags: ["Life", "随笔"]
 categories: []
 author: "Brighton"
@@ -12,7 +12,7 @@ image: "img/home-bg-jeep.jpg"
 thumbnail: "img/home-bg-jeep.jpg"
 ---
 
-<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">展望2026</div>
+<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">[公众号搬运] 展望2026</div>
 
 
 那个希望明年活得更从容的我，似乎并没有如愿以偿。

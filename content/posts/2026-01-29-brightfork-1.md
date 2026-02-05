@@ -106,7 +106,7 @@ thumbnail: "img/mbdtf.jpg"
     favorite_track="Mercury"
 >}}
 
-**Gemini Rights** - 好洗脑的R&B...
+**Gemini Rights** - 洗脑的R&B...
 
 {{< album-review
     image="img/ants-from-up-there.jpg"
@@ -130,7 +130,7 @@ thumbnail: "img/mbdtf.jpg"
     favorite_track="Venice Bitch"
 >}}
 
-**Norman Fucking Rockwell!** - 很有vibe！
+**Norman Fucking Rockwell!** - 听不懂的人有难了
 
 {{< album-review
     image="img/imaginal-disk.jpg"

@@ -1,9 +1,9 @@
 ---
-title: "[公众号搬运] 在新的一年期待好事的发生"
+title: "在新的一年期待好事的发生"
 date: 2024-12-31T23:50:00+08:00
 draft: false
 keywords: ["Life", "年终", "展望"]
-description: "展望2025"
+description: "[公众号搬运] 展望2025"
 tags: ["Life", "随笔"]
 categories: []
 author: "Brighton"
@@ -12,7 +12,7 @@ image: "img/home-bg-jeep.jpg"
 thumbnail: "img/home-bg-jeep.jpg"
 ---
 
-<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">剪掉几根大的，期待好事发生</div>
+<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">[公众号搬运] 展望2025</div>
 
 如果把个人的发展比做一棵二叉树，那么过去的一年中我肯定剪掉了几根大的。
 

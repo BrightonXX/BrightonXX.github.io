@@ -228,10 +228,14 @@
         <h5>FEATURED TAGS</h5>
         <div class="tags">
             {{ $featured_condition_size := .Site.Params.featured_condition_size }}
+            {{ $tags := slice }}
             {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
-               {{ if gt (len $taxonomy.Pages) $featured_condition_size }}
-                    <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" title="{{ $name }}">
-                        {{ $name }}
+               {{ $tags = $tags | append (dict "name" $name "count" (len $taxonomy.Pages)) }}
+            {{ end }}
+            {{ range first 5 (sort $tags "count" "desc") }}
+               {{ if gt .count $featured_condition_size }}
+                    <a href="{{ "/tags/" | relLangURL }}{{ .name | urlize }}" title="{{ .name }}">
+                        {{ .name }}
                     </a>
                {{ end }}
             {{ end }}
