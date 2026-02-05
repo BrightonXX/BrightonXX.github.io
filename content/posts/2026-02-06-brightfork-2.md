@@ -49,7 +49,7 @@ thumbnail: "img/billie-wildflower.jpg"
 
 🎵Debí tirar más fotos de cuando te tuve
 
-我觉得很多人类都能共情到这句吧，任何意义上的。
+我觉得很多人类都能共情到这句吧，任何意义上的。也许早听到这首歌就好了。
 
 
 ### Song of the Year
