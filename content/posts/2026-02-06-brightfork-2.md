@@ -61,7 +61,9 @@ thumbnail: "img/billie-wildflower.jpg"
     album="Wildflower"
 >}}
 
-**Wildflower** - 我收回一半对 2025 Grammy 的恶评，但是这种补奖也许并不能很有说服力。
+**Wildflower** - 我收回一半对 2025 Grammy 的恶评，但是这种补奖也许并不是很有说服力。
+
+...22年HTE的奖什么时候补...?
 
 ## 填坑：上次的小众泛九分补充 { .section-title }
 
