@@ -49,7 +49,9 @@
                             {{ end }}
                             on
                             {{ .Date.Format "Monday, January 2, 2006" }}
-                            {{ $readingTime := div (add .WordCount 279) 280 }}
+                            {{ $readingTimeRaw := div (add .WordCount 279) 280 }}
+                            {{ $readingTime := div (add (mul $readingTimeRaw 7) 9) 10 }}
+                            {{ if lt $readingTime 1 }}{{ $readingTime = 1 }}{{ end }}
                             <span class="reading-time"> · {{ $readingTime }} min read</span>
                             <span class="page-view"> · <span id="busuanzi_value_page_pv">Loading</span> views</span>
                             {{ if .Site.Params.page_view_counter }}
@@ -69,13 +71,25 @@
 
 {{ define "main" }}
 <!-- Post Content -->
-<article>
+<article class="post-article{{ if not (eq (.Param "showtoc") false) }} has-catalog{{ end }}">
     <div class="container">
         <div class="row">
 
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container
+                reading-tools-container">
+                <div class="reading-tools" aria-live="polite">
+                    <div id="remaining-reading-time" class="remaining-reading-time">-- min left</div>
+                    <button id="back-to-top-btn" class="back-to-top-btn" type="button" aria-label="Back to top"><i class="fas fa-angle-up" aria-hidden="true"></i></button>
+                </div>
+            </div>
+
             <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-2
+                col-lg-8 col-lg-offset-0
                 col-md-10 col-md-offset-1
                 post-container">
 

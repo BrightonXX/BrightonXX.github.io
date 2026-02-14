@@ -135,6 +135,89 @@
       text-indent: 1.3em;
     }
     {{ end }}
+
+    /* Sticky Catalog Navigation */
+    .post-article.has-catalog {
+      overflow: visible;
+    }
+    .reading-tools-container {
+      padding: 0;
+    }
+    .reading-tools {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin: 0 auto;
+    }
+    .remaining-reading-time {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 1;
+      color: #2f3b44;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 133, 161, 0.25);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      white-space: nowrap;
+      user-select: none;
+    }
+    .back-to-top-btn {
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-radius: 50%;
+      background: #0085a1;
+      color: #fff;
+      font-size: 20px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 133, 161, 0.32);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+    }
+    .back-to-top-btn:hover {
+      background: #006f86;
+    }
+    .back-to-top-btn.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .back-to-top-btn i {
+      font-size: 18px;
+      pointer-events: none;
+    }
+    @media (min-width: 1200px) {
+      .catalog-container {
+        padding: 0;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 36px;
+        align-self: flex-start;
+      }
+      .reading-tools-container.catalog-container {
+        top: 27px;
+        padding-top: 36px;
+      }
+      .catalog-container .side-catalog,
+      .catalog-container .side-catalog.fixed {
+        position: static !important;
+        top: auto !important;
+        width: 100%;
+        max-height: calc(100vh - 56px);
+        overflow-y: auto !important;
+        overflow-x: hidden;
+        height: auto !important;
+        padding-bottom: 12px;
+      }
+    }
     </style>
 
     <!-- Prevent title from wrapping awkwardly -->
@@ -203,6 +286,50 @@
         // Not on a slogan page, reset the flag
         sessionStorage.setItem('onSloganPage', 'false');
       }
+    });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const backToTopBtn = document.getElementById('back-to-top-btn');
+      const remainingTimeEl = document.getElementById('remaining-reading-time');
+      const readingTools = document.querySelector('.reading-tools');
+      if (!backToTopBtn || !remainingTimeEl || !readingTools) return;
+
+      const readingTimeNode = document.querySelector('.post-heading .reading-time');
+      let totalMinutes = 0;
+      if (readingTimeNode) {
+        const match = readingTimeNode.textContent.match(/(\d+)/);
+        if (match) totalMinutes = parseInt(match[1], 10);
+      }
+      if (!totalMinutes || Number.isNaN(totalMinutes)) totalMinutes = 1;
+
+      const updateReadingTools = function() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollRange = document.documentElement.scrollHeight - window.innerHeight;
+        const viewportFocus = window.innerHeight * 0.5;
+        const effectiveScroll = scrollTop + viewportFocus;
+        const progress = scrollRange > 0 ? Math.min(Math.max(effectiveScroll / scrollRange, 0), 1) : 0;
+        const remainingMinutes = Math.max(0, Math.ceil(totalMinutes * (1 - progress)));
+
+        remainingTimeEl.textContent = remainingMinutes > 0
+          ? (remainingMinutes + ' min left')
+          : 'Done reading';
+
+        if (scrollTop > 260) {
+          backToTopBtn.classList.add('is-visible');
+        } else {
+          backToTopBtn.classList.remove('is-visible');
+        }
+      };
+
+      backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      updateReadingTools();
+      window.addEventListener('scroll', updateReadingTools, { passive: true });
+      window.addEventListener('resize', updateReadingTools);
     });
     </script>
 

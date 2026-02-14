@@ -30,7 +30,9 @@
         {{ end }}
     {{ else }}
         Posted by {{ with .Params.author }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }} on {{ .Date.Format "Monday, January 2, 2006" }}
-        {{ $readingTime := div (add .WordCount 279) 280 }}
+        {{ $readingTimeRaw := div (add .WordCount 279) 280 }}
+        {{ $readingTime := div (add (mul $readingTimeRaw 7) 9) 10 }}
+        {{ if lt $readingTime 1 }}{{ $readingTime = 1 }}{{ end }}
         <span class="reading-time"> · {{ $readingTime }} min read</span>
         {{ if (and .Lastmod (ne .Lastmod .Date)) }}
             <br>Last Modified on {{ dateFormat "Monday, January 2, 2006" .Params.LastMod }}
