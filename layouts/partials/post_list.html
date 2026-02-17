@@ -1,5 +1,5 @@
 <!-- post list -->
-<div data-pagefind-ignore="all">
+<div data-pagefind-ignore="all" class="js-post-stream">
 {{ range $index, $element := $.Paginator.Pages }}
 <div class="post-preview">
     <a href="{{ .Permalink }}">
@@ -44,3 +44,13 @@
 <hr>
 {{ end }}
 </div>
+
+{{ $pag := $.Paginator }}
+{{ if $pag.HasNext }}
+<div class="post-load-more-wrap" data-next-url="{{ $pag.Next.URL }}">
+    <button class="post-load-more-btn" type="button">Load older posts ↓</button>
+    <noscript>
+        <a class="post-load-more-fallback" href="{{ $pag.Next.URL }}">Older posts →</a>
+    </noscript>
+</div>
+{{ end }}

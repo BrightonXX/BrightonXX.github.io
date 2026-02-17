@@ -1,0 +1,123 @@
+<div data-pagefind-ignore="all" class="container">
+    <div class="row">
+        <!-- USE SIDEBAR -->
+        <!-- Post Container -->
+   	    <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container
+        ">
+            {{ partial "post_list.html" . }}
+       	</div>
+        {{ partial "sidebar.html" . }}
+	</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stream = document.querySelector('.js-post-stream');
+  const loadMoreWrap = document.querySelector('.post-load-more-wrap');
+  if (!stream || !loadMoreWrap) return;
+
+  const btn = loadMoreWrap.querySelector('.post-load-more-btn');
+  if (!btn) return;
+
+  let nextUrl = loadMoreWrap.getAttribute('data-next-url');
+  let loading = false;
+  let dropTimer = null;
+  const MIN_EXPAND_DELAY_MS = 320;
+
+  const setButtonState = function(label, disabled) {
+    btn.textContent = label;
+    btn.disabled = disabled;
+    btn.setAttribute('aria-busy', disabled ? 'true' : 'false');
+    if (disabled) {
+      btn.classList.add('is-loading');
+    } else {
+      btn.classList.remove('is-loading');
+    }
+  };
+
+  const triggerClickDrop = function() {
+    if (dropTimer) window.clearTimeout(dropTimer);
+    btn.classList.remove('is-click-drop');
+    // Force reflow so repeated clicks can retrigger the keyframe.
+    void btn.offsetWidth;
+    btn.classList.add('is-click-drop');
+    dropTimer = window.setTimeout(function() {
+      btn.classList.remove('is-click-drop');
+    }, 420);
+  };
+
+  const animateIncomingPosts = function(nodes) {
+    if (!nodes.length) return;
+    requestAnimationFrame(function() {
+      nodes.forEach(function(node, index) {
+        node.style.transitionDelay = Math.min(index * 70, 280) + 'ms';
+        node.classList.add('is-revealed');
+      });
+      window.setTimeout(function() {
+        nodes.forEach(function(node) {
+          node.classList.remove('post-preview-entering', 'is-revealed');
+          node.style.transitionDelay = '';
+        });
+      }, 1000);
+    });
+  };
+
+  async function loadOlderPosts() {
+    if (!nextUrl || loading) return;
+    loading = true;
+    const clickStartAt = window.performance.now();
+    triggerClickDrop();
+    setButtonState('Loading older posts...', true);
+
+    try {
+      const response = await fetch(nextUrl, { credentials: 'same-origin' });
+      if (!response.ok) throw new Error('request failed');
+
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const nextStream = doc.querySelector('.js-post-stream');
+      if (!nextStream) throw new Error('missing stream in next page');
+
+      const fragment = document.createDocumentFragment();
+      const incoming = [];
+      Array.from(nextStream.children).forEach(function(node) {
+        if (node.classList && node.classList.contains('post-preview')) {
+          node.classList.add('post-preview-entering');
+          incoming.push(node);
+        }
+        fragment.appendChild(node);
+      });
+
+      const elapsed = window.performance.now() - clickStartAt;
+      const wait = Math.max(0, MIN_EXPAND_DELAY_MS - elapsed);
+      if (wait > 0) {
+        await new Promise(function(resolve) { window.setTimeout(resolve, wait); });
+      }
+
+      stream.appendChild(fragment);
+      animateIncomingPosts(incoming);
+
+      const nextWrap = doc.querySelector('.post-load-more-wrap');
+      if (nextWrap && nextWrap.getAttribute('data-next-url')) {
+        nextUrl = nextWrap.getAttribute('data-next-url');
+        loadMoreWrap.setAttribute('data-next-url', nextUrl);
+        setButtonState('Load older posts ↓', false);
+      } else {
+        loadMoreWrap.remove();
+      }
+    } catch (err) {
+      setButtonState('Retry loading', false);
+    } finally {
+      loading = false;
+    }
+  }
+
+  btn.addEventListener('click', loadOlderPosts);
+});
+</script>

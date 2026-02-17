@@ -268,7 +268,8 @@
         </div>
     </section>
     {{ end }}
-    {{ if .Site.Params.last_posts }}
+    {{ $isAllPostsList := or .IsHome (hasPrefix .RelPermalink "/page/") (and .IsSection (eq .Section "posts")) (and (hasPrefix .RelPermalink "/posts/page/") (not .IsPage)) }}
+    {{ if and .Site.Params.last_posts (not $isAllPostsList) }}
     <section>
         <hr class="hidden-sm hidden-xs">
         <h5>{{ .Site.Params.last_posts_title | default `LAST POSTS` }}</h5>
