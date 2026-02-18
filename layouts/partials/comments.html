@@ -1,18 +1,78 @@
 <!-- Giscus Comments -->
 {{ if and .Site.Params.giscus (eq .Kind "page") (eq .Section "posts") }}
-<script src="https://giscus.app/client.js"
-        data-repo="{{ .Site.Params.giscus.repo }}"
-        data-repo-id="{{ .Site.Params.giscus.repoId }}"
-        data-category="{{ .Site.Params.giscus.category }}"
-        data-category-id="{{ .Site.Params.giscus.categoryId }}"
-        data-mapping="{{ .Site.Params.giscus.mapping | default "pathname" }}"
-        data-strict="{{ .Site.Params.giscus.strict | default "0" }}"
-        data-reactions-enabled="{{ .Site.Params.giscus.reactionsEnabled | default "1" }}"
-        data-emit-metadata="{{ .Site.Params.giscus.emitMetadata | default "0" }}"
-        data-input-position="{{ .Site.Params.giscus.inputPosition | default "bottom" }}"
-        data-theme="{{ .Site.Params.giscus.theme | default "light" }}"
-        data-lang="{{ .Site.Params.giscus.lang | default "en" }}"
-        crossorigin="anonymous"
-        async>
+<div id="giscus-container"></div>
+<script>
+(function() {
+  const config = {
+    repo: '{{ .Site.Params.giscus.repo }}',
+    repoId: '{{ .Site.Params.giscus.repoId }}',
+    category: '{{ .Site.Params.giscus.category }}',
+    categoryId: '{{ .Site.Params.giscus.categoryId }}',
+    mapping: '{{ .Site.Params.giscus.mapping | default "pathname" }}',
+    strict: '{{ .Site.Params.giscus.strict | default "0" }}',
+    reactionsEnabled: '{{ .Site.Params.giscus.reactionsEnabled | default "1" }}',
+    emitMetadata: '{{ .Site.Params.giscus.emitMetadata | default "0" }}',
+    inputPosition: '{{ .Site.Params.giscus.inputPosition | default "bottom" }}',
+    lang: '{{ .Site.Params.giscus.lang | default "en" }}',
+    themeLight: '{{ .Site.Params.giscus.theme_light | default "light" }}',
+    themeDark: '{{ .Site.Params.giscus.theme_dark | default "dark" }}'
+  };
+
+  function getSiteTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  function getGiscusTheme(siteTheme) {
+    return siteTheme === 'dark' ? config.themeDark : config.themeLight;
+  }
+
+  function syncGiscusTheme() {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return false;
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: getGiscusTheme(getSiteTheme()) } } },
+      'https://giscus.app'
+    );
+    return true;
+  }
+
+  function mountGiscus() {
+    const host = document.getElementById('giscus-container');
+    if (!host) return;
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', config.repo);
+    script.setAttribute('data-repo-id', config.repoId);
+    script.setAttribute('data-category', config.category);
+    script.setAttribute('data-category-id', config.categoryId);
+    script.setAttribute('data-mapping', config.mapping);
+    script.setAttribute('data-strict', config.strict);
+    script.setAttribute('data-reactions-enabled', config.reactionsEnabled);
+    script.setAttribute('data-emit-metadata', config.emitMetadata);
+    script.setAttribute('data-input-position', config.inputPosition);
+    script.setAttribute('data-theme', getGiscusTheme(getSiteTheme()));
+    script.setAttribute('data-lang', config.lang);
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    host.appendChild(script);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    mountGiscus();
+
+    const root = document.documentElement;
+    const observer = new MutationObserver(function() {
+      syncGiscusTheme();
+    });
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+    const retry = window.setInterval(function() {
+      if (syncGiscusTheme()) window.clearInterval(retry);
+    }, 250);
+    window.setTimeout(function() {
+      window.clearInterval(retry);
+    }, 10000);
+  });
+})();
 </script>
 {{ end}}
