@@ -8,7 +8,9 @@ categories: []
 author: "Brighton"
 ---
 
-MacBook 的含金量还在上升
+<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">MacBook 的含金量还在上升</div>
+
+MacBook 的含金量还在上升。
 
 了解我的都知道去年下半年，我的主力机从拯救者替换成 MacBook Air M4 了，原本只是为了轻便和续航，以及拯救 Ubuntu 灾难级别的桌面表现，有时候我确实要复现环境需要，弄个远程还是方便多了。然后，拯救者现在变成了固定在宿舍网口的 Ubuntu 20.04 自用服务器，用 tailscale 公网 ssh + Claude Code 调教的舒服的一，解决了没有公网 ipv4 以及 ssh 原生命令行不好用的情况（额，我有时候真的把 CC 当做一个智能命令行使用）。
 
