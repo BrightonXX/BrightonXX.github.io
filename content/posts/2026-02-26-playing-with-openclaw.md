@@ -6,9 +6,15 @@ description: "MacBook 的含金量还在上升"
 tags: ["OpenClaw", "Agent", "Life", "随笔", "tech", "workflow"]
 categories: []
 author: "Brighton"
+image: "img/openclaw-cover.png"
+thumbnail: "img/openclaw-cover.png"
 ---
 
 <div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">MacBook 的含金量还在上升</div>
+
+<div style="text-align: center;">
+<img src="/img/openclaw-pipeline.png" alt="OpenClaw Pipeline" style="max-width: 80%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+</div>
 
 MacBook 的含金量还在上升。
 
@@ -27,6 +33,15 @@ api 方面还是继续用的 z.ai 的 coding plan。我当时 lite 用腻了，�
 ---
 
 对了，附上我目前的 pipeline 输出，大概看上去还有模有样的，我还在微调以及加新的玩意，主要是可以设计定时任务太方便了：
+
+<div style="text-align: center;">
+<img src="/img/openclaw-link.png" alt="OpenClaw Pipeline" style="max-width: 80%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+</div>
+
+<details>
+<summary style="cursor: pointer; font-weight: bold; color: #007bff;">👇 点击展开查看：Brighton的小秘书完整输出示例 (2026-02-26)</summary>
+
+<br>
 
 ## 📰 Brighton的小秘书 - 完整信息汇总
 
@@ -219,3 +234,5 @@ AMD 正在成为 NVDA 在 AI 芯片市场的有力竞争者。Meta 的大单意�
 ⏰ **定时推送：** 早间 9:30 | 晚间 20:00
 🔍 **突发监测：** 每小时 (8:00-23:00)
 📊 **情绪分析：** 每次推送自动更新
+
+</details>
