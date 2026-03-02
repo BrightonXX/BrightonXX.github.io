@@ -197,6 +197,17 @@ Chinese version must NOT have front matter - start directly with content.
 - **Location**: `layouts/taxonomy/tag.html`
 - H1: "Searched for [tagname]", Subtitle: "Tag · X posts"
 
+### 6. Live Focus Status (third-party API)
+- **Widget**: `layouts/partials/sidebar.html`
+- **Styles + Runtime polling**: `layouts/partials/head.html`
+- **Config**: `hugo.toml` under `[params.focus_status]`
+- **Integration templates**:
+  - `integrations/focus-status/cloudflare-worker.js`
+  - `integrations/focus-status/wrangler.toml.sample`
+  - `integrations/focus-status/deploy-commands.sh.sample`
+  - `scripts/report_focus_status.sh`
+  - `integrations/focus-status/README.md`
+
 ---
 
 ## WeChat Article Imports

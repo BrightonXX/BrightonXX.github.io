@@ -276,6 +276,90 @@
       border-color: rgba(146, 190, 210, 0.36);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
     }
+    html[data-theme="dark"] .focus-status-card {
+      background: rgba(19, 31, 42, 0.86);
+      border-color: rgba(146, 190, 210, 0.3);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.32);
+    }
+    html[data-theme="dark"] .focus-status-card[data-focus-state="on"] {
+      border-color: rgba(92, 206, 168, 0.46);
+      box-shadow: 0 10px 24px rgba(6, 16, 24, 0.46);
+    }
+    html[data-theme="dark"] .focus-status-card[data-focus-state="sleep"] {
+      border-color: rgba(145, 181, 255, 0.46);
+      box-shadow: 0 10px 24px rgba(10, 18, 38, 0.46);
+    }
+    html[data-theme="dark"] .focus-status-card[data-focus-state="stale"] {
+      border-color: rgba(237, 196, 112, 0.4);
+    }
+    html[data-theme="dark"] .focus-status-card[data-focus-state="offline"],
+    html[data-theme="dark"] .focus-status-card[data-focus-state="unknown"] {
+      border-color: rgba(185, 144, 210, 0.38);
+    }
+    html[data-theme="dark"] .focus-status-text {
+      color: #d7e7f2;
+    }
+    html[data-theme="dark"] .focus-status-meta {
+      color: #9db2c1;
+    }
+    html[data-theme="dark"] .focus-status-action-btn {
+      background: rgba(21, 36, 50, 0.85);
+      color: #b7d8ea;
+      border-color: rgba(129, 176, 200, 0.36);
+    }
+    html[data-theme="dark"] .focus-status-action-btn:hover {
+      background: rgba(28, 47, 66, 0.9);
+      color: #d3ecf8;
+      border-color: rgba(166, 210, 231, 0.58);
+    }
+    html[data-theme="dark"] .focus-status-detail {
+      background: rgba(18, 30, 40, 0.74);
+      color: #bdd3e1;
+      border-color: rgba(129, 176, 200, 0.28);
+    }
+    html[data-theme="dark"] .focus-status-badge--on {
+      background: rgba(52, 173, 136, 0.26);
+      color: #9deace;
+      border-color: rgba(103, 218, 176, 0.45);
+    }
+    html[data-theme="dark"] .focus-status-badge--off {
+      background: rgba(73, 117, 140, 0.24);
+      color: #b3d8eb;
+      border-color: rgba(139, 191, 216, 0.42);
+    }
+    html[data-theme="dark"] .focus-status-badge--sleep {
+      background: rgba(95, 128, 208, 0.26);
+      color: #d4e2ff;
+      border-color: rgba(139, 172, 243, 0.46);
+    }
+    html[data-theme="dark"] .focus-status-badge--stale {
+      background: rgba(183, 137, 42, 0.22);
+      color: #f0d09d;
+      border-color: rgba(237, 196, 112, 0.46);
+    }
+    html[data-theme="dark"] .focus-status-badge--offline,
+    html[data-theme="dark"] .focus-status-badge--unknown {
+      background: rgba(147, 112, 165, 0.2);
+      color: #dcb9f1;
+      border-color: rgba(185, 144, 210, 0.45);
+    }
+    html[data-theme="dark"] .focus-status-dot--on {
+      background: #5fd3ad;
+      box-shadow: 0 0 0 0 rgba(95, 211, 173, 0.45);
+    }
+    html[data-theme="dark"] .focus-status-dot--off {
+      background: #8dc5de;
+    }
+    html[data-theme="dark"] .focus-status-dot--sleep {
+      background: #9db9ff;
+    }
+    html[data-theme="dark"] .focus-status-dot--stale {
+      background: #e4bd78;
+    }
+    html[data-theme="dark"] .focus-status-dot--offline,
+    html[data-theme="dark"] .focus-status-dot--unknown {
+      background: #c49adb;
+    }
     html[data-theme="dark"] .article-description,
     html[data-theme="dark"] .article-subtitle,
     html[data-theme="dark"] .section-title {
@@ -425,6 +509,174 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       white-space: nowrap;
       user-select: none;
+    }
+    .focus-status-card {
+      position: relative;
+      border: 1px solid rgba(0, 133, 161, 0.22);
+      border-radius: 12px;
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.96), rgba(246, 251, 253, 0.96));
+      padding: 12px 12px 10px 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      transition: border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease, transform 220ms ease;
+    }
+    .focus-status-card.is-refreshing {
+      transform: translateY(1px);
+    }
+    .focus-status-card[data-focus-state="on"] {
+      border-color: rgba(36, 173, 126, 0.34);
+      box-shadow: 0 10px 24px rgba(16, 86, 63, 0.14);
+    }
+    .focus-status-card[data-focus-state="sleep"] {
+      border-color: rgba(80, 122, 211, 0.34);
+      box-shadow: 0 10px 24px rgba(34, 59, 112, 0.14);
+    }
+    .focus-status-card[data-focus-state="stale"] {
+      border-color: rgba(211, 155, 52, 0.32);
+    }
+    .focus-status-card[data-focus-state="offline"],
+    .focus-status-card[data-focus-state="unknown"] {
+      border-color: rgba(147, 112, 165, 0.3);
+    }
+    .focus-status-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+    .focus-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #8ea0ae;
+      flex: 0 0 8px;
+      box-shadow: 0 0 0 0 rgba(142, 160, 174, 0.32);
+      transition: background-color 180ms ease, box-shadow 180ms ease;
+    }
+    .focus-status-dot--on {
+      background: #24ad7e;
+      box-shadow: 0 0 0 0 rgba(36, 173, 126, 0.35);
+      animation: focus-status-pulse 1.8s ease-out infinite;
+    }
+    .focus-status-dot--off {
+      background: #3f86a7;
+    }
+    .focus-status-dot--sleep {
+      background: #5f80d0;
+    }
+    .focus-status-dot--stale {
+      background: #c99131;
+    }
+    .focus-status-dot--offline,
+    .focus-status-dot--unknown {
+      background: #a97ac0;
+    }
+    @keyframes focus-status-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(36, 173, 126, 0.34);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(36, 173, 126, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(36, 173, 126, 0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .focus-status-dot--on {
+        animation: none !important;
+      }
+    }
+    .focus-status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .focus-status-badge--on {
+      background: rgba(36, 173, 126, 0.16);
+      color: #178460;
+      border-color: rgba(36, 173, 126, 0.3);
+    }
+    .focus-status-badge--off {
+      background: rgba(63, 134, 167, 0.14);
+      color: #236f8f;
+      border-color: rgba(63, 134, 167, 0.28);
+    }
+    .focus-status-badge--sleep {
+      background: rgba(83, 124, 212, 0.15);
+      color: #2f4f9b;
+      border-color: rgba(83, 124, 212, 0.32);
+    }
+    .focus-status-badge--stale {
+      background: rgba(211, 155, 52, 0.18);
+      color: #9f6d13;
+      border-color: rgba(211, 155, 52, 0.34);
+    }
+    .focus-status-badge--offline {
+      background: rgba(169, 122, 192, 0.16);
+      color: #83509a;
+      border-color: rgba(169, 122, 192, 0.3);
+    }
+    .focus-status-badge--unknown {
+      background: rgba(121, 136, 153, 0.16);
+      color: #516170;
+      border-color: rgba(121, 136, 153, 0.28);
+    }
+    .focus-status-text {
+      margin: 0 0 4px 0;
+      font-size: 13px;
+      line-height: 1.42;
+      font-weight: 520;
+      letter-spacing: 0.01em;
+      color: #31404f;
+    }
+    .focus-status-meta {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.38;
+      color: #728292;
+    }
+    .focus-status-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+    }
+    .focus-status-action-btn {
+      border: 1px solid rgba(0, 133, 161, 0.28);
+      background: rgba(246, 251, 253, 0.9);
+      color: #2f6f81;
+      font-size: 11px;
+      line-height: 1;
+      padding: 5px 9px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+    }
+    .focus-status-action-btn:hover {
+      background: rgba(237, 247, 251, 1);
+      color: #1f5f72;
+      border-color: rgba(0, 133, 161, 0.45);
+    }
+    .focus-status-action-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .focus-status-detail {
+      margin-top: 8px;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 133, 161, 0.16);
+      background: rgba(244, 250, 253, 0.9);
+      font-size: 11px;
+      line-height: 1.4;
+      color: #4a6173;
     }
     .back-to-top-btn {
       width: 48px;
@@ -669,6 +921,324 @@
       updateReadingTools();
       window.addEventListener('scroll', updateReadingTools, { passive: true });
       window.addEventListener('resize', updateReadingTools);
+    });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('[data-focus-status-card]');
+      if (!cards.length) return;
+
+      function readInt(rawValue, fallbackValue, minValue) {
+        const parsed = parseInt(rawValue, 10);
+        if (Number.isNaN(parsed)) return fallbackValue;
+        return Math.max(parsed, minValue);
+      }
+
+      function pickValue(record, keys) {
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (Object.prototype.hasOwnProperty.call(record, key) && record[key] != null) {
+            return record[key];
+          }
+        }
+        return null;
+      }
+
+      function pickString(record, keys) {
+        const value = pickValue(record, keys);
+        if (value == null) return '';
+        return String(value).trim();
+      }
+
+      function normalizeBoolean(value) {
+        if (typeof value === 'boolean') return value;
+        if (typeof value === 'number') return value !== 0;
+        if (typeof value !== 'string') return null;
+        const normalized = value.trim().toLowerCase();
+        if (!normalized) return null;
+        if (['true', '1', 'on', 'active', 'enabled', 'focus', 'focused', 'busy'].indexOf(normalized) !== -1) {
+          return true;
+        }
+        if (['false', '0', 'off', 'inactive', 'disabled', 'idle', 'available'].indexOf(normalized) !== -1) {
+          return false;
+        }
+        return null;
+      }
+
+      function parseTimestamp(value) {
+        if (value == null) return null;
+        if (typeof value === 'number' && Number.isFinite(value)) {
+          if (value <= 0) return null;
+          return value < 1000000000000 ? value * 1000 : value;
+        }
+        if (typeof value === 'string') {
+          const trimmed = value.trim();
+          if (!trimmed) return null;
+          if (/^\d+$/.test(trimmed)) {
+            const numeric = Number(trimmed);
+            if (!Number.isFinite(numeric) || numeric <= 0) return null;
+            return numeric < 1000000000000 ? numeric * 1000 : numeric;
+          }
+          const parsed = Date.parse(trimmed);
+          return Number.isNaN(parsed) ? null : parsed;
+        }
+        return null;
+      }
+
+      function formatAge(ageMinutes) {
+        if (ageMinutes == null || !Number.isFinite(ageMinutes)) return null;
+        const normalized = Math.max(ageMinutes, 0);
+        if (normalized < 60) return '<1h ago';
+        if (normalized < 1440) return Math.floor(normalized / 60) + 'h ago';
+        if (normalized > 4320) return '>3d ago';
+        return Math.floor(normalized / 1440) + 'd ago';
+      }
+
+      function formatSourceLabel(sourceRaw) {
+        if (!sourceRaw) return '';
+        const normalized = String(sourceRaw).trim().toLowerCase();
+        if (!normalized) return '';
+        if (normalized.indexOf('iphone') !== -1) return 'iPhone';
+        if (normalized.indexOf('mac') !== -1) return 'Mac';
+        if (normalized.indexOf('heartbeat') !== -1) return 'Heartbeat';
+        if (normalized.indexOf('shortcut') !== -1) return 'Shortcut';
+        return normalized.replace(/[_-]+/g, ' ').slice(0, 24);
+      }
+
+      function composeMeta(baseMeta, sourceLabel) {
+        return baseMeta;
+      }
+
+      function isSleepFocusName(nameRaw) {
+        if (!nameRaw) return false;
+        const trimmed = String(nameRaw).trim();
+        if (!trimmed) return false;
+        const normalized = trimmed.toLowerCase();
+        if (/(sleep|bedtime|sleeping|wind[\s-]?down|night)/.test(normalized)) return true;
+        if (/[睡眠就寝寝觉]/.test(trimmed)) return true;
+        return false;
+      }
+
+      function renderCard(card, state, badgeText, text, meta, detail) {
+        const badgeEl = card.querySelector('[data-focus-badge]');
+        const dotEl = card.querySelector('[data-focus-dot]');
+        const textEl = card.querySelector('[data-focus-text]');
+        const metaEl = card.querySelector('[data-focus-meta]');
+        const detailEl = card.querySelector('[data-focus-detail]');
+        if (!badgeEl || !dotEl || !textEl || !metaEl || !detailEl) return;
+
+        card.setAttribute('data-focus-state', state);
+        dotEl.className = 'focus-status-dot focus-status-dot--' + state;
+        badgeEl.className = 'focus-status-badge focus-status-badge--' + state;
+        badgeEl.textContent = badgeText;
+        textEl.textContent = text;
+        metaEl.textContent = meta;
+        detailEl.textContent = detail || 'No extra details yet.';
+      }
+
+      function extractRecord(payload) {
+        if (!payload || typeof payload !== 'object') return {};
+        if (payload.data && typeof payload.data === 'object') return payload.data;
+        if (payload.result && typeof payload.result === 'object') return payload.result;
+        return payload;
+      }
+
+      function evaluatePayload(record, staleAfterMinutes, offlineAfterMinutes) {
+        const focusName = pickString(record, ['focus_name', 'focusName', 'focus', 'mode_name', 'modeName']);
+        const focusRaw = pickValue(record, ['focus_mode', 'focusMode', 'is_focus_on', 'isFocusOn', 'focus_on', 'focusOn', 'enabled', 'active']);
+        const statusRaw = pickString(record, ['status', 'state']);
+        const onlineRaw = pickValue(record, ['device_online', 'deviceOnline', 'online', 'is_online', 'isOnline']);
+        const timestampRaw = pickValue(record, ['updated_at', 'updatedAt', 'last_updated_at', 'lastUpdatedAt', 'timestamp', 'ts']);
+        const sourceRaw = pickString(record, ['source', 'client', 'origin']);
+        const sourceLabel = formatSourceLabel(sourceRaw);
+        const sourceDetail = sourceLabel ? ('Source: ' + sourceLabel) : 'Source: Unknown';
+        const modeDetail = focusName ? ('Mode: ' + focusName) : 'Mode: Unnamed';
+
+        let focusOn = normalizeBoolean(focusRaw);
+        if (focusOn == null && statusRaw) {
+          const normalized = statusRaw.toLowerCase();
+          if (/(focus|on|active|enabled|busy)/.test(normalized)) focusOn = true;
+          if (/(off|idle|inactive|disabled|available)/.test(normalized)) focusOn = false;
+        }
+
+        const onlineHint = normalizeBoolean(onlineRaw);
+        const updatedMs = parseTimestamp(timestampRaw);
+        const ageMinutes = updatedMs == null ? null : ((Date.now() - updatedMs) / 60000);
+        const ageLabel = formatAge(ageMinutes);
+
+        if (onlineHint === false || (ageMinutes != null && ageMinutes > offlineAfterMinutes)) {
+          return {
+            state: 'off',
+            badge: 'Off',
+            text: 'No recent signal.',
+            meta: composeMeta(ageLabel ? ('Last signal ' + ageLabel) : 'No timestamp in payload', sourceLabel),
+            detail: modeDetail + ' · ' + sourceDetail + ' · Treated as off after timeout.'
+          };
+        }
+
+        if (ageMinutes != null && ageMinutes > staleAfterMinutes) {
+          return {
+            state: 'stale',
+            badge: 'Stale',
+            text: 'Status may be delayed.',
+            meta: composeMeta(ageLabel ? ('Last signal ' + ageLabel) : 'No timestamp in payload', sourceLabel),
+            detail: modeDetail + ' · ' + sourceDetail + ' · Last update may not reflect current state.'
+          };
+        }
+
+        if (focusOn === true) {
+          if (isSleepFocusName(focusName)) {
+            return {
+              state: 'sleep',
+              badge: 'Sleeping',
+              text: 'Brighton is sleeping. Guess when he\'ll wake up?',
+              meta: composeMeta(ageLabel ? ('Notifications muted · ' + ageLabel) : 'Notifications muted', sourceLabel),
+              detail: modeDetail + ' · ' + sourceDetail + ' · Sleep Focus silences all notifications. If it\'s urgent, call Brighton\'s number twice.'
+            };
+          }
+          return {
+            state: 'on',
+            badge: 'In Focus',
+            text: 'Brighton is working right now, replies may be delayed.',
+            meta: composeMeta(ageLabel ? ('Awake · ' + ageLabel) : 'Awake', sourceLabel),
+            detail: modeDetail + ' · ' + sourceDetail + ' · Focus mode is active; replies may be instant or delayed.'
+          };
+        }
+
+        if (focusOn === false) {
+          return {
+            state: 'off',
+            badge: 'Available',
+            text: 'Brighton may be awake, but who knows what he is doing.',
+            meta: composeMeta(ageLabel ? ('Accepting all notifications and calls · ' + ageLabel) : 'Accepting all notifications and calls', sourceLabel),
+            detail: modeDetail + ' · ' + sourceDetail + ' · Accepting all notifications and calls.'
+          };
+        }
+
+        return {
+          state: 'unknown',
+          badge: 'Unknown',
+          text: 'Waiting for reliable status.',
+          meta: composeMeta(ageLabel ? ('Last signal ' + ageLabel) : 'Need focus_mode and updated_at', sourceLabel),
+          detail: 'Raw payload missing required fields (focus_mode / updated_at).'
+        };
+      }
+
+      cards.forEach(function(card) {
+        const endpoint = String(card.getAttribute('data-focus-endpoint') || '').trim();
+        const refreshMs = readInt(card.getAttribute('data-focus-refresh-ms'), 45000, 5000);
+        const timeoutMs = readInt(card.getAttribute('data-focus-timeout-ms'), 5000, 1000);
+        const staleAfterMinutes = readInt(card.getAttribute('data-focus-stale-minutes'), 480, 1);
+        let offlineAfterMinutes = readInt(card.getAttribute('data-focus-offline-minutes'), 4320, 2);
+        if (offlineAfterMinutes <= staleAfterMinutes) {
+          offlineAfterMinutes = staleAfterMinutes + 1;
+        }
+
+        if (!endpoint) {
+          renderCard(
+            card,
+            'unknown',
+            'Disconnected',
+            'Set focus_status.endpoint in hugo.toml to enable live status.',
+            'No API endpoint configured',
+            'Configure endpoint in hugo.toml and redeploy.'
+          );
+          return;
+        }
+
+        let isFetching = false;
+        let lastGood = null;
+        let openDetail = false;
+        const refreshBtn = card.querySelector('[data-focus-refresh-btn]');
+        const toggleBtn = card.querySelector('[data-focus-toggle-btn]');
+        const detailEl = card.querySelector('[data-focus-detail]');
+
+        function syncDetailVisibility() {
+          if (!toggleBtn || !detailEl) return;
+          detailEl.hidden = !openDetail;
+          toggleBtn.textContent = openDetail ? 'Hide' : 'Details';
+          toggleBtn.setAttribute('aria-expanded', openDetail ? 'true' : 'false');
+        }
+
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', function() {
+            openDetail = !openDetail;
+            syncDetailVisibility();
+          });
+        }
+
+        function updateFromApi() {
+          if (isFetching) return;
+          isFetching = true;
+          card.classList.add('is-refreshing');
+          if (refreshBtn) {
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = '...';
+          }
+
+          const controller = new AbortController();
+          const timeoutId = window.setTimeout(function() {
+            controller.abort();
+          }, timeoutMs);
+
+          fetch(endpoint, {
+            method: 'GET',
+            cache: 'no-store',
+            headers: { Accept: 'application/json' },
+            signal: controller.signal
+          })
+            .then(function(response) {
+              if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+              }
+              return response.json();
+            })
+            .then(function(payload) {
+              const record = extractRecord(payload);
+              const result = evaluatePayload(record, staleAfterMinutes, offlineAfterMinutes);
+              lastGood = result;
+              renderCard(card, result.state, result.badge, result.text, result.meta, result.detail);
+            })
+            .catch(function() {
+              if (lastGood) {
+                const meta = lastGood.meta ? ('API unreachable, ' + lastGood.meta) : 'API unreachable';
+                const detail = lastGood.detail || 'Using last known state due to temporary API failure.';
+                renderCard(card, 'stale', 'Stale', lastGood.text, meta, detail);
+                return;
+              }
+              renderCard(
+                card,
+                'unknown',
+                'Disconnected',
+                'Unable to reach focus API.',
+                'Check endpoint, CORS, and token settings',
+                'No cached payload is available yet.'
+              );
+            })
+            .finally(function() {
+              window.clearTimeout(timeoutId);
+              isFetching = false;
+              card.classList.remove('is-refreshing');
+              if (refreshBtn) {
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'Refresh';
+              }
+            });
+        }
+
+        if (refreshBtn) {
+          refreshBtn.addEventListener('click', function() {
+            updateFromApi();
+          });
+        }
+        syncDetailVisibility();
+        updateFromApi();
+        window.setInterval(updateFromApi, refreshMs);
+        document.addEventListener('visibilitychange', function() {
+          if (!document.hidden) updateFromApi();
+        });
+      });
     });
     </script>
 

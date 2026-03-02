@@ -1,0 +1,13 @@
+name = "brighton-focus-status"
+main = "cloudflare-worker.js"
+compatibility_date = "2026-03-02"
+workers_dev = true
+preview_urls = false
+
+# KV binding for latest focus state.
+[[kv_namespaces]]
+binding = "FOCUS_KV"
+id = "97ce2491fe3f49c0aa14ccbc4a28894e"
+
+[vars]
+FOCUS_ALLOWED_ORIGINS = "https://brightonxx.github.io,http://localhost:1314,http://localhost:1313"

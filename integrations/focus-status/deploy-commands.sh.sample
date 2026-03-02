@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Cloudflare Worker deploy helper (manual copy/execute).
+# Prereq: npm i -g wrangler && wrangler login
+
+PROJECT_DIR="/Users/brighton/Desktop/ProjectFinal/Web/blog/integrations/focus-status"
+WORKER_NAME="brighton-focus-status"
+
+cd "$PROJECT_DIR"
+
+echo "1) Create KV namespace..."
+wrangler kv namespace create FOCUS_KV
+
+echo "2) Edit wrangler.toml.sample with the KV id, then copy to wrangler.toml:"
+echo "   cp wrangler.toml.sample wrangler.toml"
+
+echo "3) Set API token secret:"
+echo "   wrangler secret put FOCUS_API_TOKEN"
+
+echo "4) Deploy:"
+echo "   wrangler deploy"
+
+echo "5) After deploy, set blog endpoint in hugo.toml:"
+echo "   https://${WORKER_NAME}.<your-subdomain>.workers.dev/v1/focus/latest"

@@ -209,6 +209,36 @@
             </div>
     </section>
 	{{ end }}
+    {{ if and .Site.Params.focus_status .Site.Params.focus_status.enabled }}
+    <section class="visible-md visible-lg">
+        <hr class="hidden-sm hidden-xs">
+        <h5>{{ .Site.Params.focus_status.title | default "FOCUS MODE" }}</h5>
+        <div
+            class="focus-status-card"
+            data-focus-state="unknown"
+            data-focus-status-card
+            data-focus-endpoint="{{ .Site.Params.focus_status.endpoint }}"
+            data-focus-refresh-ms="{{ .Site.Params.focus_status.refresh_ms | default 45000 }}"
+            data-focus-timeout-ms="{{ .Site.Params.focus_status.request_timeout_ms | default 5000 }}"
+            data-focus-stale-minutes="{{ .Site.Params.focus_status.stale_after_minutes | default 480 }}"
+            data-focus-offline-minutes="{{ .Site.Params.focus_status.offline_after_minutes | default 4320 }}"
+        >
+            <div class="focus-status-head">
+                <span class="focus-status-dot focus-status-dot--unknown" data-focus-dot aria-hidden="true"></span>
+                <div class="focus-status-badge focus-status-badge--unknown" data-focus-badge>Disconnected</div>
+            </div>
+            <p class="focus-status-text" data-focus-text>Set your API endpoint to enable live status.</p>
+            <p class="focus-status-meta" data-focus-meta>Waiting for source</p>
+            <div class="focus-status-actions">
+                <button type="button" class="focus-status-action-btn" data-focus-refresh-btn>Refresh</button>
+                <button type="button" class="focus-status-action-btn" data-focus-toggle-btn aria-expanded="false">Details</button>
+            </div>
+            <div class="focus-status-detail" data-focus-detail hidden>
+                No extra details yet.
+            </div>
+        </div>
+    </section>
+    {{ end }}
     <!-- Bookmarks -->
     {{ if .Site.Params.bookmarks }}
     <section>

@@ -11,3 +11,9 @@ hugo_stats.json
 *.swp
 *.swo
 *~
+
+# Focus status local state
+.focus-status/
+
+# Cloudflare Wrangler
+.wrangler/
