@@ -1054,6 +1054,7 @@
         const sourceLabel = formatSourceLabel(sourceRaw);
         const sourceDetail = sourceLabel ? ('Source: ' + sourceLabel) : 'Source: Unknown';
         const modeDetail = focusName ? ('Mode: ' + focusName) : 'Mode: Unnamed';
+        const messageRaw = pickString(record, ['test', 'message', 'note', 'status_text']);
 
         let focusOn = normalizeBoolean(focusRaw);
         if (focusOn == null && statusRaw) {
@@ -1097,12 +1098,20 @@
               detail: modeDetail + ' · ' + sourceDetail + ' · Sleep Focus silences all notifications. If it\'s urgent, call Brighton\'s number twice.'
             };
           }
+          let focusText = 'Brighton is working right now, replies may be delayed.';
+          if (messageRaw) {
+            focusText += ' Latest message: "' + messageRaw + '"';
+          }
+          let detailText = modeDetail + ' · ' + sourceDetail + ' · Focus mode is active; replies may be instant or delayed.';
+          if (messageRaw) {
+            detailText += ' The message above was entered by Brighton when triggering this focus mode.';
+          }
           return {
             state: 'on',
             badge: 'In Focus',
-            text: 'Brighton is working right now, replies may be delayed.',
+            text: focusText,
             meta: composeMeta(ageLabel ? ('Awake · ' + ageLabel) : 'Awake', sourceLabel),
-            detail: modeDetail + ' · ' + sourceDetail + ' · Focus mode is active; replies may be instant or delayed.'
+            detail: detailText
           };
         }
 

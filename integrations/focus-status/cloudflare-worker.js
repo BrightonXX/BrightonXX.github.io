@@ -105,6 +105,7 @@ export default {
       const device = String((payload && payload.device) || 'mac').trim().slice(0, 40);
       const source = String((payload && payload.source) || 'script').trim().slice(0, 40);
 
+      // Core fields
       const stored = {
         focus_mode: focusMode,
         focus_name: focusName,
@@ -112,6 +113,31 @@ export default {
         source,
         updated_at: new Date().toISOString()
       };
+
+      // Preserve extra fields from payload (e.g., battery, location, music, etc.)
+      const coreKeys = ['focus_mode', 'focus_name', 'device', 'source', 'updated_at'];
+      if (payload && typeof payload === 'object') {
+        for (const key of Object.keys(payload)) {
+          if (!coreKeys.includes(key)) {
+            const value = payload[key];
+            // Only store serializable values, max 500 chars for strings
+            if (typeof value === 'string') {
+              stored[key] = value.slice(0, 500);
+            } else if (typeof value === 'number' || typeof value === 'boolean') {
+              stored[key] = value;
+            } else if (value === null) {
+              stored[key] = null;
+            } else if (typeof value === 'object') {
+              // Store objects as JSON string (e.g., device_details)
+              try {
+                stored[key] = JSON.stringify(value).slice(0, 2000);
+              } catch (e) {
+                // Skip non-serializable
+              }
+            }
+          }
+        }
+      }
 
       await env.FOCUS_KV.put(STORAGE_KEY, JSON.stringify(stored));
       return jsonResponse({ ok: true, ...stored }, 200, corsHeaders);

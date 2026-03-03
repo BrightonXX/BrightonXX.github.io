@@ -56,7 +56,7 @@ term = ["HTML", "RSS"]
     endpoint = "https://brighton-focus-status.brightonxx.workers.dev/v1/focus/latest"
     refresh_ms = 45000
     request_timeout_ms = 5000
-    stale_after_minutes = 480
+    stale_after_minutes = 1080
     offline_after_minutes = 4320
     title = "FOCUS MODE"
 
