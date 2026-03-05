@@ -13,7 +13,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ "/" | relLangURL }}">{{ .Site.Title }}</a>
+            <a class="navbar-brand navbar-home-brand" href="{{ "/" | relLangURL }}" aria-label="Home" title="Home">
+                <i class="fa fa-home" aria-hidden="true"></i>
+                <span class="sr-only">Home</span>
+            </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
