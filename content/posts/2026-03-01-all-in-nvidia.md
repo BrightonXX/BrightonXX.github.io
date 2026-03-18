@@ -1,12 +1,12 @@
 ---
-title: "梭哈英伟达：梭哈梭哈英伟达"
+title: "梭哈英伟达。"
 date: 2026-03-01T03:22:00+08:00
 draft: false
 description: "梭哈英伟达！梭哈英伟达！梭哈英伟达！"
 keywords: ["梭哈英伟达", "NVDA", "AI"]
 tags: ["梭哈英伟达", "NVDA", "AI"]
 categories: []
-author: "正在梭哈英伟达的 Brighton"
+author: "Brighton"
 image: "img/nvidia-all-in.jpg"
 thumbnail: "img/nvidia-all-in.jpg"
 ---
