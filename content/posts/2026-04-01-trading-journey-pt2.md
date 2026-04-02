@@ -11,7 +11,7 @@ image: "img/trading-journey-2.jpg"
 thumbnail: "img/trading-journey-2.jpg"
 ---
 
-<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">粘上 SNDK，这辈子也许就废了吧</div>
+<div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">粘上 MU，这辈子也许就废了吧</div>
 
 我的人生，至少从高中阶段开始，就是一场 `while(true)` 的复盘。复盘也许可以被看做是一种 data augmentation + self-supervised learning 的过程吧，副作用就是有可能让我更加偏执，但是过去的经验还是总的来说利大于弊的。绝大多数复盘都是完全不可见人的，但股市这一块的复盘可以被公开展示，写一下吧。
 
