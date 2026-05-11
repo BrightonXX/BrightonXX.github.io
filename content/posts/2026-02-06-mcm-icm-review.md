@@ -1,6 +1,7 @@
 ---
 title: "2026 MCM 美赛 B 题复盘"
 date: 2026-02-06T03:30:00+08:00
+lastmod: 2026-05-11T20:00:00+08:00
 draft: false
 keywords: ["MCM", "数学建模", "复盘", "美赛"]
 description: "至少是完赛了吧"
@@ -70,5 +71,9 @@ thumbnail: "img/mcm-review-cover.jpg"
 <div style="text-align: center; margin: 30px 0;">
 <img src="/img/mcm-overall.jpg" alt="Overall Model" style="max-width: 100%; height: auto; border-radius: 8px;">
 </div>
+
+## 后续更新
+
+Meritorious Winner，和我的预期一致。勉强可以在简历里面加一行了吧，虽然本身意义还是存疑，但也算一份收获。
 
 **Stay tuned!**
