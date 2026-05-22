@@ -17,9 +17,7 @@ thumbnail: "img/doubao-voice.jpg"
 
 ## 豆包语音输入法
 
-我发现了一个 AI 工作流最新最利之器，这个东西不亚于当初发现 Claude Code 的震撼之处。
-
-它的名字叫豆包语音输入法。听着真的很土，但真的好用。
+这个东西不亚于当初发现 Claude Code 的震撼之处。听着真的很土，但真的好用。
 
 之前做 vibe coding 最大的 bottleneck 是打字速度。假如我要 multi-tasking，开好几个 sessions——一边做人文社科的 final proposal，一边做其他几个 project——眼睛勉强能跟得上，但我没有办法三只手同时输出。我打字算快的，但永远满足不了多个窗口的 prompt 输出需求。
 
