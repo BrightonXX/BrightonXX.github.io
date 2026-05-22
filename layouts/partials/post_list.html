@@ -2,7 +2,7 @@
 <div data-pagefind-ignore="all" class="js-post-stream">
 {{ range $index, $element := $.Paginator.Pages }}
 <div class="post-preview">
-    <a href="{{ .Permalink }}">
+    <a href="{{ if .Params.external_url }}{{ .Params.external_url }}{{ else }}{{ .Permalink }}{{ end }}">
         <h2 class="post-title">
             {{ .Title }}
         </h2>

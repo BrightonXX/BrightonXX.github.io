@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>five and a half years of mood</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:wght@300;400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --paper: #f4ead6;
+            --paper2: #ede0c4;
+            --ink: #1a1814;
+            --ink2: #5a5142;
+            --ink3: #8a7e69;
+            --rule: #cdbf9c;
+            --pos: #3d6b4f;
+            --neg: #a93529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'Fraunces', Georgia, serif;
+            font-feature-settings: 'liga', 'dlig';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(0, 0, 0, 0.025) 0, transparent 1px),
+                radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.02) 0, transparent 1px);
+            background-size: 4px 4px, 6px 6px;
+            opacity: 0.5;
+            mix-blend-mode: multiply;
+        }
+
+        .wrap {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 96px 32px 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ============ Hero ============ */
+        .hero {
+            margin-bottom: 72px
+        }
+
+        .hero .kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74em;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--ink3);
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8em, 6.5vw, 5.2em);
+            font-weight: 400;
+            font-style: italic;
+            line-height: 0.98;
+            letter-spacing: -0.025em;
+            font-variation-settings: 'opsz' 144, 'SOFT' 50;
+            margin-bottom: 28px;
+            max-width: 14ch;
+        }
+
+        .hero h1 b {
+            font-weight: 700;
+            font-style: normal;
+            color: var(--neg);
+            font-variation-settings: 'opsz' 144;
+        }
+
+        .hero .lede {
+            font-size: 1.15em;
+            line-height: 1.65;
+            color: var(--ink2);
+            max-width: 56ch;
+            font-variation-settings: 'opsz' 24;
+        }
+
+        .hero .lede em {
+            font-style: italic;
+            color: var(--ink)
+        }
+
+        /* 中文小字注释 */
+        .zh {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 0.78em;
+            line-height: 1.75;
+            color: var(--ink3);
+            margin-top: 14px;
+            letter-spacing: 0.02em;
+        }
+
+        .zh.lede-zh {
+            max-width: 56ch
+        }
+
+        .zh.cap-zh {
+            max-width: 60ch;
+            margin-top: 10px
+        }
+
+        .zh.foot-zh {
+            font-size: 0.85em;
+            margin-top: 6px
+        }
+
+        /* ============ Chapter dividers ============ */
+        .chapter {
+            margin: 80px 0 36px;
+            padding-top: 48px;
+            border-top: 1px solid var(--rule);
+            text-align: center;
+        }
+
+        .chapter .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74em;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--ink3);
+            margin-bottom: 6px;
+        }
+
+        .chapter h2 {
+            font-size: 2.1em;
+            font-weight: 600;
+            font-style: italic;
+            letter-spacing: -0.015em;
+            font-variation-settings: 'opsz' 96;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+
+        .chapter .sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78em;
+            color: var(--ink3);
+            letter-spacing: 0.06em;
+        }
+
+        /* ============ Sections inside a chapter ============ */
+        .block {
+            margin-bottom: 48px
+        }
+
+        .block h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            font-style: italic;
+            margin-bottom: 4px;
+            font-variation-settings: 'opsz' 60;
+            letter-spacing: -0.01em;
+        }
+
+        .block .desc {
+            font-size: 0.95em;
+            color: var(--ink2);
+            line-height: 1.55;
+            max-width: 64ch;
+            margin-bottom: 18px;
+        }
+
+        .block .desc em {
+            font-style: italic;
+            color: var(--ink)
+        }
+
+        /* main timeseries chart */
+        .tschart {
+            width: 100%;
+            height: 480px
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--rule);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7em;
+            color: var(--ink2);
+            flex-wrap: wrap;
+        }
+
+        .legend .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle
+        }
+
+        /* 4-cell stats grid */
+        .stats4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--rule);
+            border: 1px solid var(--rule);
+        }
+
+        @media(max-width:680px) {
+            .stats4 {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        .stats4 .cell {
+            background: var(--paper);
+            padding: 18px 18px
+        }
+
+        .stats4 .cell .v {
+            font-family: 'Fraunces', serif;
+            font-size: 1.9em;
+            font-weight: 600;
+            font-variation-settings: 'opsz' 96;
+            line-height: 1;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+
+        .stats4 .cell .l {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68em;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink3);
+        }
+
+        /* scatter */
+        .scatter {
+            width: 100%;
+            height: 300px
+        }
+
+        /* hist */
+        .hist {
+            width: 100%;
+            height: 200px
+        }
+
+        /* ============ Methodology + Footer ============ */
+        .method {
+            margin-top: 96px;
+            padding-top: 48px;
+            border-top: 1px solid var(--rule);
+        }
+
+        .method h3 {
+            font-size: 1.2em;
+            font-weight: 600;
+            font-style: italic;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+            font-variation-settings: 'opsz' 60;
+        }
+
+        .method .desc {
+            font-size: 0.93em;
+            color: var(--ink2);
+            line-height: 1.55;
+            max-width: 64ch;
+            margin-bottom: 14px;
+        }
+
+        .method ul.desc,
+        .method ul.cap-zh {
+            list-style: square;
+            margin-bottom: 14px;
+        }
+
+        .method ul.desc li,
+        .method ul.cap-zh li {
+            margin-bottom: 6px;
+        }
+
+        .method ul.desc b {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .method ul.cap-zh b {
+            color: var(--ink2);
+            font-weight: 600;
+        }
+
+        footer {
+            margin-top: 48px;
+            padding-top: 22px;
+            border-top: 1px solid var(--rule);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72em;
+            color: var(--ink3);
+            letter-spacing: 0.04em;
+            line-height: 1.7;
+        }
+
+        footer em {
+            font-style: italic;
+            color: var(--ink2)
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+
+        <!-- ============ HERO ============ -->
+        <section class="hero">
+            <div class="kicker">A reading log of myself</div>
+            <h1>Five and a half years of <b>mood</b>, in <span id="hero-days">—</span> days.</h1>
+            <p class="lede">
+                I've kept a diary on and off since I was 15. This year I read the whole
+                thing through, and gave each entry a number from <em>−2</em> (a really
+                hard day) to <em>+2</em> (a really good one).
+                <br><br>
+                The chart below splits at September 2023, when I started university —
+                the cleanest natural boundary I had between two phases of life. The
+                two halves are analyzed independently. Each half has a time-series
+                with short and long moving averages, a small set of headline numbers,
+                a scatter against word count, and a distribution.
+                <br><br>
+                I've taken out everything else: names, quotes, the actual dates within
+                each month. What's left is only the shape.
+            </p>
+            <p class="zh lede-zh">
+                十五岁开始断断续续写日记，今年回头读了一遍，给每一篇打了个分。
+                下面以 2023 年 9 月（我上大学的时间，也是我人生中最干净的两段分界）
+                为界拆成两段，独立分析。每段都包含一张时序图（带短/长两条均线和当日字数）、
+                几个简单统计、一张和字数的散点、一张分数分布。
+                <br>
+                所有人名、原话、月份内具体日期都被剥掉了，剩下的只是它的形状。
+            </p>
+        </section>
+
+        <!-- ============ BEFORE ============ -->
+        <section class="chapter">
+            <div class="label">Part I</div>
+            <h2>Before September 2023</h2>
+            <div class="sub">high school years &nbsp;·&nbsp; <span id="pre-sub">—</span></div>
+        </section>
+
+        <section class="block">
+            <h3>Daily settlement <span style="color:var(--ink3);font-size:0.7em;font-style:normal">·</span>
+                <span style="color:var(--ink3);font-size:0.7em;font-style:normal">Part I</span>
+            </h3>
+            <p class="desc">
+                Each dot is one entry. The dark line is a 30-entry simple moving
+                average; the faint red line is a 10-entry exponential moving average,
+                which reacts faster. Bars at the bottom are how many characters I wrote
+                that day.
+            </p>
+            <p class="zh cap-zh">
+                每个点是一篇日记。深色线是 30 条窗口的简单移动平均（基线），
+                浅红色线是 10 条窗口的指数移动平均（更敏感）。底部柱状是当天字数。
+            </p>
+            <div id="ts-pre" class="tschart"></div>
+            <div class="legend">
+                <span><span class="dot" style="background:#3d6b4f"></span>above neutral</span>
+                <span><span class="dot" style="background:#a93529"></span>below neutral</span>
+                <span><span class="dot" style="background:#1a1814"></span>SMA-30</span>
+                <span><span class="dot" style="background:#a93529"></span>EMA-10</span>
+            </div>
+        </section>
+
+        <section class="block">
+            <h3>By the numbers <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part I</span></h3>
+            <div class="stats4" id="stats-pre"></div>
+        </section>
+
+        <section class="block">
+            <h3>Mood vs. words <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part I</span></h3>
+            <p class="desc">
+                Each dot is one entry. Horizontal axis is characters written that day,
+                vertical is mood score.
+            </p>
+            <p class="zh cap-zh">每个点是一篇日记。横轴字数，纵轴分数。</p>
+            <div id="scatter-pre" class="scatter"></div>
+        </section>
+
+        <section class="block">
+            <h3>Distribution <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part I</span></h3>
+            <p class="desc">
+                Same data, grouped by score into eight buckets, half a unit wide.
+            </p>
+            <p class="zh cap-zh">同样的数据，按分数分到 8 个 0.5 宽的区间里。</p>
+            <div id="hist-pre" class="hist"></div>
+        </section>
+
+        <!-- ============ AFTER ============ -->
+        <section class="chapter">
+            <div class="label">Part II</div>
+            <h2>September 2023 onward</h2>
+            <div class="sub">university years &nbsp;·&nbsp; <span id="post-sub">—</span></div>
+        </section>
+
+        <section class="block">
+            <h3>Daily settlement <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part II</span></h3>
+            <p class="desc">
+                Same chart, same conventions. Each dot is one entry; the dark
+                line is a 30-entry SMA, the faint red one a 10-entry EMA;
+                bars at the bottom are characters written that day.
+            </p>
+            <p class="zh cap-zh">
+                同样的图，同样的画法。每个点是一篇日记，深色线是 30 条窗口的简单
+                移动平均，浅红色是 10 条窗口的指数移动平均，底部柱状是当天字数。
+            </p>
+            <div id="ts-post" class="tschart"></div>
+            <div class="legend">
+                <span><span class="dot" style="background:#3d6b4f"></span>above neutral</span>
+                <span><span class="dot" style="background:#a93529"></span>below neutral</span>
+                <span><span class="dot" style="background:#1a1814"></span>SMA-30</span>
+                <span><span class="dot" style="background:#a93529"></span>EMA-10</span>
+            </div>
+        </section>
+
+        <section class="block">
+            <h3>By the numbers <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part II</span></h3>
+            <div class="stats4" id="stats-post"></div>
+        </section>
+
+        <section class="block">
+            <h3>Mood vs. words <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part II</span></h3>
+            <p class="desc">
+                Each dot is one entry. Horizontal axis is characters written that day,
+                vertical is mood score.
+            </p>
+            <p class="zh cap-zh">每个点是一篇日记。横轴字数，纵轴分数。</p>
+            <div id="scatter-post" class="scatter"></div>
+        </section>
+
+        <section class="block">
+            <h3>Distribution <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part II</span></h3>
+            <p class="desc">
+                Same data, grouped by score into eight buckets, half a unit wide.
+            </p>
+            <p class="zh cap-zh">同样的数据，按分数分到 8 个 0.5 宽的区间里。</p>
+            <div id="hist-post" class="hist"></div>
+        </section>
+
+        <!-- ============ INSIGHT ============ -->
+        <section class="method">
+            <h3>What the numbers say (and what they don't)</h3>
+            <p class="desc">
+                After September 2023, the mean dropped by about 0.5, the share
+                of days above neutral fell, and entries got noticeably longer.
+                The data describes how a pen changed. It can't describe the
+                person holding it.
+            </p>
+            <p class="desc">
+                A few small observations that don't require interpretation:
+            </p>
+            <ul class="desc" style="padding-left:20px; margin-top:-6px">
+                <li><b>The peaks went missing, not the floor.</b> The earlier half
+                    has eleven entries scoring +1.5 or higher; the later half has
+                    one. The drop in mean is mostly the loss of bright days, not
+                    a worsening of bad ones.</li>
+                <li><b>Mood doesn't stick.</b> The correlation between consecutive
+                    entries is r ≈ 0.1 — a good day is barely predictive of the
+                    next one.</li>
+                <li><b>The trigger changed.</b> In the earlier half, entry length
+                    correlated with the absolute strength of the mood
+                    (r ≈ 0.20) — the diary opened when something happened.
+                    In the later half that correlation drops to near zero (r ≈ 0.05).
+                    Writing became something done daily, not something done in
+                    response to events.</li>
+            </ul>
+            <p class="zh cap-zh" style="margin-top:14px">
+                23 年 9 月之后，均值降了大约 0.5，正向天数比例下降，篇均字数翻倍。
+                这套数据描述的是一支笔的变化，描述不了拿笔的人。
+                <br>
+                几个不需要解读就成立的小观察：
+            </p>
+            <ul class="zh cap-zh" style="padding-left:20px; margin-top:0">
+                <li><b>消失的是高峰，不是底。</b>前段有 11 篇 ≥+1.5 的高点，
+                    后段只剩 1 篇。均值往下走主要是因为亮的日子变少了，
+                    不是糟糕的日子变多了。</li>
+                <li><b>情绪没有粘性。</b>相邻两篇日记的相关性 r ≈ 0.1——
+                    今天好坏几乎无法预测明天。</li>
+                <li><b>触发器变了。</b>前段写得多不多和情绪强度有关
+                    （r ≈ 0.20）——有事才打开日记。后段几乎为零（r ≈ 0.05）——
+                    写日记从"事件驱动"变成了"日常动作"。</li>
+            </ul>
+        </section>
+
+        <!-- ============ METHODOLOGY ============ -->
+        <section class="method">
+            <h3>How the scores were made</h3>
+            <p class="desc">
+                Each entry was scored by two language-model agents, working
+                independently from the raw text only. The first pass — <em>GLM 5.1</em>
+                — built the original 228-entry baseline. The second pass —
+                <em>Claude Opus 4.7</em> (the model writing this page) — re-read the
+                whole diary later and produced its own scores plus a one-line take on
+                each. The two scores agreed surprisingly well (Pearson&nbsp;r&nbsp;≈&nbsp;0.97,
+                mean disagreement&nbsp;≈&nbsp;0.15 on the −2..+2 scale).
+            </p>
+            <p class="desc">
+                I read the entries where the two agents disagreed most. Sometimes I
+                sided with one, sometimes the other. So the number you see is a
+                weighted average — <em>0.6&nbsp;×&nbsp;Opus&nbsp;+&nbsp;0.4&nbsp;×&nbsp;GLM</em>.
+            </p>
+            <p class="zh cap-zh">
+                每条由两个语言模型独立打分，都只看原文。第一遍是 <em>GLM 5.1</em>，
+                第二遍是 <em>Claude Opus 4.7</em>（写这一页的那个模型），
+                它额外附了一句话点评。两次评分一致度 Pearson r ≈ 0.97，
+                平均误差约 0.15。分歧最大的几条我读了原文人工审，
+                最终图里画的是加权平均：<em>0.6 × Opus + 0.4 × GLM</em>。
+            </p>
+        </section>
+
+        <footer>
+            <span id="footer-n">—</span> entries &nbsp;·&nbsp; charts rendered with <em>echarts</em> &nbsp;·&nbsp;
+            set in <em>Fraunces</em> &amp; <em>JetBrains Mono</em><br>
+            no individuals are described or identified on this page.
+            <span class="zh foot-zh" style="display:block">
+                共 <span id="footer-n-zh">—</span> 条 · 字体 Fraunces &amp; JetBrains Mono · 本页不涉及任何具体人物。
+            </span>
+        </footer>
+
+    </div>
+
+    <script>
+        window.addEventListener('error', e => {
+            const div = document.createElement('div');
+            div.style.cssText = 'position:fixed;left:8px;top:8px;right:8px;z-index:99;' +
+                'background:#a93529;color:#f4ead6;padding:12px 16px;' +
+                'font-family:JetBrains Mono,monospace;font-size:12px;' +
+                'border:1px solid #1a1814;line-height:1.5;white-space:pre-wrap;';
+            div.textContent = 'JS error: ' + e.message + '\n@ ' + (e.filename || '(inline)') + ':' + e.lineno;
+            document.body && document.body.appendChild(div);
+        });
+
+        const COL = {
+            ink: '#1a1814', ink2: '#5a5142', ink3: '#8a7e69',
+            paper: '#f4ead6', rule: '#cdbf9c',
+            pos: '#3d6b4f', neg: '#a93529',
+        };
+
+        // === DATA WILL BE INLINED HERE ===
+        const DATA = [{ "date": "2020-10-04", "mood": 0.38, "vol": 93 }, { "date": "2020-10-24", "mood": 0.12, "vol": 26 }, { "date": "2020-11-08", "mood": 0.62, "vol": 102 }, { "date": "2020-11-15", "mood": -0.32, "vol": 14 }, { "date": "2020-12-05", "mood": 0.76, "vol": 14 }, { "date": "2020-12-13", "mood": 0.0, "vol": 54 }, { "date": "2020-12-20", "mood": -0.7, "vol": 15 }, { "date": "2020-12-27", "mood": 0.44, "vol": 12 }, { "date": "2021-01-30", "mood": -0.02, "vol": 45 }, { "date": "2021-01-31", "mood": 1.12, "vol": 107 }, { "date": "2021-02-01", "mood": 0.5, "vol": 165 }, { "date": "2021-02-02", "mood": 0.0, "vol": 10 }, { "date": "2021-02-03", "mood": -0.88, "vol": 16 }, { "date": "2021-02-04", "mood": -1.2, "vol": 42 }, { "date": "2021-02-07", "mood": -1.32, "vol": 7 }, { "date": "2021-02-12", "mood": 0.82, "vol": 5 }, { "date": "2021-02-20", "mood": -1.0, "vol": 38 }, { "date": "2021-03-13", "mood": 1.5, "vol": 137 }, { "date": "2021-03-27", "mood": -0.12, "vol": 136 }, { "date": "2021-04-02", "mood": 0.44, "vol": 156 }, { "date": "2021-04-11", "mood": 0.38, "vol": 313 }, { "date": "2021-05-05", "mood": 0.44, "vol": 14 }, { "date": "2021-06-19", "mood": 0.88, "vol": 10 }, { "date": "2021-06-20", "mood": -0.38, "vol": 25 }, { "date": "2021-06-26", "mood": 0.32, "vol": 14 }, { "date": "2021-07-03", "mood": -0.12, "vol": 7 }, { "date": "2021-07-11", "mood": -1.12, "vol": 29 }, { "date": "2021-07-28", "mood": 1.0, "vol": 14 }, { "date": "2021-07-30", "mood": 0.32, "vol": 116 }, { "date": "2021-08-02", "mood": 1.5, "vol": 106 }, { "date": "2021-08-04", "mood": 0.56, "vol": 17 }, { "date": "2021-08-12", "mood": 0.94, "vol": 9 }, { "date": "2021-08-19", "mood": -0.38, "vol": 60 }, { "date": "2021-08-28", "mood": 0.44, "vol": 14 }, { "date": "2021-08-29", "mood": -0.12, "vol": 65 }, { "date": "2021-08-30", "mood": 0.36, "vol": 87 }, { "date": "2021-09-03", "mood": -0.56, "vol": 17 }, { "date": "2021-09-04", "mood": 0.26, "vol": 30 }, { "date": "2021-09-11", "mood": -1.18, "vol": 217 }, { "date": "2021-09-20", "mood": 1.62, "vol": 20 }, { "date": "2021-09-25", "mood": 0.8, "vol": 26 }, { "date": "2021-10-01", "mood": 0.88, "vol": 15 }, { "date": "2021-10-04", "mood": -0.36, "vol": 82 }, { "date": "2021-10-07", "mood": 0.3, "vol": 11 }, { "date": "2021-10-09", "mood": 1.0, "vol": 21 }, { "date": "2021-10-10", "mood": 0.08, "vol": 75 }, { "date": "2021-10-18", "mood": 1.44, "vol": 1298 }, { "date": "2021-10-22", "mood": 2.0, "vol": 1227 }, { "date": "2021-10-30", "mood": 1.08, "vol": 95 }, { "date": "2021-11-06", "mood": 0.8, "vol": 121 }, { "date": "2021-12-04", "mood": 1.24, "vol": 379 }, { "date": "2021-12-12", "mood": 0.5, "vol": 391 }, { "date": "2021-12-25", "mood": 1.56, "vol": 477 }, { "date": "2022-01-02", "mood": 1.0, "vol": 209 }, { "date": "2022-01-03", "mood": 1.38, "vol": 26 }, { "date": "2022-01-16", "mood": 1.62, "vol": 796 }, { "date": "2022-01-17", "mood": 1.14, "vol": 13 }, { "date": "2022-01-21", "mood": -0.6, "vol": 391 }, { "date": "2022-01-22", "mood": -0.38, "vol": 555 }, { "date": "2022-01-31", "mood": 0.56, "vol": 61 }, { "date": "2022-02-02", "mood": 0.8, "vol": 98 }, { "date": "2022-02-03", "mood": 1.32, "vol": 9 }, { "date": "2022-02-06", "mood": -0.06, "vol": 7 }, { "date": "2022-02-07", "mood": 1.0, "vol": 108 }, { "date": "2022-02-09", "mood": -0.62, "vol": 40 }, { "date": "2022-02-11", "mood": -0.86, "vol": 60 }, { "date": "2022-02-12", "mood": 0.24, "vol": 11 }, { "date": "2022-02-14", "mood": 1.74, "vol": 83 }, { "date": "2022-02-15", "mood": 1.74, "vol": 425 }, { "date": "2022-02-16", "mood": 1.44, "vol": 10 }, { "date": "2022-02-18", "mood": -0.12, "vol": 260 }, { "date": "2022-02-21", "mood": 0.96, "vol": 576 }, { "date": "2022-02-22", "mood": 1.0, "vol": 15 }, { "date": "2022-02-23", "mood": 1.3, "vol": 60 }, { "date": "2022-02-24", "mood": 0.26, "vol": 43 }, { "date": "2022-02-26", "mood": -0.42, "vol": 146 }, { "date": "2022-02-27", "mood": 1.06, "vol": 165 }, { "date": "2022-03-01", "mood": 1.2, "vol": 1133 }, { "date": "2022-03-02", "mood": 1.24, "vol": 35 }, { "date": "2022-03-03", "mood": 0.36, "vol": 48 }, { "date": "2022-03-06", "mood": 0.68, "vol": 129 }, { "date": "2022-03-07", "mood": 0.62, "vol": 154 }, { "date": "2022-03-09", "mood": 0.8, "vol": 3 }, { "date": "2022-03-12", "mood": 0.44, "vol": 40 }, { "date": "2022-03-13", "mood": 1.26, "vol": 114 }, { "date": "2022-03-16", "mood": -0.5, "vol": 22 }, { "date": "2022-03-19", "mood": -1.32, "vol": 102 }, { "date": "2022-03-20", "mood": 0.82, "vol": 56 }, { "date": "2022-03-21", "mood": 0.74, "vol": 52 }, { "date": "2022-03-22", "mood": 1.5, "vol": 213 }, { "date": "2022-03-23", "mood": -1.68, "vol": 346 }, { "date": "2022-03-24", "mood": 1.3, "vol": 79 }, { "date": "2022-03-27", "mood": 1.44, "vol": 279 }, { "date": "2022-03-29", "mood": 0.5, "vol": 1749 }, { "date": "2022-03-31", "mood": 0.56, "vol": 7 }, { "date": "2022-04-03", "mood": 1.24, "vol": 77 }, { "date": "2022-04-04", "mood": -0.42, "vol": 22 }, { "date": "2022-04-05", "mood": -1.0, "vol": 528 }, { "date": "2022-04-08", "mood": 1.8, "vol": 503 }, { "date": "2022-04-16", "mood": 1.56, "vol": 207 }, { "date": "2022-04-23", "mood": 1.2, "vol": 167 }, { "date": "2022-04-30", "mood": -0.06, "vol": 496 }, { "date": "2022-05-03", "mood": 0.74, "vol": 91 }, { "date": "2022-05-04", "mood": -0.2, "vol": 7 }, { "date": "2022-05-08", "mood": 1.38, "vol": 59 }, { "date": "2022-05-14", "mood": 1.08, "vol": 18 }, { "date": "2022-05-21", "mood": -0.44, "vol": 102 }, { "date": "2022-06-08", "mood": -0.26, "vol": 115 }, { "date": "2022-06-12", "mood": 1.32, "vol": 13 }, { "date": "2022-06-18", "mood": -1.26, "vol": 1864 }, { "date": "2022-07-09", "mood": 0.44, "vol": 11 }, { "date": "2022-07-13", "mood": 0.68, "vol": 19 }, { "date": "2022-07-18", "mood": 1.38, "vol": 15 }, { "date": "2022-07-29", "mood": 0.38, "vol": 9 }, { "date": "2022-09-01", "mood": 0.74, "vol": 54 }, { "date": "2022-09-05", "mood": 0.88, "vol": 56 }, { "date": "2022-09-18", "mood": 1.24, "vol": 35 }, { "date": "2022-09-25", "mood": 0.06, "vol": 3 }, { "date": "2023-02-26", "mood": 0.38, "vol": 38 }, { "date": "2023-03-12", "mood": -1.44, "vol": 7 }, { "date": "2023-06-14", "mood": -0.42, "vol": 30 }, { "date": "2023-06-26", "mood": -0.62, "vol": 16 }, { "date": "2023-08-08", "mood": 0.36, "vol": 10 }, { "date": "2023-08-10", "mood": 0.14, "vol": 1603 }, { "date": "2023-09-14", "mood": -0.22, "vol": 325 }, { "date": "2023-10-05", "mood": -0.98, "vol": 196 }, { "date": "2023-10-09", "mood": -0.56, "vol": 7 }, { "date": "2023-10-11", "mood": 0.38, "vol": 170 }, { "date": "2023-10-23", "mood": 0.0, "vol": 37 }, { "date": "2023-10-29", "mood": -0.06, "vol": 24 }, { "date": "2023-10-31", "mood": -0.86, "vol": 10 }, { "date": "2023-11-16", "mood": -0.56, "vol": 24 }, { "date": "2023-11-20", "mood": -0.44, "vol": 452 }, { "date": "2023-12-04", "mood": -1.0, "vol": 85 }, { "date": "2023-12-06", "mood": -0.62, "vol": 75 }, { "date": "2023-12-17", "mood": 0.24, "vol": 1020 }, { "date": "2024-01-01", "mood": 0.38, "vol": 1545 }, { "date": "2024-01-02", "mood": -0.44, "vol": 114 }, { "date": "2024-01-09", "mood": 0.44, "vol": 13 }, { "date": "2024-01-14", "mood": -1.12, "vol": 1397 }, { "date": "2024-01-18", "mood": 0.36, "vol": 23 }, { "date": "2024-02-07", "mood": -0.74, "vol": 52 }, { "date": "2024-02-18", "mood": -0.88, "vol": 116 }, { "date": "2024-02-19", "mood": -0.36, "vol": 19 }, { "date": "2024-03-08", "mood": -0.56, "vol": 62 }, { "date": "2024-03-12", "mood": 0.12, "vol": 1496 }, { "date": "2024-03-13", "mood": -0.36, "vol": 133 }, { "date": "2024-03-16", "mood": 0.74, "vol": 70 }, { "date": "2024-03-22", "mood": 0.38, "vol": 237 }, { "date": "2024-03-26", "mood": 0.44, "vol": 19 }, { "date": "2024-03-27", "mood": -0.86, "vol": 196 }, { "date": "2024-04-04", "mood": -0.42, "vol": 70 }, { "date": "2024-04-07", "mood": -1.08, "vol": 194 }, { "date": "2024-04-08", "mood": -0.68, "vol": 686 }, { "date": "2024-04-11", "mood": 0.2, "vol": 76 }, { "date": "2024-04-18", "mood": -0.56, "vol": 28 }, { "date": "2024-04-21", "mood": -0.42, "vol": 35 }, { "date": "2024-04-22", "mood": 0.56, "vol": 42 }, { "date": "2024-04-30", "mood": -0.92, "vol": 35 }, { "date": "2024-05-04", "mood": -0.5, "vol": 386 }, { "date": "2024-05-10", "mood": 0.24, "vol": 22 }, { "date": "2024-05-17", "mood": -0.26, "vol": 35 }, { "date": "2024-05-21", "mood": -0.5, "vol": 31 }, { "date": "2024-05-24", "mood": -1.0, "vol": 23 }, { "date": "2024-05-30", "mood": 0.12, "vol": 55 }, { "date": "2024-07-19", "mood": -0.36, "vol": 171 }, { "date": "2024-09-14", "mood": -0.86, "vol": 203 }, { "date": "2024-10-07", "mood": 0.12, "vol": 143 }, { "date": "2024-10-10", "mood": 0.44, "vol": 1157 }, { "date": "2024-10-14", "mood": -0.14, "vol": 41 }, { "date": "2024-11-13", "mood": -0.62, "vol": 569 }, { "date": "2024-11-16", "mood": -0.36, "vol": 1648 }, { "date": "2024-11-28", "mood": 0.42, "vol": 237 }, { "date": "2024-11-30", "mood": 0.56, "vol": 1216 }, { "date": "2024-12-05", "mood": 0.36, "vol": 580 }, { "date": "2024-12-12", "mood": -0.36, "vol": 50 }, { "date": "2024-12-25", "mood": 0.74, "vol": 1131 }, { "date": "2025-01-01", "mood": 0.5, "vol": 242 }, { "date": "2025-01-24", "mood": -0.44, "vol": 48 }, { "date": "2025-02-22", "mood": -0.68, "vol": 1003 }, { "date": "2025-03-01", "mood": -0.62, "vol": 315 }, { "date": "2025-03-20", "mood": -1.24, "vol": 219 }, { "date": "2025-03-25", "mood": 0.24, "vol": 26 }, { "date": "2025-04-08", "mood": -0.42, "vol": 246 }, { "date": "2025-04-11", "mood": -0.56, "vol": 212 }, { "date": "2025-04-25", "mood": -1.18, "vol": 408 }, { "date": "2025-04-27", "mood": -0.24, "vol": 1251 }, { "date": "2025-05-09", "mood": -0.42, "vol": 1451 }, { "date": "2025-05-14", "mood": 0.62, "vol": 349 }, { "date": "2025-05-21", "mood": 0.92, "vol": 206 }, { "date": "2025-05-28", "mood": -0.14, "vol": 248 }, { "date": "2025-06-15", "mood": 0.62, "vol": 82 }, { "date": "2025-06-25", "mood": 1.74, "vol": 24 }, { "date": "2025-06-28", "mood": -0.36, "vol": 41 }, { "date": "2025-07-01", "mood": -0.2, "vol": 19 }, { "date": "2025-07-04", "mood": 1.44, "vol": 76 }, { "date": "2025-07-23", "mood": -0.56, "vol": 26 }, { "date": "2025-08-19", "mood": -0.12, "vol": 618 }, { "date": "2025-09-09", "mood": -0.36, "vol": 494 }, { "date": "2025-09-11", "mood": -1.32, "vol": 244 }, { "date": "2025-09-12", "mood": 0.18, "vol": 45 }, { "date": "2025-09-14", "mood": 0.44, "vol": 13 }, { "date": "2025-09-16", "mood": -0.86, "vol": 48 }, { "date": "2025-09-22", "mood": -0.62, "vol": 884 }, { "date": "2025-09-28", "mood": 0.74, "vol": 90 }, { "date": "2025-10-08", "mood": -0.36, "vol": 158 }, { "date": "2025-10-14", "mood": 0.08, "vol": 42 }, { "date": "2025-10-17", "mood": 0.18, "vol": 43 }, { "date": "2025-10-20", "mood": 0.74, "vol": 257 }, { "date": "2025-11-03", "mood": 0.44, "vol": 452 }, { "date": "2025-11-13", "mood": -1.5, "vol": 67 }, { "date": "2025-11-19", "mood": -0.24, "vol": 214 }, { "date": "2025-12-03", "mood": 0.36, "vol": 66 }, { "date": "2025-12-06", "mood": 0.5, "vol": 377 }, { "date": "2025-12-06", "mood": 0.92, "vol": 377 }, { "date": "2025-12-08", "mood": -0.92, "vol": 100 }, { "date": "2025-12-15", "mood": -0.5, "vol": 466 }, { "date": "2025-12-18", "mood": 1.26, "vol": 815 }, { "date": "2025-12-19", "mood": 0.44, "vol": 1691 }, { "date": "2025-12-22", "mood": -0.26, "vol": 200 }, { "date": "2025-12-26", "mood": 0.26, "vol": 46 }, { "date": "2026-01-03", "mood": 0.24, "vol": 42 }, { "date": "2026-01-08", "mood": 0.62, "vol": 283 }, { "date": "2026-01-10", "mood": 0.24, "vol": 262 }, { "date": "2026-02-26", "mood": 0.74, "vol": 846 }, { "date": "2026-03-27", "mood": -1.8, "vol": 1281 }, { "date": "2026-05-12", "mood": 1.0, "vol": 404 }, { "date": "2026-05-15", "mood": 1.36, "vol": 333 }];
+
+        const CUT = '2023-09-01';
+        const PRE = DATA.filter(d => d.date < CUT);
+        const POST = DATA.filter(d => d.date >= CUT);
+
+        // Hero numbers
+        const _days = Math.round((new Date(DATA.at(-1).date) - new Date(DATA[0].date)) / 86400000);
+        document.getElementById('hero-days').textContent = _days.toLocaleString();
+        document.getElementById('footer-n').textContent = DATA.length;
+        const _zhEl = document.getElementById('footer-n-zh');
+        if (_zhEl) _zhEl.textContent = DATA.length;
+
+        // Chapter subs
+        function subText(rows) {
+            const moods = rows.map(r => r.mood);
+            const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
+            return rows.length + ' entries · mean mood ' + (avg >= 0 ? '+' : '') + avg.toFixed(2);
+        }
+        document.getElementById('pre-sub').textContent = subText(PRE);
+        document.getElementById('post-sub').textContent = subText(POST);
+
+        renderTimeseries('ts-pre', PRE);
+        renderTimeseries('ts-post', POST);
+        renderStats('stats-pre', PRE);
+        renderStats('stats-post', POST);
+        renderScatter('scatter-pre', PRE);
+        renderScatter('scatter-post', POST);
+        renderHist('hist-pre', PRE);
+        renderHist('hist-post', POST);
+
+        // ===========================================================
+        // Time series: scatter + line + SMA + EMA + volume
+        // ===========================================================
+        function renderTimeseries(id, rows) {
+            const ch = echarts.init(document.getElementById(id));
+            const ts = rows.map(d => +new Date(d.date));
+            const line = rows.map((d, i) => [ts[i], d.mood]);
+
+            // SMA-30
+            const ma = [];
+            for (let i = 0; i < rows.length; i++) {
+                const lo = Math.max(0, i - 14), hi = Math.min(rows.length, i + 16);
+                const seg = rows.slice(lo, hi).map(x => x.mood);
+                ma.push([ts[i], +(seg.reduce((a, b) => a + b, 0) / seg.length).toFixed(3)]);
+            }
+            // EMA-10
+            const alpha = 2 / (10 + 1);
+            const ema = []; let prev = rows[0].mood;
+            for (let i = 0; i < rows.length; i++) {
+                prev = i === 0 ? rows[0].mood : alpha * rows[i].mood + (1 - alpha) * prev;
+                ema.push([ts[i], +prev.toFixed(3)]);
+            }
+
+            const pos = [], neg = [];
+            rows.forEach((d, i) => {
+                if (d.mood >= 0) pos.push([ts[i], d.mood, d.date]);
+                else neg.push([ts[i], d.mood, d.date]);
+            });
+            const volPos = [], volNeg = [];
+            rows.forEach((d, i) => {
+                const item = [ts[i], d.vol || 0];
+                if (d.mood >= 0) volPos.push(item); else volNeg.push(item);
+            });
+
+            // Gaussian smoothed daily volume series
+            // 把稀疏的字数事件铺到每天上，用 σ=4 天的高斯核做平滑
+            // 衰减很快：今天写了不会拖到下周
+            const day = 86400000;
+            const start = ts[0];
+            const end = ts[ts.length - 1];
+            const ndays = Math.max(1, Math.round((end - start) / day) + 1);
+            const dailyPos = new Array(ndays).fill(0);
+            const dailyNeg = new Array(ndays).fill(0);
+            rows.forEach(d => {
+                const idx = Math.round((+new Date(d.date) - start) / day);
+                if (idx < 0 || idx >= ndays) return;
+                if (d.mood >= 0) dailyPos[idx] += (d.vol || 0);
+                else dailyNeg[idx] += (d.vol || 0);
+            });
+            const sigma = 4;
+            const radius = Math.ceil(sigma * 3);
+            const kernel = [];
+            for (let k = -radius; k <= radius; k++) {
+                kernel.push(Math.exp(-(k * k) / (2 * sigma * sigma)));
+            }
+            const ksum = kernel.reduce((a, b) => a + b, 0);
+            function smooth(arr) {
+                const out = new Array(arr.length).fill(0);
+                for (let i = 0; i < arr.length; i++) {
+                    let s = 0;
+                    for (let k = -radius; k <= radius; k++) {
+                        const j = i + k;
+                        if (j >= 0 && j < arr.length) s += arr[j] * kernel[k + radius];
+                    }
+                    out[i] = s / ksum;
+                }
+                return out;
+            }
+            const smoothPos = smooth(dailyPos);
+            const smoothNeg = smooth(dailyNeg);
+            const smoothPosSeries = smoothPos.map((v, i) => [start + i * day, v]);
+            const smoothNegSeries = smoothNeg.map((v, i) => [start + i * day, v]);
+
+            ch.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        lineStyle: { color: COL.ink2, opacity: 0.6 },
+                        crossStyle: { color: COL.ink2, opacity: 0.6 },
+                        label: { show: false }
+                    },
+                    backgroundColor: COL.paper, borderColor: COL.ink, borderWidth: 1,
+                    padding: 10,
+                    textStyle: { color: COL.ink, fontFamily: 'JetBrains Mono', fontSize: 11 },
+                    formatter: function (params) {
+                        let mood = null, dateRaw = '';
+                        for (const p of params) {
+                            if (p.value && p.value[2] && !dateRaw) dateRaw = p.value[2];
+                            if (p.seriesName === '+' || p.seriesName === '-') mood = p.value[1];
+                        }
+                        if (!dateRaw && params[0]) dateRaw = +params[0].axisValue;
+                        if (mood === null && params[0]) mood = params[0].value[1];
+
+                        // 用真实日期查原始字数（rows 在闭包里）
+                        let vol = null;
+                        if (typeof dateRaw === 'string' && dateRaw.length === 10) {
+                            const hit = rows.find(r => r.date === dateRaw);
+                            if (hit) vol = hit.vol || 0;
+                        }
+
+                        let html = '<div style="line-height:1.6"><b>' + fuzzyDate(dateRaw) + '</b>';
+                        if (mood !== null) html += '<br><span style="color:' + COL.ink3 + '">' + describe(mood) + '</span>';
+                        if (vol !== null) html += '<br><span style="color:' + COL.ink3 + '">' + vol + ' chars written</span>';
+                        return html + '</div>';
+                    },
+                },
+                axisPointer: { link: [{ xAxisIndex: 'all' }] },
+                grid: [
+                    { left: 56, right: 24, top: 14, height: '62%' },
+                    { left: 56, right: 24, top: '76%', height: '16%' },
+                ],
+                xAxis: [
+                    {
+                        type: 'time', gridIndex: 0,
+                        axisLine: { lineStyle: { color: COL.rule } },
+                        axisLabel: { show: false }, splitLine: { show: false }
+                    },
+                    {
+                        type: 'time', gridIndex: 1,
+                        axisLine: { lineStyle: { color: COL.rule } },
+                        axisLabel: {
+                            color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono',
+                            formatter: function (v) {
+                                const d = new Date(v);
+                                return d.getMonth() === 0 ? String(d.getFullYear()) : '';
+                            },
+                        },
+                        splitLine: { show: false }
+                    },
+                ],
+                yAxis: [
+                    {
+                        type: 'value', min: -2, max: 2, gridIndex: 0,
+                        name: 'mood', nameLocation: 'end', nameGap: 8,
+                        nameTextStyle: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
+                        axisLine: { show: false },
+                        axisLabel: { color: COL.ink3, fontFamily: 'JetBrains Mono', fontSize: 11 },
+                        splitLine: { lineStyle: { color: COL.rule, opacity: 0.4 } }
+                    },
+                    {
+                        type: 'value', gridIndex: 1,
+                        name: 'intensity', nameLocation: 'end', nameGap: 8,
+                        nameTextStyle: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
+                        axisLine: { show: false },
+                        axisLabel: { color: COL.ink3, fontFamily: 'JetBrains Mono', fontSize: 9 },
+                        splitLine: { lineStyle: { color: COL.rule, opacity: 0.3 } }
+                    },
+                ],
+                series: [
+                    {
+                        type: 'line', xAxisIndex: 0, yAxisIndex: 0, data: line,
+                        smooth: 0.25, symbol: 'none',
+                        lineStyle: { color: COL.ink3, width: 0.7, opacity: 0.4 }, z: 1
+                    },
+                    {
+                        type: 'scatter', name: '+', xAxisIndex: 0, yAxisIndex: 0,
+                        data: pos, symbolSize: 2.6,
+                        itemStyle: { color: COL.pos, opacity: 0.45 }, z: 5
+                    },
+                    {
+                        type: 'scatter', name: '-', xAxisIndex: 0, yAxisIndex: 0,
+                        data: neg, symbolSize: 2.6,
+                        itemStyle: { color: COL.neg, opacity: 0.45 }, z: 5
+                    },
+                    {
+                        type: 'line', name: 'EMA10', xAxisIndex: 0, yAxisIndex: 0,
+                        data: ema, smooth: true, symbol: 'none',
+                        lineStyle: { color: COL.neg, width: 1.4, opacity: 0.9 }, z: 9
+                    },
+                    {
+                        type: 'line', name: 'SMA30', xAxisIndex: 0, yAxisIndex: 0,
+                        data: ma, smooth: true, symbol: 'none',
+                        lineStyle: { color: COL.ink, width: 1.8 }, z: 10,
+                        markLine: {
+                            silent: true, symbol: 'none',
+                            data: [{ yAxis: 0 }],
+                            lineStyle: { color: COL.ink2, width: 0.6 }, label: { show: false }
+                        }
+                    },
+                    {
+                        type: 'line', name: 'vol', xAxisIndex: 1, yAxisIndex: 1,
+                        data: smoothPosSeries, smooth: true, symbol: 'none',
+                        lineStyle: { color: COL.pos, width: 0.8, opacity: 0.6 },
+                        areaStyle: { color: COL.pos, opacity: 0.35 },
+                    },
+                    {
+                        type: 'line', name: 'vol', xAxisIndex: 1, yAxisIndex: 1,
+                        data: smoothNegSeries, smooth: true, symbol: 'none',
+                        lineStyle: { color: COL.neg, width: 0.8, opacity: 0.6 },
+                        areaStyle: { color: COL.neg, opacity: 0.35 },
+                    },
+                ],
+            });
+            window.addEventListener('resize', () => ch.resize());
+        }
+
+        // ===========================================================
+        // Stats (4 numbers)
+        // ===========================================================
+        function renderStats(id, rows) {
+            const moods = rows.map(x => x.mood);
+            const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
+            const std = Math.sqrt(moods.map(x => (x - avg) ** 2).reduce((a, b) => a + b, 0) / moods.length);
+            const posShare = moods.filter(x => x >= 0).length / moods.length;
+            const meanVol = rows.reduce((s, r) => s + (r.vol || 0), 0) / rows.length;
+            const cells = [
+                { v: rows.length, l: 'entries' },
+                { v: (avg >= 0 ? '+' : '') + avg.toFixed(2), l: 'mean mood' },
+                { v: Math.round(posShare * 100) + '%', l: 'days above neutral' },
+                { v: Math.round(meanVol), l: 'avg length (chars)' },
+            ];
+            document.getElementById(id).innerHTML = cells.map(c =>
+                `<div class="cell"><div class="v">${c.v}</div><div class="l">${c.l}</div></div>`
+            ).join('');
+        }
+
+        // ===========================================================
+        // Scatter mood × words
+        // ===========================================================
+        function renderScatter(id, rows) {
+            const ch = echarts.init(document.getElementById(id));
+            const pts = rows.filter(d => (d.vol || 0) > 0).map(d => [d.vol, d.mood]);
+            const posPts = pts.filter(p => p[1] >= 0);
+            const negPts = pts.filter(p => p[1] < 0);
+            const xMax = Math.max(...pts.map(p => p[0]), 100) * 1.05;
+
+            ch.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: COL.paper, borderColor: COL.ink, borderWidth: 1,
+                    textStyle: { color: COL.ink, fontFamily: 'JetBrains Mono', fontSize: 11 },
+                    formatter: p => p.value[0] + ' chars · ' + describe(p.value[1]),
+                },
+                grid: { left: 56, right: 24, top: 14, bottom: 44 },
+                xAxis: {
+                    type: 'value', min: 0, max: xMax,
+                    name: 'words written that day',
+                    nameLocation: 'middle', nameGap: 26,
+                    nameTextStyle: { color: COL.ink3, fontSize: 11, fontFamily: 'JetBrains Mono' },
+                    axisLine: { lineStyle: { color: COL.rule } },
+                    axisLabel: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
+                    splitLine: { lineStyle: { color: COL.rule, opacity: 0.3 } },
+                },
+                yAxis: {
+                    type: 'value', min: -2, max: 2,
+                    name: 'mood', nameLocation: 'end', nameGap: 8,
+                    nameTextStyle: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
+                    axisLine: { show: false },
+                    axisLabel: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
+                    splitLine: { lineStyle: { color: COL.rule, opacity: 0.4 } },
+                },
+                series: [
+                    {
+                        type: 'scatter', data: posPts, symbolSize: 7,
+                        itemStyle: { color: COL.pos, opacity: 0.45 },
+                        markLine: {
+                            silent: true, symbol: 'none',
+                            data: [{ yAxis: 0 }],
+                            lineStyle: { color: COL.ink2, width: 0.5 }, label: { show: false }
+                        }
+                    },
+                    {
+                        type: 'scatter', data: negPts, symbolSize: 7,
+                        itemStyle: { color: COL.neg, opacity: 0.45 }
+                    },
+                ],
+            });
+            window.addEventListener('resize', () => ch.resize());
+        }
+
+        // ===========================================================
+        // Histogram of mood
+        // ===========================================================
+        function renderHist(id, rows) {
+            const ch = echarts.init(document.getElementById(id));
+            const bins = [];
+            const step = 0.5;
+            for (let x = -2; x < 2; x += step) bins.push({ lo: x, hi: x + step, n: 0 });
+            for (const d of rows) {
+                const i = Math.min(bins.length - 1, Math.max(0, Math.floor((d.mood + 2) / step)));
+                bins[i].n++;
+            }
+            const max = Math.max(...bins.map(b => b.n));
+
+            ch.setOption({
+                backgroundColor: 'transparent',
+                textStyle: { fontFamily: 'JetBrains Mono' },
+                tooltip: {
+                    backgroundColor: COL.paper, borderColor: COL.ink, borderWidth: 1,
+                    textStyle: { color: COL.ink, fontFamily: 'JetBrains Mono', fontSize: 11 },
+                    formatter: p => {
+                        const b = bins[p.dataIndex];
+                        return 'mood ' + b.lo.toFixed(1) + ' … ' + b.hi.toFixed(1) + '<br><b>' + b.n + '</b> entries';
+                    },
+                },
+                grid: { left: 40, right: 18, top: 24, bottom: 32 },
+                xAxis: {
+                    type: 'category',
+                    data: bins.map(b => {
+                        const lo = b.lo, hi = b.hi;
+                        return (lo > 0 ? '+' : '') + lo.toFixed(1) + ' / ' + (hi > 0 ? '+' : '') + hi.toFixed(1);
+                    }),
+                    axisLine: { lineStyle: { color: COL.rule } },
+                    axisTick: { show: false },
+                    axisLabel: {
+                        color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono',
+                    },
+                },
+                yAxis: {
+                    type: 'value', max: max,
+                    axisLine: { show: false }, axisTick: { show: false },
+                    axisLabel: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
+                    splitLine: { lineStyle: { color: COL.rule, opacity: 0.4 } },
+                },
+                series: [{
+                    type: 'bar', data: bins.map(b => b.n),
+                    barCategoryGap: '20%',
+                    itemStyle: {
+                        color: function (p) { return bins[p.dataIndex].lo + 0.001 >= 0 ? COL.pos : COL.neg; },
+                        opacity: 0.75,
+                    },
+                    label: {
+                        show: true, position: 'top',
+                        color: COL.ink2, fontSize: 11, fontFamily: 'JetBrains Mono'
+                    },
+                }],
+            });
+        }
+
+        // ===========================================================
+        // helpers
+        // ===========================================================
+        function describe(m) {
+            if (m >= 1.5) return 'a very good day';
+            if (m >= 1.0) return 'a good day';
+            if (m >= 0.5) return 'a slightly good day';
+            if (m >= 0.1) return 'a barely-above-neutral day';
+            if (m > -0.1) return 'a neutral day';
+            if (m > -0.5) return 'a slightly bad day';
+            if (m > -1.0) return 'a bad day';
+            if (m > -1.5) return 'a very bad day';
+            return 'a really hard day';
+        }
+        function fuzzyDate(v) {
+            const d = new Date(+v);
+            if (isNaN(d.getTime())) return '';
+            const day = d.getDate();
+            const tier = day <= 10 ? 'early' : day <= 20 ? 'mid' : 'late';
+            const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()];
+            return d.getFullYear() + ' · ' + tier + ' ' + month;
+        }
+    </script>
+</body>
+
+</html>
