@@ -1,4 +1,8 @@
 {{ define "header" }}
+{{ if .Params.external_url }}
+<meta http-equiv="refresh" content="0; url={{ .Params.external_url }}">
+<link rel="canonical" href="{{ .Params.external_url }}">
+{{ end }}
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header {
