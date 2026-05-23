@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>five and a half years of mood</title>
+    <title>the shape of five years</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -337,11 +337,14 @@
         <!-- ============ HERO ============ -->
         <section class="hero">
             <div class="kicker">A reading log of myself</div>
-            <h1>Five and a half years of <b>mood</b>, in <span id="hero-days">—</span> days.</h1>
+            <h1>The shape of <b>five years</b>.</h1>
+            <p class="zh" style="margin-top:-18px;margin-bottom:28px;font-size:0.82em;color:var(--ink3)">
+                五年半的日记，只剩下了形状。
+            </p>
             <p class="lede">
                 I've kept a diary on and off since I was 15. This year I read the whole
-                thing through, and gave each entry a number from <em>−2</em> (a really
-                hard day) to <em>+2</em> (a really good one).
+                thing through, and gave each entry a mood score from <em>−1</em> (a really
+                hard day) to <em>+1</em> (a really good one).
                 <br><br>
                 The chart below splits at September 2023, when I started university —
                 the cleanest natural boundary I had between two phases of life. The
@@ -353,13 +356,29 @@
                 each month. What's left is only the shape.
             </p>
             <p class="zh lede-zh">
-                十五岁开始断断续续写日记，今年回头读了一遍，给每一篇打了个分。
+                十五岁开始断断续续写日记，今年回头读了一遍，
+                把每一篇当天的心情量化成了一个 −1（很糟糕的一天）到 +1（很开心的一天）之间的数字。
                 下面以 2023 年 9 月（我上大学的时间，也是我人生中最干净的两段分界）
                 为界拆成两段，独立分析。每段都包含一张时序图（带短/长两条均线和当日字数）、
                 几个简单统计、一张和字数的散点、一张分数分布。
                 <br>
                 所有人名、原话、月份内具体日期都被剥掉了，剩下的只是它的形状。
             </p>
+        </section>
+
+        <!-- ============ HEATMAP OVERVIEW ============ -->
+        <section class="block">
+            <h3>At a glance</h3>
+            <p class="desc">
+                Each column is one calendar month; each row is a day of the month
+                (1 at top, 31 at bottom). Brighter squares are better days, darker
+                squares are harder days, and faint squares are days with no entry.
+            </p>
+            <p class="zh cap-zh">
+                每列是一个自然月，每行是月份中的第几天（1 号在上，31 号在下）。
+                越亮代表情绪分数越高，越暗代表越低，极浅的格子是没有记录的日子。
+            </p>
+            <div id="heatmap" style="width:100%;"></div>
         </section>
 
         <!-- ============ BEFORE ============ -->
@@ -410,9 +429,9 @@
         <section class="block">
             <h3>Distribution <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part I</span></h3>
             <p class="desc">
-                Same data, grouped by score into eight buckets, half a unit wide.
+                Same data, grouped by score into sixteen buckets, an eighth of a unit wide.
             </p>
-            <p class="zh cap-zh">同样的数据，按分数分到 8 个 0.5 宽的区间里。</p>
+            <p class="zh cap-zh">同样的数据，按分数分到 16 个 0.125 宽的区间里。</p>
             <div id="hist-pre" class="hist"></div>
         </section>
 
@@ -461,9 +480,9 @@
         <section class="block">
             <h3>Distribution <span style="color:var(--ink3);font-size:0.7em;font-style:normal">· Part II</span></h3>
             <p class="desc">
-                Same data, grouped by score into eight buckets, half a unit wide.
+                Same data, grouped by score into sixteen buckets, an eighth of a unit wide.
             </p>
-            <p class="zh cap-zh">同样的数据，按分数分到 8 个 0.5 宽的区间里。</p>
+            <p class="zh cap-zh">同样的数据，按分数分到 16 个 0.125 宽的区间里。</p>
             <div id="hist-post" class="hist"></div>
         </section>
 
@@ -471,43 +490,43 @@
         <section class="method">
             <h3>What the numbers say (and what they don't)</h3>
             <p class="desc">
-                After September 2023, the mean dropped by about 0.5, the share
-                of days above neutral fell, and entries got noticeably longer.
-                The data describes how a pen changed. It can't describe the
-                person holding it.
+                After September 2023, the mean dropped by about 0.2, the share
+                of days above neutral fell from 79% to 56%, and entries got
+                noticeably longer. The data describes how a pen changed. It can't
+                describe the person holding it.
             </p>
             <p class="desc">
                 A few small observations that don't require interpretation:
             </p>
             <ul class="desc" style="padding-left:20px; margin-top:-6px">
                 <li><b>The peaks went missing, not the floor.</b> The earlier half
-                    has eleven entries scoring +1.5 or higher; the later half has
-                    one. The drop in mean is mostly the loss of bright days, not
+                    has four entries scoring +0.7 or higher; the later half has
+                    none. The drop in mean is mostly the loss of bright days, not
                     a worsening of bad ones.</li>
-                <li><b>Mood doesn't stick.</b> The correlation between consecutive
-                    entries is r ≈ 0.1 — a good day is barely predictive of the
-                    next one.</li>
+                <li><b>Mood sticks a little more now.</b> The autocorrelation between
+                    consecutive entries rose from r ≈ 0.16 (Part I) to r ≈ 0.30
+                    (Part II) — a good or bad day now slightly predicts the next.</li>
                 <li><b>The trigger changed.</b> In the earlier half, entry length
                     correlated with the absolute strength of the mood
-                    (r ≈ 0.20) — the diary opened when something happened.
-                    In the later half that correlation drops to near zero (r ≈ 0.05).
-                    Writing became something done daily, not something done in
+                    (r ≈ 0.36) — the diary opened when something happened.
+                    In the later half that correlation drops to near zero (r ≈ 0.09).
+                    Writing became something done regularly, not something done in
                     response to events.</li>
             </ul>
             <p class="zh cap-zh" style="margin-top:14px">
-                23 年 9 月之后，均值降了大约 0.5，正向天数比例下降，篇均字数翻倍。
+                23 年 9 月之后，均值降了大约 0.2，正向天数比例从 79% 降到 56%，篇均字数显著增长。
                 这套数据描述的是一支笔的变化，描述不了拿笔的人。
                 <br>
                 几个不需要解读就成立的小观察：
             </p>
             <ul class="zh cap-zh" style="padding-left:20px; margin-top:0">
-                <li><b>消失的是高峰，不是底。</b>前段有 11 篇 ≥+1.5 的高点，
-                    后段只剩 1 篇。均值往下走主要是因为亮的日子变少了，
+                <li><b>消失的是高峰，不是底。</b>前段有 4 篇 ≥+0.7 的高点，
+                    后段一篇都没有。均值往下走主要是因为亮的日子变少了，
                     不是糟糕的日子变多了。</li>
-                <li><b>情绪没有粘性。</b>相邻两篇日记的相关性 r ≈ 0.1——
-                    今天好坏几乎无法预测明天。</li>
+                <li><b>情绪开始有粘性了。</b>相邻两篇日记的相关性从 r ≈ 0.16（前段）
+                    升到了 r ≈ 0.30（后段）——今天的好坏开始能微弱预测明天了。</li>
                 <li><b>触发器变了。</b>前段写得多不多和情绪强度有关
-                    （r ≈ 0.20）——有事才打开日记。后段几乎为零（r ≈ 0.05）——
+                    （r ≈ 0.36）——有事才打开日记。后段几乎为零（r ≈ 0.09）——
                     写日记从"事件驱动"变成了"日常动作"。</li>
             </ul>
         </section>
@@ -516,25 +535,16 @@
         <section class="method">
             <h3>How the scores were made</h3>
             <p class="desc">
-                Each entry was scored by two language-model agents, working
-                independently from the raw text only. The first pass — <em>GLM 5.1</em>
-                — built the original 228-entry baseline. The second pass —
-                <em>Claude Opus 4.7</em> (the model writing this page) — re-read the
-                whole diary later and produced its own scores plus a one-line take on
-                each. The two scores agreed surprisingly well (Pearson&nbsp;r&nbsp;≈&nbsp;0.97,
-                mean disagreement&nbsp;≈&nbsp;0.15 on the −2..+2 scale).
-            </p>
-            <p class="desc">
-                I read the entries where the two agents disagreed most. Sometimes I
-                sided with one, sometimes the other. So the number you see is a
-                weighted average — <em>0.6&nbsp;×&nbsp;Opus&nbsp;+&nbsp;0.4&nbsp;×&nbsp;GLM</em>.
+                Each entry was scored independently by three language-model agents
+                reading the raw text. The final number is a weighted blend of all
+                three, then manually reviewed and corrected across every entry by
+                the author. The overall inter-rater agreement before correction was
+                high (Pearson&nbsp;r&nbsp;≈&nbsp;0.89, mean&nbsp;|diff|&nbsp;≈&nbsp;0.28).
             </p>
             <p class="zh cap-zh">
-                每条由两个语言模型独立打分，都只看原文。第一遍是 <em>GLM 5.1</em>，
-                第二遍是 <em>Claude Opus 4.7</em>（写这一页的那个模型），
-                它额外附了一句话点评。两次评分一致度 Pearson r ≈ 0.97，
-                平均误差约 0.15。分歧最大的几条我读了原文人工审，
-                最终图里画的是加权平均：<em>0.6 × Opus + 0.4 × GLM</em>。
+                每条由三个语言模型独立打分，都只看原文。最终分数是三者的加权混合，
+                随后由作者本人逐条审核并做了全量的二次修正。
+                修正前模型间的整体一致度 Pearson r ≈ 0.89，平均绝对差约 0.28。
             </p>
         </section>
 
@@ -567,7 +577,7 @@
         };
 
         // === DATA WILL BE INLINED HERE ===
-        const DATA = [{ "date": "2020-10-04", "mood": 0.38, "vol": 93 }, { "date": "2020-10-24", "mood": 0.12, "vol": 26 }, { "date": "2020-11-08", "mood": 0.62, "vol": 102 }, { "date": "2020-11-15", "mood": -0.32, "vol": 14 }, { "date": "2020-12-05", "mood": 0.76, "vol": 14 }, { "date": "2020-12-13", "mood": 0.0, "vol": 54 }, { "date": "2020-12-20", "mood": -0.7, "vol": 15 }, { "date": "2020-12-27", "mood": 0.44, "vol": 12 }, { "date": "2021-01-30", "mood": -0.02, "vol": 45 }, { "date": "2021-01-31", "mood": 1.12, "vol": 107 }, { "date": "2021-02-01", "mood": 0.5, "vol": 165 }, { "date": "2021-02-02", "mood": 0.0, "vol": 10 }, { "date": "2021-02-03", "mood": -0.88, "vol": 16 }, { "date": "2021-02-04", "mood": -1.2, "vol": 42 }, { "date": "2021-02-07", "mood": -1.32, "vol": 7 }, { "date": "2021-02-12", "mood": 0.82, "vol": 5 }, { "date": "2021-02-20", "mood": -1.0, "vol": 38 }, { "date": "2021-03-13", "mood": 1.5, "vol": 137 }, { "date": "2021-03-27", "mood": -0.12, "vol": 136 }, { "date": "2021-04-02", "mood": 0.44, "vol": 156 }, { "date": "2021-04-11", "mood": 0.38, "vol": 313 }, { "date": "2021-05-05", "mood": 0.44, "vol": 14 }, { "date": "2021-06-19", "mood": 0.88, "vol": 10 }, { "date": "2021-06-20", "mood": -0.38, "vol": 25 }, { "date": "2021-06-26", "mood": 0.32, "vol": 14 }, { "date": "2021-07-03", "mood": -0.12, "vol": 7 }, { "date": "2021-07-11", "mood": -1.12, "vol": 29 }, { "date": "2021-07-28", "mood": 1.0, "vol": 14 }, { "date": "2021-07-30", "mood": 0.32, "vol": 116 }, { "date": "2021-08-02", "mood": 1.5, "vol": 106 }, { "date": "2021-08-04", "mood": 0.56, "vol": 17 }, { "date": "2021-08-12", "mood": 0.94, "vol": 9 }, { "date": "2021-08-19", "mood": -0.38, "vol": 60 }, { "date": "2021-08-28", "mood": 0.44, "vol": 14 }, { "date": "2021-08-29", "mood": -0.12, "vol": 65 }, { "date": "2021-08-30", "mood": 0.36, "vol": 87 }, { "date": "2021-09-03", "mood": -0.56, "vol": 17 }, { "date": "2021-09-04", "mood": 0.26, "vol": 30 }, { "date": "2021-09-11", "mood": -1.18, "vol": 217 }, { "date": "2021-09-20", "mood": 1.62, "vol": 20 }, { "date": "2021-09-25", "mood": 0.8, "vol": 26 }, { "date": "2021-10-01", "mood": 0.88, "vol": 15 }, { "date": "2021-10-04", "mood": -0.36, "vol": 82 }, { "date": "2021-10-07", "mood": 0.3, "vol": 11 }, { "date": "2021-10-09", "mood": 1.0, "vol": 21 }, { "date": "2021-10-10", "mood": 0.08, "vol": 75 }, { "date": "2021-10-18", "mood": 1.44, "vol": 1298 }, { "date": "2021-10-22", "mood": 2.0, "vol": 1227 }, { "date": "2021-10-30", "mood": 1.08, "vol": 95 }, { "date": "2021-11-06", "mood": 0.8, "vol": 121 }, { "date": "2021-12-04", "mood": 1.24, "vol": 379 }, { "date": "2021-12-12", "mood": 0.5, "vol": 391 }, { "date": "2021-12-25", "mood": 1.56, "vol": 477 }, { "date": "2022-01-02", "mood": 1.0, "vol": 209 }, { "date": "2022-01-03", "mood": 1.38, "vol": 26 }, { "date": "2022-01-16", "mood": 1.62, "vol": 796 }, { "date": "2022-01-17", "mood": 1.14, "vol": 13 }, { "date": "2022-01-21", "mood": -0.6, "vol": 391 }, { "date": "2022-01-22", "mood": -0.38, "vol": 555 }, { "date": "2022-01-31", "mood": 0.56, "vol": 61 }, { "date": "2022-02-02", "mood": 0.8, "vol": 98 }, { "date": "2022-02-03", "mood": 1.32, "vol": 9 }, { "date": "2022-02-06", "mood": -0.06, "vol": 7 }, { "date": "2022-02-07", "mood": 1.0, "vol": 108 }, { "date": "2022-02-09", "mood": -0.62, "vol": 40 }, { "date": "2022-02-11", "mood": -0.86, "vol": 60 }, { "date": "2022-02-12", "mood": 0.24, "vol": 11 }, { "date": "2022-02-14", "mood": 1.74, "vol": 83 }, { "date": "2022-02-15", "mood": 1.74, "vol": 425 }, { "date": "2022-02-16", "mood": 1.44, "vol": 10 }, { "date": "2022-02-18", "mood": -0.12, "vol": 260 }, { "date": "2022-02-21", "mood": 0.96, "vol": 576 }, { "date": "2022-02-22", "mood": 1.0, "vol": 15 }, { "date": "2022-02-23", "mood": 1.3, "vol": 60 }, { "date": "2022-02-24", "mood": 0.26, "vol": 43 }, { "date": "2022-02-26", "mood": -0.42, "vol": 146 }, { "date": "2022-02-27", "mood": 1.06, "vol": 165 }, { "date": "2022-03-01", "mood": 1.2, "vol": 1133 }, { "date": "2022-03-02", "mood": 1.24, "vol": 35 }, { "date": "2022-03-03", "mood": 0.36, "vol": 48 }, { "date": "2022-03-06", "mood": 0.68, "vol": 129 }, { "date": "2022-03-07", "mood": 0.62, "vol": 154 }, { "date": "2022-03-09", "mood": 0.8, "vol": 3 }, { "date": "2022-03-12", "mood": 0.44, "vol": 40 }, { "date": "2022-03-13", "mood": 1.26, "vol": 114 }, { "date": "2022-03-16", "mood": -0.5, "vol": 22 }, { "date": "2022-03-19", "mood": -1.32, "vol": 102 }, { "date": "2022-03-20", "mood": 0.82, "vol": 56 }, { "date": "2022-03-21", "mood": 0.74, "vol": 52 }, { "date": "2022-03-22", "mood": 1.5, "vol": 213 }, { "date": "2022-03-23", "mood": -1.68, "vol": 346 }, { "date": "2022-03-24", "mood": 1.3, "vol": 79 }, { "date": "2022-03-27", "mood": 1.44, "vol": 279 }, { "date": "2022-03-29", "mood": 0.5, "vol": 1749 }, { "date": "2022-03-31", "mood": 0.56, "vol": 7 }, { "date": "2022-04-03", "mood": 1.24, "vol": 77 }, { "date": "2022-04-04", "mood": -0.42, "vol": 22 }, { "date": "2022-04-05", "mood": -1.0, "vol": 528 }, { "date": "2022-04-08", "mood": 1.8, "vol": 503 }, { "date": "2022-04-16", "mood": 1.56, "vol": 207 }, { "date": "2022-04-23", "mood": 1.2, "vol": 167 }, { "date": "2022-04-30", "mood": -0.06, "vol": 496 }, { "date": "2022-05-03", "mood": 0.74, "vol": 91 }, { "date": "2022-05-04", "mood": -0.2, "vol": 7 }, { "date": "2022-05-08", "mood": 1.38, "vol": 59 }, { "date": "2022-05-14", "mood": 1.08, "vol": 18 }, { "date": "2022-05-21", "mood": -0.44, "vol": 102 }, { "date": "2022-06-08", "mood": -0.26, "vol": 115 }, { "date": "2022-06-12", "mood": 1.32, "vol": 13 }, { "date": "2022-06-18", "mood": -1.26, "vol": 1864 }, { "date": "2022-07-09", "mood": 0.44, "vol": 11 }, { "date": "2022-07-13", "mood": 0.68, "vol": 19 }, { "date": "2022-07-18", "mood": 1.38, "vol": 15 }, { "date": "2022-07-29", "mood": 0.38, "vol": 9 }, { "date": "2022-09-01", "mood": 0.74, "vol": 54 }, { "date": "2022-09-05", "mood": 0.88, "vol": 56 }, { "date": "2022-09-18", "mood": 1.24, "vol": 35 }, { "date": "2022-09-25", "mood": 0.06, "vol": 3 }, { "date": "2023-02-26", "mood": 0.38, "vol": 38 }, { "date": "2023-03-12", "mood": -1.44, "vol": 7 }, { "date": "2023-06-14", "mood": -0.42, "vol": 30 }, { "date": "2023-06-26", "mood": -0.62, "vol": 16 }, { "date": "2023-08-08", "mood": 0.36, "vol": 10 }, { "date": "2023-08-10", "mood": 0.14, "vol": 1603 }, { "date": "2023-09-14", "mood": -0.22, "vol": 325 }, { "date": "2023-10-05", "mood": -0.98, "vol": 196 }, { "date": "2023-10-09", "mood": -0.56, "vol": 7 }, { "date": "2023-10-11", "mood": 0.38, "vol": 170 }, { "date": "2023-10-23", "mood": 0.0, "vol": 37 }, { "date": "2023-10-29", "mood": -0.06, "vol": 24 }, { "date": "2023-10-31", "mood": -0.86, "vol": 10 }, { "date": "2023-11-16", "mood": -0.56, "vol": 24 }, { "date": "2023-11-20", "mood": -0.44, "vol": 452 }, { "date": "2023-12-04", "mood": -1.0, "vol": 85 }, { "date": "2023-12-06", "mood": -0.62, "vol": 75 }, { "date": "2023-12-17", "mood": 0.24, "vol": 1020 }, { "date": "2024-01-01", "mood": 0.38, "vol": 1545 }, { "date": "2024-01-02", "mood": -0.44, "vol": 114 }, { "date": "2024-01-09", "mood": 0.44, "vol": 13 }, { "date": "2024-01-14", "mood": -1.12, "vol": 1397 }, { "date": "2024-01-18", "mood": 0.36, "vol": 23 }, { "date": "2024-02-07", "mood": -0.74, "vol": 52 }, { "date": "2024-02-18", "mood": -0.88, "vol": 116 }, { "date": "2024-02-19", "mood": -0.36, "vol": 19 }, { "date": "2024-03-08", "mood": -0.56, "vol": 62 }, { "date": "2024-03-12", "mood": 0.12, "vol": 1496 }, { "date": "2024-03-13", "mood": -0.36, "vol": 133 }, { "date": "2024-03-16", "mood": 0.74, "vol": 70 }, { "date": "2024-03-22", "mood": 0.38, "vol": 237 }, { "date": "2024-03-26", "mood": 0.44, "vol": 19 }, { "date": "2024-03-27", "mood": -0.86, "vol": 196 }, { "date": "2024-04-04", "mood": -0.42, "vol": 70 }, { "date": "2024-04-07", "mood": -1.08, "vol": 194 }, { "date": "2024-04-08", "mood": -0.68, "vol": 686 }, { "date": "2024-04-11", "mood": 0.2, "vol": 76 }, { "date": "2024-04-18", "mood": -0.56, "vol": 28 }, { "date": "2024-04-21", "mood": -0.42, "vol": 35 }, { "date": "2024-04-22", "mood": 0.56, "vol": 42 }, { "date": "2024-04-30", "mood": -0.92, "vol": 35 }, { "date": "2024-05-04", "mood": -0.5, "vol": 386 }, { "date": "2024-05-10", "mood": 0.24, "vol": 22 }, { "date": "2024-05-17", "mood": -0.26, "vol": 35 }, { "date": "2024-05-21", "mood": -0.5, "vol": 31 }, { "date": "2024-05-24", "mood": -1.0, "vol": 23 }, { "date": "2024-05-30", "mood": 0.12, "vol": 55 }, { "date": "2024-07-19", "mood": -0.36, "vol": 171 }, { "date": "2024-09-14", "mood": -0.86, "vol": 203 }, { "date": "2024-10-07", "mood": 0.12, "vol": 143 }, { "date": "2024-10-10", "mood": 0.44, "vol": 1157 }, { "date": "2024-10-14", "mood": -0.14, "vol": 41 }, { "date": "2024-11-13", "mood": -0.62, "vol": 569 }, { "date": "2024-11-16", "mood": -0.36, "vol": 1648 }, { "date": "2024-11-28", "mood": 0.42, "vol": 237 }, { "date": "2024-11-30", "mood": 0.56, "vol": 1216 }, { "date": "2024-12-05", "mood": 0.36, "vol": 580 }, { "date": "2024-12-12", "mood": -0.36, "vol": 50 }, { "date": "2024-12-25", "mood": 0.74, "vol": 1131 }, { "date": "2025-01-01", "mood": 0.5, "vol": 242 }, { "date": "2025-01-24", "mood": -0.44, "vol": 48 }, { "date": "2025-02-22", "mood": -0.68, "vol": 1003 }, { "date": "2025-03-01", "mood": -0.62, "vol": 315 }, { "date": "2025-03-20", "mood": -1.24, "vol": 219 }, { "date": "2025-03-25", "mood": 0.24, "vol": 26 }, { "date": "2025-04-08", "mood": -0.42, "vol": 246 }, { "date": "2025-04-11", "mood": -0.56, "vol": 212 }, { "date": "2025-04-25", "mood": -1.18, "vol": 408 }, { "date": "2025-04-27", "mood": -0.24, "vol": 1251 }, { "date": "2025-05-09", "mood": -0.42, "vol": 1451 }, { "date": "2025-05-14", "mood": 0.62, "vol": 349 }, { "date": "2025-05-21", "mood": 0.92, "vol": 206 }, { "date": "2025-05-28", "mood": -0.14, "vol": 248 }, { "date": "2025-06-15", "mood": 0.62, "vol": 82 }, { "date": "2025-06-25", "mood": 1.74, "vol": 24 }, { "date": "2025-06-28", "mood": -0.36, "vol": 41 }, { "date": "2025-07-01", "mood": -0.2, "vol": 19 }, { "date": "2025-07-04", "mood": 1.44, "vol": 76 }, { "date": "2025-07-23", "mood": -0.56, "vol": 26 }, { "date": "2025-08-19", "mood": -0.12, "vol": 618 }, { "date": "2025-09-09", "mood": -0.36, "vol": 494 }, { "date": "2025-09-11", "mood": -1.32, "vol": 244 }, { "date": "2025-09-12", "mood": 0.18, "vol": 45 }, { "date": "2025-09-14", "mood": 0.44, "vol": 13 }, { "date": "2025-09-16", "mood": -0.86, "vol": 48 }, { "date": "2025-09-22", "mood": -0.62, "vol": 884 }, { "date": "2025-09-28", "mood": 0.74, "vol": 90 }, { "date": "2025-10-08", "mood": -0.36, "vol": 158 }, { "date": "2025-10-14", "mood": 0.08, "vol": 42 }, { "date": "2025-10-17", "mood": 0.18, "vol": 43 }, { "date": "2025-10-20", "mood": 0.74, "vol": 257 }, { "date": "2025-11-03", "mood": 0.44, "vol": 452 }, { "date": "2025-11-13", "mood": -1.5, "vol": 67 }, { "date": "2025-11-19", "mood": -0.24, "vol": 214 }, { "date": "2025-12-03", "mood": 0.36, "vol": 66 }, { "date": "2025-12-06", "mood": 0.5, "vol": 377 }, { "date": "2025-12-06", "mood": 0.92, "vol": 377 }, { "date": "2025-12-08", "mood": -0.92, "vol": 100 }, { "date": "2025-12-15", "mood": -0.5, "vol": 466 }, { "date": "2025-12-18", "mood": 1.26, "vol": 815 }, { "date": "2025-12-19", "mood": 0.44, "vol": 1691 }, { "date": "2025-12-22", "mood": -0.26, "vol": 200 }, { "date": "2025-12-26", "mood": 0.26, "vol": 46 }, { "date": "2026-01-03", "mood": 0.24, "vol": 42 }, { "date": "2026-01-08", "mood": 0.62, "vol": 283 }, { "date": "2026-01-10", "mood": 0.24, "vol": 262 }, { "date": "2026-02-26", "mood": 0.74, "vol": 846 }, { "date": "2026-03-27", "mood": -1.8, "vol": 1281 }, { "date": "2026-05-12", "mood": 1.0, "vol": 404 }, { "date": "2026-05-15", "mood": 1.36, "vol": 333 }];
+        const DATA = [{ "date": "2020-10-04", "mood": 0.16, "vol": 8 }, { "date": "2020-10-24", "mood": 0.1, "vol": 13 }, { "date": "2020-11-08", "mood": 0.34, "vol": 5 }, { "date": "2020-11-15", "mood": 0.02, "vol": 14 }, { "date": "2020-12-05", "mood": 0.24, "vol": 14 }, { "date": "2020-12-13", "mood": 0.04, "vol": 41 }, { "date": "2020-12-20", "mood": -0.14, "vol": 15 }, { "date": "2020-12-27", "mood": 0.12, "vol": 12 }, { "date": "2021-01-30", "mood": 0.17, "vol": 34 }, { "date": "2021-01-31", "mood": 0.31, "vol": 117 }, { "date": "2021-02-01", "mood": 0.1, "vol": 161 }, { "date": "2021-02-02", "mood": 0.03, "vol": 10 }, { "date": "2021-02-03", "mood": -0.26, "vol": 16 }, { "date": "2021-02-04", "mood": -0.28, "vol": 42 }, { "date": "2021-02-07", "mood": -0.38, "vol": 7 }, { "date": "2021-02-12", "mood": 0.23, "vol": 5 }, { "date": "2021-02-20", "mood": -0.28, "vol": 43 }, { "date": "2021-03-13", "mood": 0.66, "vol": 140 }, { "date": "2021-03-27", "mood": 0.12, "vol": 136 }, { "date": "2021-04-02", "mood": 0.16, "vol": 156 }, { "date": "2021-04-11", "mood": 0.2, "vol": 314 }, { "date": "2021-05-05", "mood": 0.27, "vol": 14 }, { "date": "2021-06-19", "mood": 0.37, "vol": 10 }, { "date": "2021-06-20", "mood": 0.06, "vol": 25 }, { "date": "2021-06-26", "mood": 0.1, "vol": 14 }, { "date": "2021-07-03", "mood": -0.01, "vol": 7 }, { "date": "2021-07-11", "mood": -0.28, "vol": 29 }, { "date": "2021-07-28", "mood": 0.34, "vol": 14 }, { "date": "2021-07-30", "mood": 0.27, "vol": 122 }, { "date": "2021-08-02", "mood": 0.42, "vol": 108 }, { "date": "2021-08-04", "mood": 0.28, "vol": 17 }, { "date": "2021-08-12", "mood": 0.32, "vol": 9 }, { "date": "2021-08-19", "mood": -0.1, "vol": 64 }, { "date": "2021-08-28", "mood": 0.07, "vol": 14 }, { "date": "2021-08-29", "mood": -0.03, "vol": 70 }, { "date": "2021-08-30", "mood": 0.14, "vol": 101 }, { "date": "2021-09-03", "mood": 0.05, "vol": 19 }, { "date": "2021-09-04", "mood": 0.11, "vol": 30 }, { "date": "2021-09-11", "mood": -0.41, "vol": 235 }, { "date": "2021-09-20", "mood": 0.69, "vol": 20 }, { "date": "2021-09-25", "mood": 0.26, "vol": 26 }, { "date": "2021-10-01", "mood": 0.32, "vol": 15 }, { "date": "2021-10-04", "mood": -0.08, "vol": 86 }, { "date": "2021-10-07", "mood": 0.21, "vol": 11 }, { "date": "2021-10-09", "mood": 0.29, "vol": 22 }, { "date": "2021-10-10", "mood": 0.2, "vol": 86 }, { "date": "2021-10-18", "mood": 0.68, "vol": 1332 }, { "date": "2021-10-22", "mood": 0.91, "vol": 1245 }, { "date": "2021-10-30", "mood": 0.36, "vol": 99 }, { "date": "2021-11-06", "mood": 0.28, "vol": 126 }, { "date": "2021-12-04", "mood": 0.56, "vol": 387 }, { "date": "2021-12-12", "mood": 0.2, "vol": 402 }, { "date": "2021-12-25", "mood": 0.71, "vol": 494 }, { "date": "2022-01-02", "mood": 0.41, "vol": 215 }, { "date": "2022-01-03", "mood": 0.37, "vol": 26 }, { "date": "2022-01-16", "mood": 0.79, "vol": 804 }, { "date": "2022-01-17", "mood": 0.34, "vol": 13 }, { "date": "2022-01-21", "mood": 0.34, "vol": 399 }, { "date": "2022-01-22", "mood": 0.19, "vol": 651 }, { "date": "2022-01-31", "mood": 0.12, "vol": 61 }, { "date": "2022-02-02", "mood": 0.24, "vol": 100 }, { "date": "2022-02-03", "mood": 0.37, "vol": 9 }, { "date": "2022-02-06", "mood": 0.06, "vol": 7 }, { "date": "2022-02-07", "mood": 0.41, "vol": 112 }, { "date": "2022-02-09", "mood": -0.18, "vol": 42 }, { "date": "2022-02-11", "mood": 0.38, "vol": 61 }, { "date": "2022-02-12", "mood": 0.25, "vol": 11 }, { "date": "2022-02-14", "mood": 0.76, "vol": 91 }, { "date": "2022-02-15", "mood": 0.71, "vol": 435 }, { "date": "2022-02-16", "mood": 0.41, "vol": 10 }, { "date": "2022-02-18", "mood": 0.27, "vol": 271 }, { "date": "2022-02-21", "mood": 0.61, "vol": 585 }, { "date": "2022-02-22", "mood": 0.41, "vol": 16 }, { "date": "2022-02-23", "mood": 0.46, "vol": 66 }, { "date": "2022-02-24", "mood": 0.06, "vol": 47 }, { "date": "2022-02-26", "mood": -0.1, "vol": 150 }, { "date": "2022-02-27", "mood": 0.41, "vol": 169 }, { "date": "2022-03-01", "mood": 0.56, "vol": 1297 }, { "date": "2022-03-02", "mood": 0.41, "vol": 37 }, { "date": "2022-03-03", "mood": 0.11, "vol": 55 }, { "date": "2022-03-06", "mood": 0.34, "vol": 136 }, { "date": "2022-03-07", "mood": 0.26, "vol": 179 }, { "date": "2022-03-09", "mood": 0.2, "vol": 3 }, { "date": "2022-03-12", "mood": 0.28, "vol": 42 }, { "date": "2022-03-13", "mood": 0.47, "vol": 125 }, { "date": "2022-03-16", "mood": 0.05, "vol": 23 }, { "date": "2022-03-19", "mood": -0.38, "vol": 118 }, { "date": "2022-03-20", "mood": 0.42, "vol": 65 }, { "date": "2022-03-21", "mood": 0.23, "vol": 56 }, { "date": "2022-03-22", "mood": 0.62, "vol": 219 }, { "date": "2022-03-23", "mood": -0.63, "vol": 384 }, { "date": "2022-03-24", "mood": 0.41, "vol": 81 }, { "date": "2022-03-27", "mood": 0.47, "vol": 284 }, { "date": "2022-03-29", "mood": 0.28, "vol": 1788 }, { "date": "2022-03-31", "mood": 0.24, "vol": 7 }, { "date": "2022-04-03", "mood": 0.45, "vol": 79 }, { "date": "2022-04-04", "mood": -0.16, "vol": 23 }, { "date": "2022-04-05", "mood": -0.32, "vol": 534 }, { "date": "2022-04-08", "mood": 0.8, "vol": 531 }, { "date": "2022-04-16", "mood": 0.68, "vol": 208 }, { "date": "2022-04-23", "mood": 0.49, "vol": 171 }, { "date": "2022-04-30", "mood": 0.12, "vol": 506 }, { "date": "2022-05-03", "mood": 0.3, "vol": 93 }, { "date": "2022-05-04", "mood": -0.08, "vol": 7 }, { "date": "2022-05-08", "mood": 0.55, "vol": 63 }, { "date": "2022-05-14", "mood": 0.35, "vol": 21 }, { "date": "2022-05-21", "mood": -0.17, "vol": 105 }, { "date": "2022-06-08", "mood": -0.15, "vol": 117 }, { "date": "2022-06-12", "mood": 0.37, "vol": 13 }, { "date": "2022-06-18", "mood": -0.21, "vol": 1901 }, { "date": "2022-07-09", "mood": 0.14, "vol": 11 }, { "date": "2022-07-13", "mood": 0.22, "vol": 19 }, { "date": "2022-07-18", "mood": 0.46, "vol": 15 }, { "date": "2022-07-29", "mood": 0.17, "vol": 9 }, { "date": "2022-09-01", "mood": 0.42, "vol": 60 }, { "date": "2022-09-05", "mood": 0.33, "vol": 56 }, { "date": "2022-09-18", "mood": 0.42, "vol": 35 }, { "date": "2022-09-25", "mood": -0.82, "vol": 705 }, { "date": "2022-11-15", "mood": -0.12, "vol": 182 }, { "date": "2022-12-01", "mood": -0.09, "vol": 96 }, { "date": "2023-02-01", "mood": 0.25, "vol": 325 }, { "date": "2023-02-26", "mood": 0.14, "vol": 12 }, { "date": "2023-03-12", "mood": -0.4, "vol": 8 }, { "date": "2023-06-14", "mood": -0.05, "vol": 32 }, { "date": "2023-06-25", "mood": -0.17, "vol": 18 }, { "date": "2023-08-08", "mood": 0.09, "vol": 8 }, { "date": "2023-08-10", "mood": 0.25, "vol": 1604 }, { "date": "2023-08-11", "mood": 0.42, "vol": 268 }, { "date": "2023-08-15", "mood": 0.12, "vol": 355 }, { "date": "2023-10-01", "mood": -0.28, "vol": 435 }, { "date": "2023-10-05", "mood": -0.47, "vol": 187 }, { "date": "2023-10-09", "mood": -0.27, "vol": 7 }, { "date": "2023-10-11", "mood": 0.02, "vol": 205 }, { "date": "2023-10-23", "mood": 0.03, "vol": 38 }, { "date": "2023-10-29", "mood": 0.1, "vol": 24 }, { "date": "2023-10-31", "mood": -0.26, "vol": 10 }, { "date": "2023-11-16", "mood": -0.36, "vol": 26 }, { "date": "2023-11-20", "mood": -0.42, "vol": 482 }, { "date": "2023-12-04", "mood": -0.39, "vol": 91 }, { "date": "2023-12-06", "mood": -0.31, "vol": 79 }, { "date": "2023-12-17", "mood": 0.17, "vol": 1053 }, { "date": "2024-01-01", "mood": 0.11, "vol": 1577 }, { "date": "2024-01-02", "mood": -0.5, "vol": 120 }, { "date": "2024-01-09", "mood": 0.09, "vol": 13 }, { "date": "2024-01-14", "mood": -0.39, "vol": 1430 }, { "date": "2024-01-18", "mood": 0.07, "vol": 23 }, { "date": "2024-02-07", "mood": -0.24, "vol": 58 }, { "date": "2024-02-18", "mood": -0.14, "vol": 117 }, { "date": "2024-02-19", "mood": 0.04, "vol": 19 }, { "date": "2024-03-08", "mood": -0.24, "vol": 68 }, { "date": "2024-03-12", "mood": -0.09, "vol": 1581 }, { "date": "2024-03-13", "mood": -0.15, "vol": 153 }, { "date": "2024-03-16", "mood": 0.18, "vol": 72 }, { "date": "2024-03-22", "mood": 0.12, "vol": 257 }, { "date": "2024-03-26", "mood": 0.16, "vol": 20 }, { "date": "2024-03-27", "mood": -0.34, "vol": 204 }, { "date": "2024-04-04", "mood": -0.12, "vol": 76 }, { "date": "2024-04-07", "mood": -0.39, "vol": 197 }, { "date": "2024-04-08", "mood": -0.26, "vol": 690 }, { "date": "2024-04-11", "mood": 0.04, "vol": 76 }, { "date": "2024-04-18", "mood": -0.1, "vol": 29 }, { "date": "2024-04-21", "mood": -0.12, "vol": 35 }, { "date": "2024-04-22", "mood": 0.16, "vol": 44 }, { "date": "2024-04-30", "mood": 0.11, "vol": 35 }, { "date": "2024-05-04", "mood": -0.21, "vol": 400 }, { "date": "2024-05-10", "mood": 0.03, "vol": 24 }, { "date": "2024-05-17", "mood": -0.1, "vol": 39 }, { "date": "2024-05-21", "mood": -0.24, "vol": 37 }, { "date": "2024-05-24", "mood": -0.36, "vol": 28 }, { "date": "2024-05-30", "mood": -0.13, "vol": 61 }, { "date": "2024-07-19", "mood": -0.12, "vol": 176 }, { "date": "2024-09-14", "mood": -0.45, "vol": 207 }, { "date": "2024-10-07", "mood": -0.15, "vol": 147 }, { "date": "2024-10-10", "mood": -0.1, "vol": 1322 }, { "date": "2024-10-14", "mood": -0.06, "vol": 41 }, { "date": "2024-11-13", "mood": -0.35, "vol": 609 }, { "date": "2024-11-16", "mood": -0.25, "vol": 1656 }, { "date": "2024-11-28", "mood": 0.12, "vol": 243 }, { "date": "2024-11-30", "mood": 0.15, "vol": 1242 }, { "date": "2024-12-05", "mood": 0.11, "vol": 597 }, { "date": "2024-12-12", "mood": -0.1, "vol": 53 }, { "date": "2024-12-25", "mood": 0.39, "vol": 1147 }, { "date": "2025-01-01", "mood": 0.3, "vol": 246 }, { "date": "2025-01-24", "mood": 0.03, "vol": 53 }, { "date": "2025-02-22", "mood": 0.03, "vol": 1018 }, { "date": "2025-03-01", "mood": -0.21, "vol": 321 }, { "date": "2025-03-20", "mood": -0.44, "vol": 239 }, { "date": "2025-03-25", "mood": 0.1, "vol": 28 }, { "date": "2025-04-08", "mood": 0.01, "vol": 246 }, { "date": "2025-04-11", "mood": -0.24, "vol": 216 }, { "date": "2025-04-25", "mood": -0.46, "vol": 410 }, { "date": "2025-04-27", "mood": -0.18, "vol": 1273 }, { "date": "2025-05-09", "mood": -0.12, "vol": 1461 }, { "date": "2025-05-14", "mood": 0.21, "vol": 356 }, { "date": "2025-05-21", "mood": 0.41, "vol": 206 }, { "date": "2025-05-28", "mood": 0.04, "vol": 252 }, { "date": "2025-06-15", "mood": 0.29, "vol": 84 }, { "date": "2025-06-25", "mood": 0.7, "vol": 25 }, { "date": "2025-06-28", "mood": -0.04, "vol": 41 }, { "date": "2025-07-01", "mood": -0.03, "vol": 19 }, { "date": "2025-07-04", "mood": 0.48, "vol": 77 }, { "date": "2025-07-23", "mood": -0.12, "vol": 26 }, { "date": "2025-08-19", "mood": -0.09, "vol": 618 }, { "date": "2025-09-09", "mood": 0.05, "vol": 497 }, { "date": "2025-09-11", "mood": -0.57, "vol": 246 }, { "date": "2025-09-12", "mood": 0.08, "vol": 45 }, { "date": "2025-09-14", "mood": 0.23, "vol": 13 }, { "date": "2025-09-16", "mood": -0.33, "vol": 50 }, { "date": "2025-09-22", "mood": 0.72, "vol": 896 }, { "date": "2025-09-28", "mood": 0.47, "vol": 94 }, { "date": "2025-10-08", "mood": 0.06, "vol": 160 }, { "date": "2025-10-14", "mood": 0.03, "vol": 42 }, { "date": "2025-10-17", "mood": 0.03, "vol": 43 }, { "date": "2025-10-20", "mood": 0.47, "vol": 260 }, { "date": "2025-11-03", "mood": -0.07, "vol": 469 }, { "date": "2025-11-13", "mood": -0.38, "vol": 69 }, { "date": "2025-11-19", "mood": -0.16, "vol": 219 }, { "date": "2025-12-03", "mood": 0.15, "vol": 76 }, { "date": "2025-12-06", "mood": 0.17, "vol": 187 }, { "date": "2025-12-07", "mood": 0.06, "vol": 200 }, { "date": "2025-12-08", "mood": -0.07, "vol": 102 }, { "date": "2025-12-15", "mood": -0.35, "vol": 472 }, { "date": "2025-12-18", "mood": 0.56, "vol": 826 }, { "date": "2025-12-19", "mood": 0.32, "vol": 1781 }, { "date": "2025-12-22", "mood": 0.35, "vol": 216 }, { "date": "2025-12-26", "mood": 0.07, "vol": 46 }, { "date": "2026-01-03", "mood": 0.1, "vol": 42 }, { "date": "2026-01-08", "mood": 0.24, "vol": 285 }, { "date": "2026-01-10", "mood": 0.04, "vol": 263 }, { "date": "2026-01-20", "mood": 0.27, "vol": 1044 }, { "date": "2026-01-20", "mood": 0.2, "vol": 809 }, { "date": "2026-01-21", "mood": 0.29, "vol": 1125 }, { "date": "2026-01-21", "mood": 0.16, "vol": 1467 }, { "date": "2026-01-27", "mood": 0.24, "vol": 2724 }, { "date": "2026-01-27", "mood": 0.27, "vol": 888 }, { "date": "2026-02-06", "mood": 0.17, "vol": 812 }, { "date": "2026-02-07", "mood": 0.21, "vol": 1841 }, { "date": "2026-02-26", "mood": 0.21, "vol": 853 }, { "date": "2026-02-26", "mood": 0.21, "vol": 63 }, { "date": "2026-03-19", "mood": 0.12, "vol": 890 }, { "date": "2026-03-27", "mood": -0.82, "vol": 1307 }, { "date": "2026-04-01", "mood": 0.09, "vol": 943 }, { "date": "2026-04-30", "mood": 0.14, "vol": 1850 }, { "date": "2026-05-11", "mood": 0.26, "vol": 1578 }, { "date": "2026-05-12", "mood": 0.39, "vol": 416 }, { "date": "2026-05-15", "mood": 0.44, "vol": 363 }, { "date": "2026-05-23", "mood": 0.4, "vol": 700 }];
 
         const CUT = '2023-09-01';
         const PRE = DATA.filter(d => d.date < CUT);
@@ -575,7 +585,6 @@
 
         // Hero numbers
         const _days = Math.round((new Date(DATA.at(-1).date) - new Date(DATA[0].date)) / 86400000);
-        document.getElementById('hero-days').textContent = _days.toLocaleString();
         document.getElementById('footer-n').textContent = DATA.length;
         const _zhEl = document.getElementById('footer-n-zh');
         if (_zhEl) _zhEl.textContent = DATA.length;
@@ -589,6 +598,7 @@
         document.getElementById('pre-sub').textContent = subText(PRE);
         document.getElementById('post-sub').textContent = subText(POST);
 
+        renderHeatmap('heatmap', DATA);
         renderTimeseries('ts-pre', PRE);
         renderTimeseries('ts-post', POST);
         renderStats('stats-pre', PRE);
@@ -598,9 +608,112 @@
         renderHist('hist-pre', PRE);
         renderHist('hist-post', POST);
 
+
         // ===========================================================
-        // Time series: scatter + line + SMA + EMA + volume
         // ===========================================================
+        // Heatmap (month columns × day-of-month rows)
+        // ===========================================================
+        // Heatmap (month columns x day-of-month rows)
+        // ===========================================================
+        function renderHeatmap(id, rows) {
+            const container = document.getElementById(id);
+            const moodMap = {};
+            for (const d of rows) moodMap[d.date] = d.mood;
+
+            const firstDate = new Date(rows[0].date);
+            const lastDate = new Date(rows[rows.length - 1].date);
+            const yearMonths = [];
+            let cur = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+            while (cur <= lastDate) {
+                yearMonths.push(cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0'));
+                cur.setMonth(cur.getMonth() + 1);
+            }
+
+            const numCols = yearMonths.length;
+            const numRows = 31;
+            const availW = container.clientWidth || 880;
+            const labelW = 20;
+            const bottomH = 18;
+            const gap = 1;
+            const cellSize = Math.floor((availW - labelW) / numCols) - gap;
+            const full = cellSize + gap;
+            const width = labelW + numCols * full;
+            const height = numRows * full + bottomH;
+
+            const canvas = document.createElement('canvas');
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr; canvas.height = height * dpr;
+            canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
+            container.style.height = height + 'px';
+            container.innerHTML = '';
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+
+            function moodColor(m) {
+                m = Math.max(-1, Math.min(1, m));
+                if (m >= 0) {
+                    // 0: muted (#c8b898) -> +1: bright warm gold (#fffbe0)
+                    const t = m;
+                    const r = Math.round(200 + t * 55);  // 200 -> 255
+                    const g = Math.round(184 + t * 67);  // 184 -> 251
+                    const b = Math.round(152 + t * 72);  // 152 -> 224
+                    return 'rgb(' + r + ',' + g + ',' + b + ')';
+                } else {
+                    // 0: muted (#c8b898) -> -1: deep dark red (#4a1a14)
+                    const t = -m;
+                    const r = Math.round(200 - t * 126); // 200 -> 74
+                    const g = Math.round(184 - t * 158); // 184 -> 26
+                    const b = Math.round(152 - t * 132); // 152 -> 20
+                    return 'rgb(' + r + ',' + g + ',' + b + ')';
+                }
+            }
+
+            // Day labels
+            ctx.font = Math.max(6, cellSize - 2) + 'px JetBrains Mono, monospace';
+            ctx.fillStyle = '#8a7e69';
+            [1, 15, 31].forEach(d => {
+                ctx.fillText(String(d), 1, (d - 1) * full + cellSize - 1);
+            });
+
+            // Draw cells
+            for (let col = 0; col < numCols; col++) {
+                const ym = yearMonths[col];
+                const yr = parseInt(ym.slice(0, 4));
+                const mo = parseInt(ym.slice(5, 7));
+                const daysInMonth = new Date(yr, mo, 0).getDate();
+                for (let day = 1; day <= 31; day++) {
+                    if (day > daysInMonth) continue;
+                    const x = labelW + col * full;
+                    const y = (day - 1) * full;
+                    const key = ym + '-' + String(day).padStart(2, '0');
+                    if (moodMap.hasOwnProperty(key)) {
+                        ctx.fillStyle = moodColor(moodMap[key]);
+                        ctx.fillRect(x, y, cellSize, cellSize);
+                        ctx.strokeStyle = 'rgba(120,110,90,0.35)';
+                        ctx.lineWidth = 0.5;
+                        ctx.strokeRect(x + 0.25, y + 0.25, cellSize - 0.5, cellSize - 0.5);
+                    } else {
+                        ctx.fillStyle = 'rgba(205,191,156,0.15)';
+                        ctx.fillRect(x, y, cellSize, cellSize);
+                    }
+                }
+            }
+
+            // Year labels
+            ctx.fillStyle = '#8a7e69';
+            ctx.font = Math.max(7, cellSize) + 'px JetBrains Mono, monospace';
+            let lastYear = '';
+            for (let col = 0; col < numCols; col++) {
+                const ym = yearMonths[col];
+                const yr = ym.slice(0, 4);
+                if (yr !== lastYear && (ym.slice(5) === '01' || col === 0)) {
+                    ctx.fillText(yr, labelW + col * full, numRows * full + 13);
+                    lastYear = yr;
+                }
+            }
+        }
+
         function renderTimeseries(id, rows) {
             const ch = echarts.init(document.getElementById(id));
             const ts = rows.map(d => +new Date(d.date));
@@ -732,7 +845,7 @@
                 ],
                 yAxis: [
                     {
-                        type: 'value', min: -2, max: 2, gridIndex: 0,
+                        type: 'value', min: -1, max: 1, gridIndex: 0,
                         name: 'mood', nameLocation: 'end', nameGap: 8,
                         nameTextStyle: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
                         axisLine: { show: false },
@@ -821,10 +934,10 @@
         // ===========================================================
         function renderScatter(id, rows) {
             const ch = echarts.init(document.getElementById(id));
-            const pts = rows.filter(d => (d.vol || 0) > 0).map(d => [d.vol, d.mood]);
+            const pts = rows.filter(d => (d.vol || 0) > 0).map(d => [Math.sqrt(d.vol), d.mood, d.vol]);
             const posPts = pts.filter(p => p[1] >= 0);
             const negPts = pts.filter(p => p[1] < 0);
-            const xMax = Math.max(...pts.map(p => p[0]), 100) * 1.05;
+            const xMax = Math.max(...pts.map(p => p[0]), 10) * 1.05;
 
             ch.setOption({
                 backgroundColor: 'transparent',
@@ -837,15 +950,18 @@
                 grid: { left: 56, right: 24, top: 14, bottom: 44 },
                 xAxis: {
                     type: 'value', min: 0, max: xMax,
-                    name: 'words written that day',
+                    name: 'entry length (chars)',
                     nameLocation: 'middle', nameGap: 26,
                     nameTextStyle: { color: COL.ink3, fontSize: 11, fontFamily: 'JetBrains Mono' },
                     axisLine: { lineStyle: { color: COL.rule } },
-                    axisLabel: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
+                    axisLabel: {
+                        color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono',
+                        formatter: function (v) { return Math.round(v * v); }
+                    },
                     splitLine: { lineStyle: { color: COL.rule, opacity: 0.3 } },
                 },
                 yAxis: {
-                    type: 'value', min: -2, max: 2,
+                    type: 'value', min: -1, max: 1,
                     name: 'mood', nameLocation: 'end', nameGap: 8,
                     nameTextStyle: { color: COL.ink3, fontSize: 10, fontFamily: 'JetBrains Mono' },
                     axisLine: { show: false },
@@ -877,10 +993,10 @@
         function renderHist(id, rows) {
             const ch = echarts.init(document.getElementById(id));
             const bins = [];
-            const step = 0.5;
-            for (let x = -2; x < 2; x += step) bins.push({ lo: x, hi: x + step, n: 0 });
+            const step = 0.125;
+            for (let x = -1; x < 1; x += step) bins.push({ lo: x, hi: x + step, n: 0 });
             for (const d of rows) {
-                const i = Math.min(bins.length - 1, Math.max(0, Math.floor((d.mood + 2) / step)));
+                const i = Math.min(bins.length - 1, Math.max(0, Math.floor((d.mood + 1) / step)));
                 bins[i].n++;
             }
             const max = Math.max(...bins.map(b => b.n));
@@ -934,14 +1050,14 @@
         // helpers
         // ===========================================================
         function describe(m) {
-            if (m >= 1.5) return 'a very good day';
-            if (m >= 1.0) return 'a good day';
-            if (m >= 0.5) return 'a slightly good day';
-            if (m >= 0.1) return 'a barely-above-neutral day';
-            if (m > -0.1) return 'a neutral day';
-            if (m > -0.5) return 'a slightly bad day';
-            if (m > -1.0) return 'a bad day';
-            if (m > -1.5) return 'a very bad day';
+            if (m >= 0.75) return 'a very good day';
+            if (m >= 0.5) return 'a good day';
+            if (m >= 0.25) return 'a slightly good day';
+            if (m >= 0.05) return 'a barely-above-neutral day';
+            if (m > -0.05) return 'a neutral day';
+            if (m > -0.25) return 'a slightly bad day';
+            if (m > -0.5) return 'a bad day';
+            if (m > -0.75) return 'a very bad day';
             return 'a really hard day';
         }
         function fuzzyDate(v) {
@@ -953,7 +1069,6 @@
                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()];
             return d.getFullYear() + ' · ' + tier + ' ' + month;
         }
+
     </script>
 </body>
-
-</html>
