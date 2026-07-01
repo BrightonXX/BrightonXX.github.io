@@ -77,16 +77,18 @@ term = ["HTML", "RSS"]
   [params.social]
   rss = true
   email = "x2005jiay@gmail.com"
+  github = "https://github.com/BrightonXX"
+  zhihu = "https://www.zhihu.com/people/da-yi-67-59"
   # linkedin = ""  # Uncomment and add your LinkedIn if needed
   # stackoverflow = ""  # Uncomment and add your StackOverflow if needed
-  github = "https://github.com/BrightonXX"
 
   [[params.additional_menus]]
   title = "TAGS"
   href = "/tags/"
-  [[params.additional_menus]]
-  title = "WORKS"
-  href = "/works/"
+  # WORKS 暂时隐藏(内容保留,不进导航)
+  # [[params.additional_menus]]
+  # title = "WORKS"
+  # href = "/works/"
   [[params.additional_menus]]
   title = "ARCHIVE"
   href = "/archive/"
