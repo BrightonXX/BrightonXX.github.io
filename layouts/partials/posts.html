@@ -1,4 +1,4 @@
-<div data-pagefind-ignore="all" class="container">
+<div data-pagefind-ignore="all" class="container home-posts">
     <div class="row">
         <!-- USE SIDEBAR -->
         <!-- Post Container -->
@@ -9,115 +9,153 @@
             col-xs-12
             post-container
         ">
+            <section class="home-intro">
+              <div class="home-intro__inner">
+                <h2 class="home-intro__title">{{ .Site.Title }}</h2>
+                <p class="home-intro__sub"><span id="home-typewriter"></span><span class="home-tw-cursor" aria-hidden="true"></span></p>
+              </div>
+              <!-- 滚动指引:加速道式 /\ ×3,暗示"往上滚/加速"。JS 按 scroll 淡出 -->
+              <div class="hero-scroll-hint" aria-hidden="true">
+                <span class="hero-scroll-hint__mark"></span>
+                <span class="hero-scroll-hint__mark"></span>
+                <span class="hero-scroll-hint__mark"></span>
+              </div>
+            </section>
+            <script>
+            document.addEventListener('DOMContentLoaded', function(){
+              var el = document.getElementById('home-typewriter');
+              if(!el) return;
+              var text = {{ .Site.Params.slogan | jsonify | safeJS }};
+              // ?replay=1 时强制重播(与 hero 缩放同步测试),否则同 session 内只播一次
+              var twReplay = new URLSearchParams(location.search).get('replay');
+              if (!twReplay && sessionStorage.getItem('homeTwPlayed') === 'true') {
+                el.textContent = text;
+                return;
+              }
+              var i = 0; el.textContent = '';
+              setTimeout(function type(){
+                if(i < text.length){ el.textContent += text.charAt(i); i++; setTimeout(type, 90); }
+                else { sessionStorage.setItem('homeTwPlayed', 'true'); }
+              }, 600);
+            });
+            </script>
+            <script>
+            // hero 缩放(Apple 风):首次进首页全屏 sticky → scroll 缩成卡片;再次进直接小卡片不重播
+            // 终态 = Archive/About 页的静态 .home-intro 卡片(实测:height156/radius16/no-shadow/title36/sub17)
+            // ⚠️ 必须包 DOMContentLoaded:本 <script> 在 DOM 里排在 .js-post-stream 之前(posts.html 先渲染
+            //    hero 再渲染 post_list),立即执行时 querySelector('.js-post-stream') 返回 null → 文章流
+            //    补偿 transform 永不写入 = hero 与文章脱节的根因。等 DOM 解析完再取 stream。
+            document.addEventListener('DOMContentLoaded', function(){
+              var hero = document.querySelector('.home-intro');
+              var pc = document.querySelector('.home-posts > .row > .post-container');
+              if(!hero || !pc) return;
+              var stream = pc.querySelector('.js-post-stream');   // DOMContentLoaded 后必存在
+              var loadMoreWrap = pc.querySelector('.post-load-more-wrap');  // 和 stream 平级,需同步 transform(否则和卡片脱节/重叠)
+              var dark = document.documentElement.getAttribute('data-theme')==='dark';
+              var replay = new URLSearchParams(location.search).get('replay');
+              var played = !replay && sessionStorage.getItem('homeHeroPlayed') === 'true';
+              hero.classList.add('is-hero');  // 首次/第二次都用 is-hero(scroll 驱动),第二次只是初始状态不同
+              var title = hero.querySelector('.home-intro__title');
+              var sub = hero.querySelector('.home-intro__sub');
+              var inner = hero.querySelector('.home-intro__inner');   // 文字缩放容器(scale 目标)
+              var hint = hero.querySelector('.hero-scroll-hint');     // 滚动指引(按 p 淡出)
+
+              // ---- 终态:对齐 Archive/About 静态 .home-intro 卡片(实测值)----
+              var cardH = 156;                  // 静态卡 height(.home-intro 基础样式)
+              var cardRadius = 16;              // var(--r-lg)
+              var cardTitleFS = 36;             // 终态字号(= 静态卡,fontSize 全程固定此值)
+              var cardSubFS = 17;               // 终态字号
+              var fullTitleFS = 60;             // 全屏态视觉字号(scale 放大到此)
+              var fullSubFS = 24;               // 全屏态视觉字号
+              var cardPadL = 40;                // 与 Archive 卡片左缩进一致
+              var cardPadT = 44;                // 与静态卡 .home-intro padding-top 一致
+
+              var fullH = pc.clientHeight;            // post-container 可视高度(= 一个滚动屏)
+              var fullScreenH = Math.round(fullH * 0.92);  // 全屏卡片高度:略矮于 pc,留底部空间给滚动指引
+              var RANGE = fullScreenH - cardH;        // 缩放区间:从全屏卡片高度缩到终态卡片
+              var STREAM_GAP = 28;                    // stream 顶距 hero 卡片底的固定间距(= 静态卡 marginBottom)
+
+              function lerp(a,b,t){return a+(b-a)*t;}
+              function smooth(t){return t*t*(3-2*t);}
+
+              var done = played;  // 第二次进入不再写标记
+              function update(){
+                var scroll = pc.scrollTop;
+                var p = Math.min(Math.max(scroll/RANGE,0),1);
+                var e = smooth(p);  // hero 缩放用 smoothstep(慢-快-慢,苹果质感)
+
+                // === HERO:高度非线性缩小,靠 margin-bottom 占位补偿(保持 sticky 钉顶 + 文档流总占位=fullScreenH)===
+                var h = lerp(fullScreenH, cardH, e);
+                hero.style.height = h.toFixed(0) + 'px';
+                hero.style.marginBottom = (fullScreenH - h).toFixed(0) + 'px';
+                // 圆角:全屏态也是大卡片(大圆角),全程"卡片感"。全屏 28 → 终态 16,平滑递减
+                hero.style.borderRadius = lerp(cardRadius + 12, cardRadius, e).toFixed(1) + 'px';
+                // shadow:全屏无阴影 → 终态无阴影(静态卡 boxShadow:none)。仅在缩放过程中给极淡过渡,凸显层次
+                var shA = dark ? lerp(0,0.18,e)*(1-Math.abs(2*p-1)) : lerp(0,0.05,e)*(1-Math.abs(2*p-1));
+                hero.style.boxShadow = shA>0.005 ? '0 '+lerp(0,2,e).toFixed(0)+'px '+lerp(0,8,e).toFixed(0)+'px rgba(13,40,55,'+shA.toFixed(2)+')' : 'none';
+
+                // === 文字缩放:fontSize 全程固定终态值(36/17),用 transform: scale 放大 ===
+                // 关键:不改 fontSize → line-box 恒定 → baseline 不跳(运动/静止位置完全一致)。
+                //       scale 是 GPU 合成,比逐帧改 fontSize 流畅。终态 scale=1 = Archive 像素级一致。
+                //       title/sub 各自 scale(比例不同:60/36 vs 24/17),transform-origin 左缘锚定。
+                if(title){
+                  title.style.transform = 'scale(' + lerp(fullTitleFS/cardTitleFS, 1, e).toFixed(4) + ')';
+                  // margin-bottom 随 scale 补偿:全屏 scale 大→字形溢出多→margin 大(28);
+                  //   终态 scale=1→margin=8(= Archive 静态卡),否则终态 slogan 被多推低 20px
+                  title.style.marginBottom = lerp(28, 8, e).toFixed(0) + 'px';
+                }
+                if(sub){ sub.style.transform = 'scale(' + lerp(fullSubFS/cardSubFS, 1, e).toFixed(4) + ')'; }
+                // padding:文字左缩进全靠 .home-intro__title/__sub 的 padding-left:40(override.css),
+                //   卡片本身 padding 左右 = 0(与 Archive 静态卡一致)。
+                //   padT:全屏态文字垂直位置(0.42 略偏上,视觉居中偏上);终态=44(同 Archive)。
+                var padT = lerp((h - 92) * 0.42, cardPadT, e).toFixed(0);
+                var padB = lerp(40,0,e).toFixed(0);    // 底 40 → 0
+                var padLR = lerp(20,0,e).toFixed(0);   // 左右 20 → 0(终态靠 title padding-left:40 缩进)
+                hero.style.padding = padT+'px '+padLR+'px '+padB+'px';
+
+                // === STREAM 同步(核心):让 stream 视口顶始终 = hero 视口底 + STREAM_GAP ===
+                // 几何推导:hero sticky 钉顶,视口底 = h(scroll≤RANGE) 或随上划递减(scroll>RANGE)。
+                //   hero 的 margin-bottom=fullScreenH-h → 文档流总占位 fullScreenH →
+                //   stream 文档顶 = fullScreenH → 自然视口顶 = fullScreenH - scroll。
+                //   期望 stream 视口顶 = hero视口底 + STREAM_GAP。
+                //   => 补偿 translateY = (heroBot + STREAM_GAP) - (fullScreenH - scroll)
+                // 用 hero 实时视口底算 want,RANGE 前后都成立,且边界连续(无跳变)。
+                if(stream){
+                  var heroBot = scroll > RANGE
+                    ? (cardH - (scroll - RANGE))      // RANGE 后:卡片底 = cardH - 上划量(随 scroll 递减)
+                    : h;                                // RANGE 前:卡片底 = 当前高度 h
+                  var want = heroBot + STREAM_GAP - fullScreenH + scroll;
+                  // stream 和 load-more 按钮平级(按钮在 stream 外),需同步 transform 才不脱节
+                  var tf = 'translateY(' + want.toFixed(0) + 'px)';
+                  stream.style.transform = tf;
+                  if(loadMoreWrap){ loadMoreWrap.style.transform = tf; }
+                }
+
+                // RANGE 后:卡片随 scroll 上滚划走(不淡出,像正常卡片被划掉)
+                if(scroll > RANGE){
+                  hero.style.transform = 'translateY(' + (-(scroll - RANGE)).toFixed(0) + 'px)';
+                } else {
+                  hero.style.transform = '';
+                }
+
+                // 滚动指引:前 15% 进度内保持可见,之后快速淡出(p>0.18 完全隐)
+                if(hint){
+                  hint.style.opacity = Math.max(0, 1 - p / 0.18).toFixed(2);
+                }
+                if(p > 0.98 && !done){ done = true; sessionStorage.setItem('homeHeroPlayed','true'); }
+              }
+              pc.addEventListener('scroll', update, {passive:true});
+              if(played){
+                // 第二次进入:默认卡片状态(不播全屏→卡片动画),但 scroll 仍驱动(往上拉能恢复)
+                requestAnimationFrame(function(){ pc.scrollTop = RANGE; update(); });
+              } else {
+                update();
+              }
+            });
+            </script>
+
             {{ partial "post_list.html" . }}
        	</div>
         {{ partial "sidebar.html" . }}
 	</div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const stream = document.querySelector('.js-post-stream');
-  const loadMoreWrap = document.querySelector('.post-load-more-wrap');
-  if (!stream || !loadMoreWrap) return;
-
-  const btn = loadMoreWrap.querySelector('.post-load-more-btn');
-  if (!btn) return;
-
-  let nextUrl = loadMoreWrap.getAttribute('data-next-url');
-  let loading = false;
-  let dropTimer = null;
-  const MIN_EXPAND_DELAY_MS = 320;
-
-  const setButtonState = function(label, disabled) {
-    btn.textContent = label;
-    btn.disabled = disabled;
-    btn.setAttribute('aria-busy', disabled ? 'true' : 'false');
-    if (disabled) {
-      btn.classList.add('is-loading');
-    } else {
-      btn.classList.remove('is-loading');
-    }
-  };
-
-  const triggerClickDrop = function() {
-    if (dropTimer) window.clearTimeout(dropTimer);
-    btn.classList.remove('is-click-drop');
-    // Force reflow so repeated clicks can retrigger the keyframe.
-    void btn.offsetWidth;
-    btn.classList.add('is-click-drop');
-    dropTimer = window.setTimeout(function() {
-      btn.classList.remove('is-click-drop');
-    }, 420);
-  };
-
-  const animateIncomingPosts = function(nodes) {
-    if (!nodes.length) return;
-    requestAnimationFrame(function() {
-      nodes.forEach(function(node, index) {
-        node.style.transitionDelay = Math.min(index * 70, 280) + 'ms';
-        node.classList.add('is-revealed');
-      });
-      window.setTimeout(function() {
-        nodes.forEach(function(node) {
-          node.classList.remove('post-preview-entering', 'is-revealed');
-          node.style.transitionDelay = '';
-        });
-      }, 1000);
-    });
-  };
-
-  async function loadOlderPosts() {
-    if (!nextUrl || loading) return;
-    loading = true;
-    const clickStartAt = window.performance.now();
-    triggerClickDrop();
-    setButtonState('Loading older posts...', true);
-
-    try {
-      const response = await fetch(nextUrl, { credentials: 'same-origin' });
-      if (!response.ok) throw new Error('request failed');
-
-      const html = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const nextStream = doc.querySelector('.js-post-stream');
-      if (!nextStream) throw new Error('missing stream in next page');
-
-      const fragment = document.createDocumentFragment();
-      const incoming = [];
-      Array.from(nextStream.children).forEach(function(node) {
-        if (node.classList && node.classList.contains('post-preview')) {
-          node.classList.add('post-preview-entering');
-          incoming.push(node);
-        }
-        fragment.appendChild(node);
-      });
-
-      const elapsed = window.performance.now() - clickStartAt;
-      const wait = Math.max(0, MIN_EXPAND_DELAY_MS - elapsed);
-      if (wait > 0) {
-        await new Promise(function(resolve) { window.setTimeout(resolve, wait); });
-      }
-
-      stream.appendChild(fragment);
-      animateIncomingPosts(incoming);
-
-      const nextWrap = doc.querySelector('.post-load-more-wrap');
-      if (nextWrap && nextWrap.getAttribute('data-next-url')) {
-        nextUrl = nextWrap.getAttribute('data-next-url');
-        loadMoreWrap.setAttribute('data-next-url', nextUrl);
-        setButtonState('Load older posts ↓', false);
-      } else {
-        loadMoreWrap.remove();
-      }
-    } catch (err) {
-      setButtonState('Retry loading', false);
-    } finally {
-      loading = false;
-    }
-  }
-
-  btn.addEventListener('click', loadOlderPosts);
-});
-</script>

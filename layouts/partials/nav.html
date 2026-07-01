@@ -1,5 +1,6 @@
 <!-- Navigation -->
-{{ if or (eq .Params.navstyle "invert") (eq .Params.headerstyle "text")  }}
+{{ $lightNav := or (eq .Params.navstyle "invert") (eq .Params.headerstyle "text") .IsHome (eq .Section "tags") (eq .Section "search") (eq .Type "archive") (eq .Params.layout "page") }}
+{{ if $lightNav }}
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top invert">
 {{ else }}
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
@@ -48,7 +49,7 @@
                         </a>
                     </li>
 		            <li>
-                        <a href="{{ "search" | relURL }}"><i class="fa fa-search"></i></a>
+                        <a href="{{ "search/" | relLangURL }}" aria-label="Search" title="Search"><i class="fa fa-search"></i></a>
 		           </li>
                 </ul>
             </div>

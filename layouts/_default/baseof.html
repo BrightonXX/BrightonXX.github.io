@@ -4,6 +4,7 @@
 {{ partial "nav.html" . }}
 <!-- Page Header -->
 {{ block "header" .}}
+{{ if and (not .IsHome) (ne .Section "tags") (ne .Section "search") (ne .Type "archive") (ne .Params.layout "page") }}
 <header class="intro-header" style="background-image: url('{{ .Site.Params.header_image | relURL }}')">
     <div class="container">
         <div class="row">
@@ -17,6 +18,7 @@
         </div>
     </div>
 </header>
+{{ end }}
 {{ end }}
 
 {{ block "main" . }}

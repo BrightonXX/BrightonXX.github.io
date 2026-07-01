@@ -1,0 +1,197 @@
+<script>
+// 无限滚动:点击 "Load older posts" fetch 下一页 .js-post-stream 追加。
+// 从 posts.html 提取为独立 partial,由 post_list.html 引用 —— 这样首页(posts.html)和
+// tag 页(tag.html)只要用了 post_list.html,就自动绑定了这段 JS,不会再出现"按钮点了没反应"。
+document.addEventListener('DOMContentLoaded', function() {
+  const stream = document.querySelector('.js-post-stream');
+  const loadMoreWrap = document.querySelector('.post-load-more-wrap');
+  if (!stream || !loadMoreWrap) return;
+
+  const btn = loadMoreWrap.querySelector('.post-load-more-btn');
+  if (!btn) return;
+
+  let nextUrl = loadMoreWrap.getAttribute('data-next-url');
+  let loading = false;
+  let dropTimer = null;
+  const MIN_EXPAND_DELAY_MS = 320;
+
+  const setButtonState = function(label, disabled) {
+    btn.textContent = label;
+    btn.disabled = disabled;
+    btn.setAttribute('aria-busy', disabled ? 'true' : 'false');
+    if (disabled) {
+      btn.classList.add('is-loading');
+    } else {
+      btn.classList.remove('is-loading');
+    }
+  };
+
+  const triggerClickDrop = function() {
+    if (dropTimer) window.clearTimeout(dropTimer);
+    btn.classList.remove('is-click-drop');
+    // Force reflow so repeated clicks can retrigger the keyframe.
+    void btn.offsetWidth;
+    btn.classList.add('is-click-drop');
+    dropTimer = window.setTimeout(function() {
+      btn.classList.remove('is-click-drop');
+    }, 420);
+  };
+
+  const animateIncomingPosts = function(nodes) {
+    if (!nodes.length) return;
+    requestAnimationFrame(function() {
+      nodes.forEach(function(node, index) {
+        node.style.transitionDelay = Math.min(index * 70, 280) + 'ms';
+        node.classList.add('is-revealed');
+      });
+      window.setTimeout(function() {
+        nodes.forEach(function(node) {
+          node.classList.remove('post-preview-entering', 'is-revealed');
+          node.style.transitionDelay = '';
+        });
+      }, 1000);
+    });
+  };
+
+  async function loadOlderPosts() {
+    if (!nextUrl || loading) return;
+    loading = true;
+    const clickStartAt = window.performance.now();
+    triggerClickDrop();
+    setButtonState('Loading older posts...', true);
+
+    try {
+      const response = await fetch(nextUrl, { credentials: 'same-origin' });
+      if (!response.ok) throw new Error('request failed');
+
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const nextStream = doc.querySelector('.js-post-stream');
+      if (!nextStream) throw new Error('missing stream in next page');
+
+      const fragment = document.createDocumentFragment();
+      const incoming = [];
+      Array.from(nextStream.children).forEach(function(node) {
+        // 只搬 .post-preview 卡片;跳过下一页 stream 里自带的 load-more 等非卡片节点(避免重复按钮)
+        if (node.classList && node.classList.contains('post-preview')) {
+          node.classList.add('post-preview-entering');
+          incoming.push(node);
+          fragment.appendChild(node);
+        }
+      });
+
+      const elapsed = window.performance.now() - clickStartAt;
+      const wait = Math.max(0, MIN_EXPAND_DELAY_MS - elapsed);
+      if (wait > 0) {
+        await new Promise(function(resolve) { window.setTimeout(resolve, wait); });
+      }
+
+      stream.appendChild(fragment);
+      animateIncomingPosts(incoming);
+
+      const nextWrap = doc.querySelector('.post-load-more-wrap');
+      if (nextWrap && nextWrap.getAttribute('data-next-url')) {
+        nextUrl = nextWrap.getAttribute('data-next-url');
+        loadMoreWrap.setAttribute('data-next-url', nextUrl);
+        setButtonState('Load older posts ↓', false);
+      } else {
+        loadMoreWrap.remove();
+      }
+    } catch (err) {
+      setButtonState('Retry loading', false);
+    } finally {
+      loading = false;
+    }
+  }
+
+  btn.addEventListener('click', loadOlderPosts);
+
+  // 无限滚动:用户滚到底部时,惯性会带着界面继续往下冲一下 —— 必须忽略这一下。
+  // 等界面几乎停下来(滚动静止一小段时间)之后,用户"再往下拉"才允许触发。
+  //
+  // 状态机:
+  //   IDLE       — 未到底(或离开底部)
+  //   COOLING    — 刚到底,惯性还在冲,忽略所有触发,等静止
+  //   READY      — 界面已静止,可以触发;此时用户再往下拉 → 触发
+  //
+  // 滚动容器是 .post-container(双列内部滚动,非 window)。
+  const scrollRoot = document.querySelector('.home-posts > .row > .post-container');
+  if (scrollRoot) {
+    const BOTTOM_THRESHOLD = 6;
+    const SETTLE_MS = 220;             // 滚动停止超过此时间视为"界面静止"
+    const PULL_MIN = 40;               // READY 态下,向下拉累积超过此值才触发
+    let state = 'IDLE';                // IDLE | COOLING | READY
+    let settleTimer = null;
+    let pullAccum = 0;
+
+    function distToBottom() {
+      return scrollRoot.scrollHeight - scrollRoot.clientHeight - scrollRoot.scrollTop;
+    }
+    function goTo(newState) {
+      if (state === newState) return;
+      state = newState;
+      pullAccum = 0;
+    }
+
+    scrollRoot.addEventListener('scroll', function() {
+      const st = scrollRoot.scrollTop;
+      const atBottom = distToBottom() <= BOTTOM_THRESHOLD;
+      if (!atBottom) {
+        // 离开底部:回到 IDLE(取消冷却/待命)
+        if (settleTimer) { clearTimeout(settleTimer); settleTimer = null; }
+        goTo('IDLE');
+      } else {
+        // 在底部
+        if (state === 'IDLE') {
+          // 刚到底 → 进入冷却(忽略惯性)
+          goTo('COOLING');
+        }
+        // COOLING 或 READY:每次 scroll 都重置静止计时(只要还在动就不算静止)
+        if (state === 'COOLING' || state === 'READY') {
+          if (settleTimer) clearTimeout(settleTimer);
+          settleTimer = setTimeout(function() {
+            // 静止了:COOLING → READY(现在可以接受下拉)
+            if (state === 'COOLING') goTo('READY');
+          }, SETTLE_MS);
+        }
+      }
+      lastScrollTop = st;
+    }, { passive: true });
+
+    // READY 态下,用户下拉达到阈值立即触发(不延迟结算,避免"愣一会")
+    function onPullDelta(delta) {
+      if (state !== 'READY') return;      // 只在 READY 态接受
+      if (delta <= 0) return;
+      pullAccum += delta;
+      if (pullAccum >= PULL_MIN) {
+        goTo('COOLING');                   // 触发后回到冷却(新内容加载完、用户继续到底再算)
+        loadOlderPosts();                 // 内部有 loading 锁防重复
+      }
+    }
+
+    scrollRoot.addEventListener('wheel', function(e) {
+      onPullDelta(e.deltaY);
+    }, { passive: true });
+
+    // 触屏:touchend 时一次性结算这一滑
+    let touchLastY = null;
+    let touchAccum = 0;
+    scrollRoot.addEventListener('touchstart', function(e) {
+      touchLastY = e.touches[0].clientY;
+      touchAccum = 0;
+    }, { passive: true });
+    scrollRoot.addEventListener('touchmove', function(e) {
+      if (touchLastY === null) return;
+      const dy = touchLastY - e.touches[0].clientY;
+      if (dy > 0) touchAccum += dy;
+      touchLastY = e.touches[0].clientY;
+    }, { passive: true });
+    scrollRoot.addEventListener('touchend', function() {
+      if (touchAccum > 0) onPullDelta(touchAccum);
+      touchLastY = null;
+      touchAccum = 0;
+    }, { passive: true });
+  }
+});
+</script>

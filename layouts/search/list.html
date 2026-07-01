@@ -14,19 +14,15 @@
         col-xs-12
         post-container
     ">
-      {{ partial "page-intro.html" . }}
-      <div class="page-body">
-        <header class="page-head">
-          <span class="page-head__kicker">Tags</span>
-          <p class="page-head__sub">{{ len $tags }} tags · search or click to browse</p>
+      <div class="page-body search-page">
+        <!-- ===== 全文搜索 (Pagefind) ===== -->
+        <header class="page-head page-head--center">
+          <span class="page-head__kicker">Search</span>
+          <p class="page-head__sub">Search across all posts · full text</p>
         </header>
+        <div id="pagefind-search" class="pagefind-search"></div>
 
-        <div class="tags-search">
-          <i class="fa fa-search tags-search__icon" aria-hidden="true"></i>
-          <input id="tags-search-input" class="tags-search__input" type="text" placeholder="Search tags…" autocomplete="off">
-          <button id="tags-search-clear" class="tags-search__clear" type="button" aria-label="Clear">×</button>
-        </div>
-
+        <!-- ===== 标签网格(Pagefind 全文搜索结果区下方,直接浏览) ===== -->
         <div class="tags-grid" id="tags-grid">
           {{ range $tags }}
             {{ $url := .name | urlize }}
@@ -66,6 +62,20 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   input.addEventListener('input', filter);
   if(clear){ clear.addEventListener('click', function(){ input.value=''; filter(); input.focus(); }); }
+});
+</script>
+
+<!-- Pagefind 全文搜索 UI 初始化(资源由 head.html 仅在本页加载) -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var mount = document.getElementById('pagefind-search');
+  if(!mount || typeof PagefindUI === 'undefined') return;
+  new PagefindUI({
+    element: '#pagefind-search',
+    showImages: false,
+    excerptLength: 12,
+    translations: { placeholder: 'Search all posts…' }
+  });
 });
 </script>
 {{ end }}

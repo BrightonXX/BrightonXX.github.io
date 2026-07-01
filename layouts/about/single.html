@@ -1,0 +1,70 @@
+{{ define "main" }}
+<div class="container home-posts">
+    <div class="row">
+        <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container
+        ">
+            {{ partial "page-intro.html" . }}
+
+            <div class="page-body">
+                <div class="about-cards">
+
+                <!-- About Me Card -->
+                <div class="about-card">
+                    <div class="about-card__icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="about-card__body">
+                        <h3 class="about-card__title">About Me</h3>
+                        <p>Hi! I'm <strong>Brighton</strong> (Yi Xu), a junior CS student at SUSTech (Southern University of Science and Technology).</p>
+                        <p>I'm passionate about technology and the world we live in. This blog is where I share my journey in computer science, projects I'm working on, and things I'm learning.</p>
+                    </div>
+                </div>
+
+                <!-- Get in Touch Card -->
+                <div class="about-card">
+                    <div class="about-card__icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="about-card__body">
+                        <h3 class="about-card__title">Get in Touch</h3>
+                        <p>Feel free to reach out!</p>
+                        <div class="about-links">
+                            <a href="mailto:x2005jiay@gmail.com" class="about-link">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                            <a href="https://github.com/BrightonXX" target="_blank" class="about-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://www.zhihu.com/people/da-yi-67-59" target="_blank" class="about-link">
+                                <span style="font-size:15px;font-weight:700;">知</span> Zhihu
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Card -->
+                <div class="about-card">
+                    <div class="about-card__icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="about-card__body">
+                        <h3 class="about-card__title">Resume</h3>
+                        <p>Check out my CV for more details about my experience and projects.</p>
+                        <a href="/cv/CV.pdf" class="about-link about-link--primary" target="_blank">
+                            <i class="fas fa-download"></i> Download CV
+                        </a>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+        {{ partial "sidebar.html" . }}
+    </div>
+</div>
+{{ end }}

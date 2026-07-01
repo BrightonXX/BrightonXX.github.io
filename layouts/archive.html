@@ -1,45 +1,43 @@
 {{ define "main" }}
 {{ $pages := (where (where .Site.Pages "Type" "posts") "IsPage" true) }}
 
-<div data-pagefind-ignore="all" class="container">
+<div data-pagefind-ignore="all" class="container home-posts">
     <div class="row">
-	    <div class="
+   	    <div class="
             col-lg-8 col-lg-offset-1
             col-md-8 col-md-offset-1
             col-sm-12
             col-xs-12
             post-container
         ">
-            <div class="archive-list">
+            {{ partial "page-intro.html" . }}
+            <div class="page-body">
+                <header class="page-head">
+                    <span class="page-head__kicker">Archive</span>
+                    <p class="page-head__sub">All posts · {{ len $pages }} entries</p>
+                </header>
+                <div class="archive-list">
                 {{ range ($pages.GroupByDate "2006") }}
-                {{ if gt .Key 1 }}
-                    {{ $.Scratch.Set "count" 1 }}
-                    {{ range .Pages  }}
-                        {{ if (eq ($.Scratch.Get "count") 1) }}
-                            {{ $.Scratch.Set "count" 0 }}
-                            <h1 class="title is-4 has-text-weight-normal">{{ .Date.Format "2006" }}</h1>
+                    {{ if gt .Key 1 }}
+                    <section class="archive-card">
+                        <h2 class="archive-year">{{ .Key }}</h2>
+                        <ul>
+                        {{ range .Pages }}
+                            <li>
+                                <a class="archive-row" href="{{ .RelPermalink }}">
+                                    <span class="archive-date">{{ .Date.Format "Jan 02" }}</span>
+                                    <span class="archive-title">{{ .Title }}</span>
+                                </a>
+                            </li>
                         {{ end }}
+                        </ul>
+                    </section>
                     {{ end }}
-
-                    <ul>
-                    {{ range .Pages }}
-                        <li>
-                            <span>{{ .Date.Format "01/02" }}</span> —
-                            <a href="{{ .RelPermalink }}">
-                                {{ .Title }}
-                            </a>
-                        </li>
-                    {{ end }}
-                    </ul>
-
                 {{ end }}
-                {{ end }}
+                </div>
             </div>
        	</div>
         {{ partial "sidebar.html" . }}
 	</div>
 </div>
-
-
-<hr />
 {{ end }}

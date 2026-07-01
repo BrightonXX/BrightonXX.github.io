@@ -35,6 +35,9 @@ jobs:
         env:
           HUGO_MINIFY_TDEWTOFF: true
 
+      - name: Build search index
+        run: npx -y pagefind --site ./public --output-subdir _pagefind
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

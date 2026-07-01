@@ -17,12 +17,9 @@
                <img src="{{ . | relURL }}" alt="avatar" style="cursor: pointer" />
             </a>
             {{ end }}
-            {{ with .Site.Params.sidebar_about_description }}
-                <p>{{ . | safeHTML }}</p>
-            {{ end }}
-            <p style="font-size: 0.9em; color: #777;">
-                <span id="busuanzi_value_site_pv">Loading</span> views · <span id="busuanzi_value_site_uv">Loading</span> visitors
-            </p>
+            <h4 class="sidebar-site-name"><a href="{{ "/" | relLangURL }}">Brighton</a></h4>
+           <!-- 简介:两行小字,serif 字体(同首页 slogan .home-intro__sub) -->
+           <p class="sidebar-tagline">CS Student in SUSTech.<br>Passionate about this world.</p>
            <!-- SNS Link -->
            <ul class="list-inline">
                {{ if .Site.Params.social.email }}
@@ -41,6 +38,16 @@
                        <span class="fa-stack fa-lg">
                            <i class="fas fa-circle fa-stack-2x"></i>
                            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               {{ end }}
+               {{ if .Site.Params.social.rss }}
+               <li>
+                   <a href="{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title | default "" }}" >
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
                        </span>
                    </a>
                </li>
@@ -211,8 +218,6 @@
 	{{ end }}
     {{ if and .Site.Params.focus_status .Site.Params.focus_status.enabled }}
     <section class="visible-md visible-lg">
-        <hr class="hidden-sm hidden-xs">
-        <h5>{{ .Site.Params.focus_status.title | default "FOCUS MODE" }}</h5>
         <div
             class="focus-status-card"
             data-focus-state="unknown"
@@ -255,7 +260,6 @@
     {{ if .Site.Params.featured_tags }}
     <section>
         <hr class="hidden-sm hidden-xs">
-        <h5>FEATURED TAGS</h5>
         <div class="tags">
             {{ $featured_condition_size := .Site.Params.featured_condition_size }}
             {{ $tags := slice }}

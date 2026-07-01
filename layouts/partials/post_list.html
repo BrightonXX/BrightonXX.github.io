@@ -1,22 +1,30 @@
 <!-- post list -->
 <div data-pagefind-ignore="all" class="js-post-stream">
 {{ range $index, $element := $.Paginator.Pages }}
+{{ $thumb := .Params.thumbnail | default .Params.image | default .Params.header_image }}
 <div class="post-preview">
-    <a href="{{ if .Params.external_url }}{{ .Params.external_url }}{{ else }}{{ .Permalink }}{{ end }}">
-        <h2 class="post-title">
-            {{ .Title }}
-        </h2>
-	{{with .Params.subtitle }}
-        <h3 class="post-subtitle">
-            {{ . }}
-        </h3>
-	{{ end }}
-        <div class="post-content-preview">
-	{{ with .Description }}
-            {{ . }}
+    <a href="{{ if .Params.external_url }}{{ .Params.external_url }}{{ else }}{{ .Permalink }}{{ end }}" class="post-card-link">
+        {{ if $thumb }}
+        <div class="post-cover"><img src="{{ $thumb | relURL }}" alt="{{ .Title }}" loading="lazy"></div>
         {{ else }}
-            {{ .Summary}}
-       {{ end }}
+        <div class="post-cover post-cover--placeholder"><span class="post-cover-mono">{{ substr .Title 0 1 }}</span></div>
+        {{ end }}
+        <div class="post-card-body">
+            <h2 class="post-title">
+                {{ .Title }}
+            </h2>
+            {{ with .Params.subtitle }}
+            <div class="post-subtitle">
+                {{ . }}
+            </div>
+            {{ end }}
+            <div class="post-content-preview">
+            {{ with .Description }}
+                {{ . }}
+            {{ else }}
+                {{ .Summary}}
+            {{ end }}
+            </div>
         </div>
     </a>
     <p class="post-meta">
@@ -39,9 +47,7 @@
         {{ end }}
     {{ end }}
     </p>
-
 </div>
-<hr>
 {{ end }}
 </div>
 
@@ -54,3 +60,5 @@
     </noscript>
 </div>
 {{ end }}
+
+{{ partial "post_load_more_js.html" . }}
