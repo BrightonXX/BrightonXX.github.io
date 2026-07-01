@@ -7,9 +7,9 @@ description: "🎵Music Makes You Lose Control"
 tags: ["BrightFork", "Music"]
 categories: []
 author: "Brighton"
-header_image: ""
-image: ""
-thumbnail: ""
+header_image: "img/illinois.jpg"
+image: "img/illinois.jpg"
+thumbnail: "img/illinois.jpg"
 ---
 
 <div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">🎵Music Makes You Lose Control</div>

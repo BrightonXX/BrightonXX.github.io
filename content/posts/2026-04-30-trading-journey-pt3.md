@@ -7,8 +7,8 @@ keywords: ["随笔", "trading"]
 tags: ["随笔", "trading"]
 categories: []
 author: "Brighton"
-image: ""
-thumbnail: ""
+image: "img/trading-pt3.jpg"
+thumbnail: "img/trading-pt3.jpg"
 ---
 
 <div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">喜忧参半</div>

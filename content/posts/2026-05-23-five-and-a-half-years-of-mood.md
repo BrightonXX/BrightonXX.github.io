@@ -7,4 +7,6 @@ tags: ["Life", "Data", "Diary"]
 categories: []
 author: "Brighton"
 external_url: "/diary-mood/"
+image: "img/diary-pattern.jpg"
+thumbnail: "img/diary-pattern.jpg"
 ---

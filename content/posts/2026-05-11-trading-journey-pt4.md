@@ -7,8 +7,8 @@ keywords: ["随笔", "trading"]
 tags: ["随笔", "trading"]
 categories: []
 author: "Brighton"
-image: ""
-thumbnail: ""
+image: "img/trading-pt4.jpg"
+thumbnail: "img/trading-pt4.jpg"
 ---
 
 <div class="article-description" style="text-align: center; font-size: 1.3em; color: #555; margin: 20px 0 30px 0; font-weight: 500;">我将以全仓姿态出击</div>
