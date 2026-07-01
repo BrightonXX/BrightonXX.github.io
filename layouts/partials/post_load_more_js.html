@@ -76,6 +76,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // 只搬 .post-preview 卡片;跳过下一页 stream 里自带的 load-more 等非卡片节点(避免重复按钮)
         if (node.classList && node.classList.contains('post-preview')) {
           node.classList.add('post-preview-entering');
+          // 移除原生 loading=lazy:无限滚动注入的卡片就在视口内(用户主动触发),
+          // 且 entering 动画的 opacity:0 + transform 会干扰 lazy 的可见性判定,
+          // 导致首次 load-more(第二页)的图片不被加载(三四页因页面已稳定而正常)。
+          node.querySelectorAll('img[loading]').forEach(function(img){
+            img.removeAttribute('loading');
+            img.loading = 'eager';
+          });
           incoming.push(node);
           fragment.appendChild(node);
         }
