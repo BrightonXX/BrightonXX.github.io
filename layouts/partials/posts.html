@@ -46,6 +46,10 @@
             //    hero 再渲染 post_list),立即执行时 querySelector('.js-post-stream') 返回 null → 文章流
             //    补偿 transform 永不写入 = hero 与文章脱节的根因。等 DOM 解析完再取 stream。
             document.addEventListener('DOMContentLoaded', function(){
+              // hero 缩放依赖双列内部滚动(@media≥992px .post-container 自己 overflow-y:auto)。
+              // 窄屏(<992px)是整页 body 滚动,scroll 监听绑 post-container 不触发 + 几何全错 → 直接跳过,
+              // 用静态卡(.home-intro 基础样式 / @media≤991 的 132px)。
+              if (window.matchMedia('(max-width: 991px)').matches) return;
               var hero = document.querySelector('.home-intro');
               var pc = document.querySelector('.home-posts > .row > .post-container');
               if(!hero || !pc) return;

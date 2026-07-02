@@ -1306,13 +1306,24 @@ html[data-theme="dark"] .post-cover--placeholder {
     padding-top: 72px
   }
 
-  .home-intro {
-    height: 132px
+  /* 窄屏不跑 hero 缩放 JS,强制静态卡(覆盖可能的 is-hero 残留) */
+  .home-intro,
+  .home-intro.is-hero {
+    position: relative;
+    height: 132px;
+    margin: 0 0 28px;
+    border-radius: var(--r-lg);
+    padding: 30px 0 0;
+    overflow: hidden
   }
 
   .home-intro__title {
     font-size: 26px;
     letter-spacing: .04em
+  }
+
+  .hero-scroll-hint {
+    display: none            /* 窄屏无缩放动画,隐藏滚动指引 */
   }
 
   .post-cover {
