@@ -1323,7 +1323,7 @@ html[data-theme="dark"] .post-cover--placeholder {
   }
 
   .hero-scroll-hint {
-    display: none            /* 窄屏无缩放动画,隐藏滚动指引 */
+    display: none !important  /* 窄屏无缩放动画,隐藏滚动指引(!important 压过 JS 设的 inline style) */
   }
 
   .post-cover {

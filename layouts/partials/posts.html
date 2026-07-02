@@ -47,113 +47,118 @@
             //    补偿 transform 永不写入 = hero 与文章脱节的根因。等 DOM 解析完再取 stream。
             document.addEventListener('DOMContentLoaded', function(){
               // hero 缩放依赖双列内部滚动(@media≥992px .post-container 自己 overflow-y:auto)。
-              // 窄屏(<992px)是整页 body 滚动,scroll 监听绑 post-container 不触发 + 几何全错 → 直接跳过,
+              // 窄屏(<992px)是整页 body 滚动,scroll 监听绑 post-container 不触发 + 几何全错 → 跳过,
               // 用静态卡(.home-intro 基础样式 / @media≤991 的 132px)。
-              if (window.matchMedia('(max-width: 991px)').matches) return;
-              var hero = document.querySelector('.home-intro');
-              var pc = document.querySelector('.home-posts > .row > .post-container');
-              if(!hero || !pc) return;
-              var stream = pc.querySelector('.js-post-stream');   // DOMContentLoaded 后必存在
-              var loadMoreWrap = pc.querySelector('.post-load-more-wrap');  // 和 stream 平级,需同步 transform(否则和卡片脱节/重叠)
-              var dark = document.documentElement.getAttribute('data-theme')==='dark';
-              var replay = new URLSearchParams(location.search).get('replay');
-              var played = !replay && sessionStorage.getItem('homeHeroPlayed') === 'true';
-              hero.classList.add('is-hero');  // 首次/第二次都用 is-hero(scroll 驱动),第二次只是初始状态不同
-              var title = hero.querySelector('.home-intro__title');
-              var sub = hero.querySelector('.home-intro__sub');
-              var inner = hero.querySelector('.home-intro__inner');   // 文字缩放容器(scale 目标)
-              var hint = hero.querySelector('.hero-scroll-hint');     // 滚动指引(按 p 淡出)
 
-              // ---- 终态:对齐 Archive/About 静态 .home-intro 卡片(实测值)----
-              var cardH = 156;                  // 静态卡 height(.home-intro 基础样式)
-              var cardRadius = 16;              // var(--r-lg)
-              var cardTitleFS = 36;             // 终态字号(= 静态卡,fontSize 全程固定此值)
-              var cardSubFS = 17;               // 终态字号
-              var fullTitleFS = 60;             // 全屏态视觉字号(scale 放大到此)
-              var fullSubFS = 24;               // 全屏态视觉字号
-              var cardPadL = 40;                // 与 Archive 卡片左缩进一致
-              var cardPadT = 44;                // 与静态卡 .home-intro padding-top 一致
+              var heroEl = document.querySelector('.home-intro');
+              var pcEl = document.querySelector('.home-posts > .row > .post-container');
+              if(!heroEl || !pcEl) return;
 
-              var fullH = pc.clientHeight;            // post-container 可视高度(= 一个滚动屏)
-              var fullScreenH = Math.round(fullH * 0.92);  // 全屏卡片高度:略矮于 pc,留底部空间给滚动指引
-              var RANGE = fullScreenH - cardH;        // 缩放区间:从全屏卡片高度缩到终态卡片
-              var STREAM_GAP = 28;                    // stream 顶距 hero 卡片底的固定间距(= 静态卡 marginBottom)
-
-              function lerp(a,b,t){return a+(b-a)*t;}
-              function smooth(t){return t*t*(3-2*t);}
-
-              var done = played;  // 第二次进入不再写标记
-              function update(){
-                var scroll = pc.scrollTop;
-                var p = Math.min(Math.max(scroll/RANGE,0),1);
-                var e = smooth(p);  // hero 缩放用 smoothstep(慢-快-慢,苹果质感)
-
-                // === HERO:高度非线性缩小,靠 margin-bottom 占位补偿(保持 sticky 钉顶 + 文档流总占位=fullScreenH)===
-                var h = lerp(fullScreenH, cardH, e);
-                hero.style.height = h.toFixed(0) + 'px';
-                hero.style.marginBottom = (fullScreenH - h).toFixed(0) + 'px';
-                // 圆角:全屏态也是大卡片(大圆角),全程"卡片感"。全屏 28 → 终态 16,平滑递减
-                hero.style.borderRadius = lerp(cardRadius + 12, cardRadius, e).toFixed(1) + 'px';
-                // shadow:全屏无阴影 → 终态无阴影(静态卡 boxShadow:none)。仅在缩放过程中给极淡过渡,凸显层次
-                var shA = dark ? lerp(0,0.18,e)*(1-Math.abs(2*p-1)) : lerp(0,0.05,e)*(1-Math.abs(2*p-1));
-                hero.style.boxShadow = shA>0.005 ? '0 '+lerp(0,2,e).toFixed(0)+'px '+lerp(0,8,e).toFixed(0)+'px rgba(13,40,55,'+shA.toFixed(2)+')' : 'none';
-
-                // === 文字缩放:fontSize 全程固定终态值(36/17),用 transform: scale 放大 ===
-                // 关键:不改 fontSize → line-box 恒定 → baseline 不跳(运动/静止位置完全一致)。
-                //       scale 是 GPU 合成,比逐帧改 fontSize 流畅。终态 scale=1 = Archive 像素级一致。
-                //       title/sub 各自 scale(比例不同:60/36 vs 24/17),transform-origin 左缘锚定。
-                if(title){
-                  title.style.transform = 'scale(' + lerp(fullTitleFS/cardTitleFS, 1, e).toFixed(4) + ')';
-                  // margin-bottom 随 scale 补偿:全屏 scale 大→字形溢出多→margin 大(28);
-                  //   终态 scale=1→margin=8(= Archive 静态卡),否则终态 slogan 被多推低 20px
-                  title.style.marginBottom = lerp(28, 8, e).toFixed(0) + 'px';
-                }
-                if(sub){ sub.style.transform = 'scale(' + lerp(fullSubFS/cardSubFS, 1, e).toFixed(4) + ')'; }
-                // padding:文字左缩进全靠 .home-intro__title/__sub 的 padding-left:40(override.css),
-                //   卡片本身 padding 左右 = 0(与 Archive 静态卡一致)。
-                //   padT:全屏态文字垂直位置(0.42 略偏上,视觉居中偏上);终态=44(同 Archive)。
-                var padT = lerp((h - 92) * 0.42, cardPadT, e).toFixed(0);
-                var padB = lerp(40,0,e).toFixed(0);    // 底 40 → 0
-                var padLR = lerp(20,0,e).toFixed(0);   // 左右 20 → 0(终态靠 title padding-left:40 缩进)
-                hero.style.padding = padT+'px '+padLR+'px '+padB+'px';
-
-                // === STREAM 同步(核心):让 stream 视口顶始终 = hero 视口底 + STREAM_GAP ===
-                // 几何推导:hero sticky 钉顶,视口底 = h(scroll≤RANGE) 或随上划递减(scroll>RANGE)。
-                //   hero 的 margin-bottom=fullScreenH-h → 文档流总占位 fullScreenH →
-                //   stream 文档顶 = fullScreenH → 自然视口顶 = fullScreenH - scroll。
-                //   期望 stream 视口顶 = hero视口底 + STREAM_GAP。
-                //   => 补偿 translateY = (heroBot + STREAM_GAP) - (fullScreenH - scroll)
-                // 用 hero 实时视口底算 want,RANGE 前后都成立,且边界连续(无跳变)。
-                if(stream){
-                  var heroBot = scroll > RANGE
-                    ? (cardH - (scroll - RANGE))      // RANGE 后:卡片底 = cardH - 上划量(随 scroll 递减)
-                    : h;                                // RANGE 前:卡片底 = 当前高度 h
-                  var want = heroBot + STREAM_GAP - fullScreenH + scroll;
-                  // stream 和 load-more 按钮平级(按钮在 stream 外),需同步 transform 才不脱节
-                  var tf = 'translateY(' + want.toFixed(0) + 'px)';
-                  stream.style.transform = tf;
-                  if(loadMoreWrap){ loadMoreWrap.style.transform = tf; }
-                }
-
-                // RANGE 后:卡片随 scroll 上滚划走(不淡出,像正常卡片被划掉)
-                if(scroll > RANGE){
-                  hero.style.transform = 'translateY(' + (-(scroll - RANGE)).toFixed(0) + 'px)';
-                } else {
-                  hero.style.transform = '';
-                }
-
-                // 滚动指引:前 15% 进度内保持可见,之后快速淡出(p>0.18 完全隐)
-                if(hint){
-                  hint.style.opacity = Math.max(0, 1 - p / 0.18).toFixed(2);
-                }
-                if(p > 0.98 && !done){ done = true; sessionStorage.setItem('homeHeroPlayed','true'); }
+              // 清理 hero 的所有 inline style(宽→窄切换时,让 CSS 媒体查询接管静态卡)
+              function clearHeroInline(){
+                heroEl.classList.remove('is-hero');
+                heroEl.style.cssText = '';
+                var t = heroEl.querySelector('.home-intro__title');
+                var s = heroEl.querySelector('.home-intro__sub');
+                var h = heroEl.querySelector('.hero-scroll-hint');
+                if(t){ t.style.cssText=''; }
+                if(s){ s.style.cssText=''; }
+                if(h){ h.style.cssText=''; }
+                var st = pcEl.querySelector('.js-post-stream');
+                var lm = pcEl.querySelector('.post-load-more-wrap');
+                if(st){ st.style.transform=''; }
+                if(lm){ lm.style.transform=''; }
               }
-              pc.addEventListener('scroll', update, {passive:true});
-              if(played){
-                // 第二次进入:默认卡片状态(不播全屏→卡片动画),但 scroll 仍驱动(往上拉能恢复)
-                requestAnimationFrame(function(){ pc.scrollTop = RANGE; update(); });
-              } else {
-                update();
+
+              var mq = window.matchMedia('(min-width: 992px)');
+              var scrollHandler = null;
+
+              function initDesktop(){
+                clearHeroInline();   // 先清残留(可能从窄屏切来)
+                var stream = pcEl.querySelector('.js-post-stream');
+                var loadMoreWrap = pcEl.querySelector('.post-load-more-wrap');
+                if(!stream) return;
+                var dark = document.documentElement.getAttribute('data-theme')==='dark';
+                var replay = new URLSearchParams(location.search).get('replay');
+                var played = !replay && sessionStorage.getItem('homeHeroPlayed') === 'true';
+                heroEl.classList.add('is-hero');
+                var title = heroEl.querySelector('.home-intro__title');
+                var sub = heroEl.querySelector('.home-intro__sub');
+                var hint = heroEl.querySelector('.hero-scroll-hint');
+
+                var cardH = 156, cardRadius = 16, cardTitleFS = 36, cardSubFS = 17;
+                var fullTitleFS = 60, fullSubFS = 24, cardPadL = 40, cardPadT = 44;
+                var fullH = pcEl.clientHeight;
+                var fullScreenH = Math.round(fullH * 0.92);
+                var RANGE = fullScreenH - cardH;
+                var STREAM_GAP = 28;
+
+                function lerp(a,b,t){return a+(b-a)*t;}
+                function smooth(t){return t*t*(3-2*t);}
+                var done = played;
+
+                function update(){
+                  var scroll = pcEl.scrollTop;
+                  var p = Math.min(Math.max(scroll/RANGE,0),1);
+                  var e = smooth(p);
+                  var h = lerp(fullScreenH, cardH, e);
+                  heroEl.style.height = h.toFixed(0) + 'px';
+                  heroEl.style.marginBottom = (fullScreenH - h).toFixed(0) + 'px';
+                  heroEl.style.borderRadius = lerp(cardRadius + 12, cardRadius, e).toFixed(1) + 'px';
+                  var shA = dark ? lerp(0,0.18,e)*(1-Math.abs(2*p-1)) : lerp(0,0.05,e)*(1-Math.abs(2*p-1));
+                  heroEl.style.boxShadow = shA>0.005 ? '0 '+lerp(0,2,e).toFixed(0)+'px '+lerp(0,8,e).toFixed(0)+'px rgba(13,40,55,'+shA.toFixed(2)+')' : 'none';
+                  if(title){
+                    title.style.transform = 'scale(' + lerp(fullTitleFS/cardTitleFS, 1, e).toFixed(4) + ')';
+                    title.style.marginBottom = lerp(28, 8, e).toFixed(0) + 'px';
+                  }
+                  if(sub){ sub.style.transform = 'scale(' + lerp(fullSubFS/cardSubFS, 1, e).toFixed(4) + ')'; }
+                  var padT = lerp((h - 92) * 0.42, cardPadT, e).toFixed(0);
+                  var padB = lerp(40,0,e).toFixed(0);
+                  var padLR = lerp(20,0,e).toFixed(0);
+                  heroEl.style.padding = padT+'px '+padLR+'px '+padB+'px';
+                  if(stream){
+                    var heroBot = scroll > RANGE ? (cardH - (scroll - RANGE)) : h;
+                    var want = heroBot + STREAM_GAP - fullScreenH + scroll;
+                    var tf = 'translateY(' + want.toFixed(0) + 'px)';
+                    stream.style.transform = tf;
+                    if(loadMoreWrap){ loadMoreWrap.style.transform = tf; }
+                  }
+                  if(scroll > RANGE){
+                    heroEl.style.transform = 'translateY(' + (-(scroll - RANGE)).toFixed(0) + 'px)';
+                  } else {
+                    heroEl.style.transform = '';
+                  }
+                  if(hint){ hint.style.opacity = Math.max(0, 1 - p / 0.18).toFixed(2); }
+                  if(p > 0.98 && !done){ done = true; sessionStorage.setItem('homeHeroPlayed','true'); }
+                }
+                if(scrollHandler){ pcEl.removeEventListener('scroll', scrollHandler, {passive:true}); }
+                scrollHandler = update;
+                pcEl.addEventListener('scroll', update, {passive:true});
+                if(played){
+                  requestAnimationFrame(function(){ pcEl.scrollTop = RANGE; update(); });
+                } else {
+                  update();
+                }
+              }
+
+              // 初始:按当前宽度决定
+              if (mq.matches) {
+                initDesktop();
+              }
+
+              // resize/横竖屏切换:跨越 992px 断点时重置
+              // 宽→窄:清理 inline style,让 CSS @media≤991 接管(静态卡 + 隐藏 hint)
+              // 窄→宽:重新初始化桌面动画
+              if (mq.addEventListener) {
+                mq.addEventListener('change', function(e){
+                  if (e.matches) { initDesktop(); }   // 进入宽屏
+                  else { clearHeroInline(); }          // 进入窄屏
+                });
+              } else if (mq.addListener) {
+                mq.addListener(function(e){
+                  if (e.matches) { initDesktop(); }
+                  else { clearHeroInline(); }
+                });
               }
             });
             </script>
