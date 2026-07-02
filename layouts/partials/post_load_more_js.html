@@ -103,9 +103,13 @@ document.addEventListener('DOMContentLoaded', function() {
         loadMoreWrap.setAttribute('data-next-url', nextUrl);
         setButtonState('Load older posts ↓', false);
       } else {
-        // 最后一页:清空 nextUrl(防止下拉重复加载)+ 删按钮
+        // 最后一页:清空 nextUrl(防止下拉重复加载)+ 删按钮 + 显示"到底了"提示
         nextUrl = null;
         loadMoreWrap.remove();
+        var end = document.createElement('p');
+        end.className = 'post-list-end';
+        end.textContent = "You've reached the end · 没有更多了";
+        stream.appendChild(end);
       }
     } catch (err) {
       setButtonState('Retry loading', false);

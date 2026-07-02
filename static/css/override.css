@@ -755,6 +755,17 @@ footer hr {
   margin: 16px 0 10px !important
 }
 
+/* 无限滚动到底提示:小字、淡色、居中 serif(同 tags-empty 风格) */
+.post-list-end {
+  margin: 18px 0 24px;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-4);
+  letter-spacing: .02em
+}
+
 .page-head {
   margin: 0 0 10px;
   padding: 0 0 0 24px;
