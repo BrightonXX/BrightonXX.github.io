@@ -882,10 +882,10 @@
         padding-bottom: 12px;
       }
 
-      /* reading-tools 吸附:JS 加 .is-pinned + 记录 left 防 fixed 后横向跑偏。 */
+      /* reading-tools 吸附:top 补偿 padding-top:36px(让按钮和 catalog 内容同一高度) */
       .reading-tools-container.is-pinned {
         position: fixed !important;
-        top: 80px !important;
+        top: 44px !important;          /* 80(catalog 内容) - 36(本容器 padding-top) = 44 */
         z-index: 5;
       }
     }

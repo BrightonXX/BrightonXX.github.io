@@ -63,11 +63,15 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     var catOrigin = catalog ? docOffset(catalog) : Infinity;
     var rtOrigin = rtCol ? docOffset(rtCol) : Infinity;
 
-    // reading-tools:记录一次 left(fixed 后横向位置会丢,用这个固定值锁定)
+    // reading-tools:记录一次 left + width(fixed 后两者都会丢,导致内容居中点偏移→横向跳)
     // 延迟记录:等 generateCatalog + 字体加载后布局稳定
-    var rtLeft = null;
+    var rtLeft = null, rtWidth = null;
     setTimeout(function(){
-        if(rtCol){ rtLeft = rtCol.getBoundingClientRect().left; }
+        if(rtCol){
+            var r = rtCol.getBoundingClientRect();
+            rtLeft = r.left;
+            rtWidth = r.width;
+        }
     }, 300);
     // reading-tools 占位(fixed 时防左列塌陷)
     var placeholder = null;
@@ -90,9 +94,11 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
             ensurePlaceholder();
             var rtPin = st > (rtOrigin - PIN_TOP);
             if(rtPin && rtLeft !== null){
-                rtCol.style.left = rtLeft + 'px';   // pin 时锁定 left(防止横向跑偏)
+                rtCol.style.left = rtLeft + 'px';     // 锁定 left
+                rtCol.style.width = rtWidth + 'px';   // 锁定 width(让内部 margin:auto 居中点不变)
             } else {
-                rtCol.style.left = '';               // 取消 pin 时清除,回到文档流
+                rtCol.style.left = '';
+                rtCol.style.width = '';
             }
             rtCol.classList.toggle('is-pinned', rtPin);
             if(placeholder){ placeholder.style.display = rtPin ? 'block' : 'none'; }
