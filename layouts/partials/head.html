@@ -592,7 +592,7 @@
 
     /* Sticky Catalog Navigation */
     .post-article.has-catalog {
-      overflow: visible;
+      overflow: visible !important;   /* 压过主题 article{overflow:hidden},让 reading-tools sticky 生效 */
     }
 
     .reading-tools-container {
@@ -870,6 +870,13 @@
 
       .reading-tools-container.catalog-container {
         padding-top: 36px;
+        /* reading-tools 用 sticky(catalog 用 fixed,各走各的路)。
+           sticky 不脱离文档流,左侧列不塌陷。
+           需要 .post-article overflow:visible(下面强制),否则 article{overflow:hidden} 让 sticky 失效。 */
+        position: -webkit-sticky;
+        position: sticky;
+        top: 36px;
+        align-self: flex-start;
       }
 
       /* catalog 吸附:footer.html JS 滚过 header 后加 .fixed(只 catalog,不碰 reading-tools)。
