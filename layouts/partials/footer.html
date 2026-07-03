@@ -42,8 +42,20 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     });
 });
 
-// Catalog + Reading-tools 吸附改用纯 CSS sticky(head.html @media≥1200px),
-// 不再需要 JS fixed(fixed 会脱离文档流导致三列栅格塌陷→正文崩)。
-// sticky 保留栅格占位,只视觉钉住。
+// Catalog 吸附(relu 行为):独立监听 window scroll,滚过 header 后 .side-catalog 加 .fixed。
+// 不碰 reading-tools(左侧列 fixed 会塌陷→正文崩,只 catalog 右侧列 fixed 安全)。
+(function(){
+    if(window.innerWidth < 1200) return;
+    var header = document.querySelector('header.intro-header .container');
+    var catalog = document.querySelector('.side-catalog');
+    if(!header || !catalog) return;
+    var threshold = header.offsetHeight + 41;
+    function onScroll(){
+        var st = window.pageYOffset || document.documentElement.scrollTop;
+        catalog.classList.toggle('fixed', st > threshold);
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+})();
 </script>
 {{ end }}

@@ -592,7 +592,7 @@
 
     /* Sticky Catalog Navigation */
     .post-article.has-catalog {
-      overflow: visible !important;   /* !important 压过主题 article{overflow:hidden},否则 sticky 失效 */
+      overflow: visible;
     }
 
     .reading-tools-container {
@@ -872,34 +872,17 @@
         padding-top: 36px;
       }
 
-      /* catalog + reading-tools 吸附:用 CSS sticky(不脱离文档流,保留栅格占位)。
-         fixed 会抽走元素导致三列栅格塌陷→正文崩,sticky 安全。
-         ⚠️ sticky 失效根因:祖先有 overflow:hidden(主题 article{overflow:hidden})。
-         必须把整条祖先链的 overflow 设 visible,sticky 才有滚动空间。 */
-      .post-article.has-catalog,
-      .post-article.has-catalog > .container,
-      .post-article.has-catalog > .container > .row {
-        overflow: visible !important;
-      }
-      .catalog-container {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 36px;
-        align-self: flex-start;
-      }
-
-      .catalog-container .side-catalog {
-        max-height: calc(100vh - 56px);
+      /* catalog 吸附:footer.html JS 滚过 header 后加 .fixed(只 catalog,不碰 reading-tools)。
+         catalog 在右侧列,fixed 后留白不影响正文;reading-tools 左侧 fixed 会塌陷→崩。 */
+      .catalog-container .side-catalog.fixed {
+        position: fixed !important;
+        top: 70px !important;
+        width: 195px;
+        max-height: calc(100vh - 90px);
         overflow-y: auto !important;
         overflow-x: hidden;
+        height: auto !important;
         padding-bottom: 12px;
-      }
-
-      .reading-tools-container {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 36px;
-        align-self: flex-start;
       }
     }
   </style>
