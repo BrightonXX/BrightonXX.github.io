@@ -63,8 +63,12 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     var catOrigin = catalog ? docOffset(catalog) : Infinity;
     var rtOrigin = rtCol ? docOffset(rtCol) : Infinity;
 
-    // reading-tools:记录 fixed 前的 left(fixed 后横向位置会丢,需手动设回)
+    // reading-tools:记录一次 left(fixed 后横向位置会丢,用这个固定值锁定)
+    // 延迟记录:等 generateCatalog + 字体加载后布局稳定
     var rtLeft = null;
+    setTimeout(function(){
+        if(rtCol){ rtLeft = rtCol.getBoundingClientRect().left; }
+    }, 300);
     // reading-tools 占位(fixed 时防左列塌陷)
     var placeholder = null;
     function ensurePlaceholder(){
@@ -85,12 +89,10 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
         if(rtCol){
             ensurePlaceholder();
             var rtPin = st > (rtOrigin - PIN_TOP);
-            // fixed 前记录 left(文档流位置);fixed 时设回,防止横向跑偏
-            if(!rtPin){
-                rtLeft = rtCol.getBoundingClientRect().left;   // 未 pin 时记录真实 left
-                rtCol.style.left = '';
-            } else if(rtLeft !== null){
-                rtCol.style.left = rtLeft + 'px';              // pin 时锁定 left
+            if(rtPin && rtLeft !== null){
+                rtCol.style.left = rtLeft + 'px';   // pin 时锁定 left(防止横向跑偏)
+            } else {
+                rtCol.style.left = '';               // 取消 pin 时清除,回到文档流
             }
             rtCol.classList.toggle('is-pinned', rtPin);
             if(placeholder){ placeholder.style.display = rtPin ? 'block' : 'none'; }
