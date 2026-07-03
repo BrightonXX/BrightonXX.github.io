@@ -856,8 +856,8 @@
     }
 
     @media (min-width: 1200px) {
-      /* 文章页栅格改 flex:start —— 让 catalog 列不被默认 stretch 拉满父高,
-         否则 .side-catalog 的 fixed 吸附无意义(列已占满)。 */
+      /* 文章页栅格改 flex:start —— 让 catalog/reading-tools 列不被默认 stretch 拉满父高,
+         否则 sticky 无滚动空间。老版本(备份)验证此方案 catalog+reading-tools 都能 sticky。 */
       .post-article > .container > .row {
         display: flex;
         align-items: flex-start;
@@ -866,26 +866,24 @@
 
       .catalog-container {
         padding: 36px 0 0;
-      }
-
-      .reading-tools-container.catalog-container {
-        padding-top: 36px;
-        /* reading-tools 用 sticky(catalog 用 fixed,各走各的路)。
-           sticky 不脱离文档流,左侧列不塌陷。
-           需要 .post-article overflow:visible(下面强制),否则 article{overflow:hidden} 让 sticky 失效。 */
         position: -webkit-sticky;
         position: sticky;
         top: 36px;
         align-self: flex-start;
       }
 
-      /* catalog 吸附:footer.html JS 滚过 header 后加 .fixed(只 catalog,不碰 reading-tools)。
-         catalog 在右侧列,fixed 后留白不影响正文;reading-tools 左侧 fixed 会塌陷→崩。 */
+      .reading-tools-container.catalog-container {
+        top: 27px;
+        padding-top: 36px;
+      }
+
+      /* side-catalog 设 static,让外层 .catalog-container 做 sticky(老版方案) */
+      .catalog-container .side-catalog,
       .catalog-container .side-catalog.fixed {
-        position: fixed !important;
-        top: 70px !important;
-        width: 195px;
-        max-height: calc(100vh - 90px);
+        position: static !important;
+        top: auto !important;
+        width: 100%;
+        max-height: calc(100vh - 56px);
         overflow-y: auto !important;
         overflow-x: hidden;
         height: auto !important;
