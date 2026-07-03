@@ -872,25 +872,28 @@
         padding-top: 36px;
       }
 
-      /* catalog 吸附:footer.html JS 滚过 header 后加 .fixed。
-         top 与 catalog-container 的 padding-top(36px)一致,吸附时不跳变。
-         max-height + overflow 让超长目录内部滚动。 */
-      .catalog-container .side-catalog.fixed {
-        position: fixed !important;
-        top: 36px !important;
-        width: 195px;
+      /* catalog + reading-tools 吸附:用 CSS sticky(不脱离文档流,保留栅格占位)。
+         fixed 会抽走元素导致三列栅格塌陷→正文崩,sticky 安全。
+         父级 row 已是 flex+align-items:flex-start,sticky 在 flex 子项上可生效。 */
+      .catalog-container {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 36px;
+        align-self: flex-start;
+      }
+
+      .catalog-container .side-catalog {
         max-height: calc(100vh - 56px);
         overflow-y: auto !important;
         overflow-x: hidden;
-        height: auto !important;
         padding-bottom: 12px;
       }
 
-      /* reading-tools(返回顶部+剩余时间)吸附:同 catalog 逻辑,加 .is-pinned */
-      .reading-tools-container.is-pinned {
-        position: fixed !important;
-        top: 36px !important;
-        z-index: 5;
+      .reading-tools-container {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 36px;
+        align-self: flex-start;
       }
     }
   </style>
