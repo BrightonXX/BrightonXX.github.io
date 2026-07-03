@@ -42,16 +42,28 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     });
 });
 
-// Catalog + Reading-tools 吸附:各自由"即将滚出视口顶"时钉住,钉在 top:36px。
-// 这样两个元素触发时机各自精确,钉住时不跳变(连贯)。
-// catalog(右列):.fixed。reading-tools(左列):.is-pinned + placeholder 占位防塌陷。
+// Catalog + Reading-tools 吸附(sticky 模拟):
+// 记住每个元素的文档流原始位置(offsetTop,不随滚动变)。
+// scrollTop > 原始位置 - pinTop 时 → fixed(钉在 pinTop);
+// scrollTop 回到原始位置以上 → 还原(回到文档流原位)。
+// 这样上下滚动都连贯:元素"到达 pinTop 位置就停住",不跳变。
 (function(){
     if(window.innerWidth < 1200) return;
     var catalog = document.querySelector('.side-catalog');
     var rtCol = document.querySelector('.reading-tools-container');
     if(!catalog && !rtCol) return;
+    var PIN_TOP = 36;
 
-    // 给 reading-tools 列建占位(fixed 时填进去,防左列塌陷)
+    // 记录元素在文档流里的 offsetTop(相对文档顶,不随滚动变)
+    function docOffset(el){
+        var top = 0;
+        while(el){ top += el.offsetTop; el = el.offsetParent; }
+        return top;
+    }
+    var catOrigin = catalog ? docOffset(catalog) : Infinity;
+    var rtOrigin = rtCol ? docOffset(rtCol) : Infinity;
+
+    // reading-tools 占位(fixed 时防左列塌陷)
     var placeholder = null;
     function ensurePlaceholder(){
         if(!rtCol || placeholder) return;
@@ -62,26 +74,16 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
         rtCol.parentNode.insertBefore(placeholder, rtCol);
     }
 
-    // 每个元素各自算:当它的视口 y ≤ 36px(即将到顶)时钉住
-    // 用 getBoundingClientRect 实时算,不依赖 header 高度(更精确,不受布局变化影响)
     function onScroll(){
-        var pinTop = 36;
+        var st = window.pageYOffset || document.documentElement.scrollTop;
+        // 当 scrollTop 使得元素的视口 y 会 < PIN_TOP 时 → 钉住(否则元素自然在文档流里)
         if(catalog){
-            var catY = catalog.getBoundingClientRect().top;
-            // catalog 没加 fixed 时才量(避免 fixed 后 rect 是视口 top:36,恒满足)
-            if(!catalog.classList.contains('fixed')){
-                catalog._triggerY = catY;  // 记住它当前的文档流位置
-            }
-            var shouldPin = window.pageYOffset > 0 && catY <= pinTop;
-            catalog.classList.toggle('fixed', shouldPin);
+            var catPin = st > (catOrigin - PIN_TOP);
+            catalog.classList.toggle('fixed', catPin);
         }
         if(rtCol){
             ensurePlaceholder();
-            if(!rtCol.classList.contains('is-pinned')){
-                var rtY = rtCol.getBoundingClientRect().top;
-                rtCol._triggerY = rtY;
-            }
-            var rtPin = window.pageYOffset > 0 && rtCol.getBoundingClientRect().top <= pinTop;
+            var rtPin = st > (rtOrigin - PIN_TOP);
             rtCol.classList.toggle('is-pinned', rtPin);
             if(placeholder){ placeholder.style.display = rtPin ? 'block' : 'none'; }
         }
