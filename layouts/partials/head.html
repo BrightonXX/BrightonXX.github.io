@@ -856,10 +856,8 @@
     }
 
     @media (min-width: 1200px) {
-      /* 文章页栅格改 flex:start —— 让 sticky 列(reading-tools/catalog)在 flex 容器内稳健钉住:
-         (1) align-items:flex-start 防止列被默认 stretch 拉到与父等高(否则 sticky 无滚动空间,直接失效);
-         (2) 不再依赖 float col 上的 sticky(旧 Safari/部分引擎在 float 元素上 sticky 不生效,catalog 会随页滚走);
-         (3) 接上下面 .catalog-container 的 align-self:flex-start 意图。 */
+      /* 文章页栅格改 flex:start —— 让 catalog 列不被默认 stretch 拉满父高,
+         否则 .side-catalog 的 fixed 吸附无意义(列已占满)。 */
       .post-article > .container > .row {
         display: flex;
         align-items: flex-start;
@@ -868,23 +866,20 @@
 
       .catalog-container {
         padding: 36px 0 0;
-        position: -webkit-sticky;
-        position: sticky;
-        top: 36px;
-        align-self: flex-start;
       }
 
       .reading-tools-container.catalog-container {
-        top: 27px;
         padding-top: 36px;
       }
 
-      .catalog-container .side-catalog,
+      /* catalog 吸附:由 hux-blog.min.js 的 scroll 监听加 .fixed class 控制。
+         .fixed → position:fixed,钉在视口顶部(relu 行为:头部随页滚,过阈值后钉住)。
+         max-height + overflow 让超长目录内部滚动,不溢出视口。 */
       .catalog-container .side-catalog.fixed {
-        position: static !important;
-        top: auto !important;
-        width: 100%;
-        max-height: calc(100vh - 56px);
+        position: fixed !important;
+        top: 70px !important;          /* 留出 navbar 空间 */
+        width: 195px;
+        max-height: calc(100vh - 90px);
         overflow-y: auto !important;
         overflow-x: hidden;
         height: auto !important;
