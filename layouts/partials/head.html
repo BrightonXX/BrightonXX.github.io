@@ -856,8 +856,7 @@
     }
 
     @media (min-width: 1200px) {
-      /* 文章页栅格改 flex:start —— 让 catalog/reading-tools 列不被默认 stretch 拉满父高,
-         否则 sticky 无滚动空间。老版本(备份)验证此方案 catalog+reading-tools 都能 sticky。 */
+      /* 文章页栅格改 flex:start —— catalog/reading-tools 列不被 stretch 拉满。 */
       .post-article > .container > .row {
         display: flex;
         align-items: flex-start;
@@ -866,28 +865,29 @@
 
       .catalog-container {
         padding: 36px 0 0;
-        position: -webkit-sticky;
-        position: sticky;
-        top: 36px;
-        align-self: flex-start;
       }
-
       .reading-tools-container.catalog-container {
-        top: 27px;
         padding-top: 36px;
       }
 
-      /* side-catalog 设 static,让外层 .catalog-container 做 sticky(老版方案) */
-      .catalog-container .side-catalog,
+      /* catalog 吸附:footer.html JS 加 .fixed。right 列 fixed 安全(留白不影响正文)。 */
       .catalog-container .side-catalog.fixed {
-        position: static !important;
-        top: auto !important;
-        width: 100%;
+        position: fixed !important;
+        top: 36px !important;
+        width: 195px;
         max-height: calc(100vh - 56px);
         overflow-y: auto !important;
         overflow-x: hidden;
         height: auto !important;
         padding-bottom: 12px;
+      }
+
+      /* reading-tools 吸附:同 JS 加 .is-pinned。left 列 fixed 会塌陷,
+         footer.html JS 会插 placeholder 占位防塌陷。 */
+      .reading-tools-container.is-pinned {
+        position: fixed !important;
+        top: 36px !important;
+        z-index: 5;
       }
     }
   </style>

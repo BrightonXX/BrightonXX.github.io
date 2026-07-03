@@ -42,7 +42,40 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     });
 });
 
-// Catalog + reading-tools 吸附改用纯 CSS sticky(head.html,老版本验证过的方案)。
-// 不需要 JS fixed(sticky 不脱离文档流,三列都不崩)。
+// Catalog + Reading-tools 吸附:滚过文章 header 后钉顶。
+// catalog(右列):直接 .side-catalog 加 .fixed(fixed,右列留白不影响正文)。
+// reading-tools(左列):fixed 会塌陷左列→正文崩。用 placeholder 占位:fixed 时插入等宽占位元素。
+(function(){
+    if(window.innerWidth < 1200) return;
+    var header = document.querySelector('header.intro-header .container');
+    var catalog = document.querySelector('.side-catalog');
+    var readingToolsCol = document.querySelector('.reading-tools-container');
+    if(!header) return;
+
+    // 给 reading-tools 列建一个占位(fixed 时填进去,防止左列塌陷)
+    var placeholder = null;
+    function ensurePlaceholder(){
+        if(!readingToolsCol || placeholder) return;
+        placeholder = document.createElement('div');
+        placeholder.style.width = window.getComputedStyle(readingToolsCol).width;
+        placeholder.style.height = readingToolsCol.offsetHeight + 'px';
+        placeholder.style.display = 'none';
+        readingToolsCol.parentNode.insertBefore(placeholder, readingToolsCol);
+    }
+
+    var threshold = header.offsetHeight + 20;
+    function onScroll(){
+        var st = window.pageYOffset || document.documentElement.scrollTop;
+        var fixed = st > threshold;
+        if(catalog){ catalog.classList.toggle('fixed', fixed); }
+        if(readingToolsCol){
+            ensurePlaceholder();
+            readingToolsCol.classList.toggle('is-pinned', fixed);
+            if(placeholder){ placeholder.style.display = fixed ? 'block' : 'none'; }
+        }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+})();
 </script>
 {{ end }}
