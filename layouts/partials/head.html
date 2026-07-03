@@ -882,10 +882,11 @@
         padding-bottom: 12px;
       }
 
-      /* reading-tools 吸附:top 补偿 padding-top:36px(让按钮和 catalog 内容同一高度) */
-      .reading-tools-container.is-pinned {
+      /* reading-tools 吸附:pin 内部 .reading-tools(和 catalog pin .side-catalog 对称)。
+         top:80 与 catalog 一致,无 padding 补偿(子元素不含容器 padding)。 */
+      .reading-tools.is-pinned {
         position: fixed !important;
-        top: 44px !important;          /* 80(catalog 内容) - 36(本容器 padding-top) = 44 */
+        top: 80px !important;
         z-index: 5;
       }
     }

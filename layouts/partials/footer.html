@@ -51,8 +51,9 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     if(window.innerWidth < 1200) return;
     var catalog = document.querySelector('.side-catalog');
     var rtCol = document.querySelector('.reading-tools-container');
-    if(!catalog && !rtCol) return;
-    var PIN_TOP = 80;   // 与 CSS .fixed/.is-pinned 的 top 一致
+    var rtInner = document.querySelector('.reading-tools');   // pin 内部子元素(和 catalog pin .side-catalog 对称)
+    if(!catalog && !rtInner) return;
+    var PIN_TOP = 80;   // 与 CSS top 一致,pin 内部子元素后无 padding 补偿问题
 
     // 记录元素在文档流里的 offsetTop(相对文档顶,不随滚动变)
     function docOffset(el){
@@ -61,46 +62,44 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
         return top;
     }
     var catOrigin = catalog ? docOffset(catalog) : Infinity;
-    var rtOrigin = rtCol ? docOffset(rtCol) : Infinity;
+    var rtOrigin = rtInner ? docOffset(rtInner) : Infinity;
 
-    // reading-tools:记录一次 left + width(fixed 后两者都会丢,导致内容居中点偏移→横向跳)
-    // 延迟记录:等 generateCatalog + 字体加载后布局稳定
+    // reading-tools 内部:记录一次 left + width(fixed 后两者丢,导致内容偏移)
     var rtLeft = null, rtWidth = null;
     setTimeout(function(){
-        if(rtCol){
-            var r = rtCol.getBoundingClientRect();
+        if(rtInner){
+            var r = rtInner.getBoundingClientRect();
             rtLeft = r.left;
             rtWidth = r.width;
         }
     }, 300);
-    // reading-tools 占位(fixed 时防左列塌陷)
+    // 占位(fixed 时防左列塌陷)——用容器做占位,pin 内部
     var placeholder = null;
     function ensurePlaceholder(){
-        if(!rtCol || placeholder) return;
+        if(!rtInner || placeholder) return;
         placeholder = document.createElement('div');
-        placeholder.style.width = window.getComputedStyle(rtCol).width;
-        placeholder.style.height = rtCol.offsetHeight + 'px';
+        placeholder.style.width = rtWidth + 'px';
+        placeholder.style.height = rtInner.offsetHeight + 'px';
         placeholder.style.display = 'none';
-        rtCol.parentNode.insertBefore(placeholder, rtCol);
+        rtInner.parentNode.insertBefore(placeholder, rtInner);
     }
 
     function onScroll(){
         var st = window.pageYOffset || document.documentElement.scrollTop;
         if(catalog){
-            var catPin = st > (catOrigin - PIN_TOP);
-            catalog.classList.toggle('fixed', catPin);
+            catalog.classList.toggle('fixed', st > (catOrigin - PIN_TOP));
         }
-        if(rtCol){
+        if(rtInner){
             ensurePlaceholder();
             var rtPin = st > (rtOrigin - PIN_TOP);
             if(rtPin && rtLeft !== null){
-                rtCol.style.left = rtLeft + 'px';     // 锁定 left
-                rtCol.style.width = rtWidth + 'px';   // 锁定 width(让内部 margin:auto 居中点不变)
+                rtInner.style.left = rtLeft + 'px';
+                rtInner.style.width = rtWidth + 'px';
             } else {
-                rtCol.style.left = '';
-                rtCol.style.width = '';
+                rtInner.style.left = '';
+                rtInner.style.width = '';
             }
-            rtCol.classList.toggle('is-pinned', rtPin);
+            rtInner.classList.toggle('is-pinned', rtPin);
             if(placeholder){ placeholder.style.display = rtPin ? 'block' : 'none'; }
         }
     }
