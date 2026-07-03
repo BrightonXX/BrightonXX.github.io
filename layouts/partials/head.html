@@ -873,20 +873,19 @@
       /* catalog 吸附:footer.html JS 加 .fixed。right 列 fixed 安全(留白不影响正文)。 */
       .catalog-container .side-catalog.fixed {
         position: fixed !important;
-        top: 36px !important;
+        top: 80px !important;           /* 往下移(原 36,留更多顶部空间) */
         width: 195px;
-        max-height: calc(100vh - 56px);
+        max-height: calc(100vh - 100px);
         overflow-y: auto !important;
         overflow-x: hidden;
         height: auto !important;
         padding-bottom: 12px;
       }
 
-      /* reading-tools 吸附:同 JS 加 .is-pinned。left 列 fixed 会塌陷,
-         footer.html JS 会插 placeholder 占位防塌陷。 */
+      /* reading-tools 吸附:JS 加 .is-pinned + 记录 left 防 fixed 后横向跑偏。 */
       .reading-tools-container.is-pinned {
         position: fixed !important;
-        top: 36px !important;
+        top: 80px !important;
         z-index: 5;
       }
     }

@@ -52,7 +52,7 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     var catalog = document.querySelector('.side-catalog');
     var rtCol = document.querySelector('.reading-tools-container');
     if(!catalog && !rtCol) return;
-    var PIN_TOP = 36;
+    var PIN_TOP = 80;   // 与 CSS .fixed/.is-pinned 的 top 一致
 
     // 记录元素在文档流里的 offsetTop(相对文档顶,不随滚动变)
     function docOffset(el){
@@ -63,6 +63,8 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     var catOrigin = catalog ? docOffset(catalog) : Infinity;
     var rtOrigin = rtCol ? docOffset(rtCol) : Infinity;
 
+    // reading-tools:记录 fixed 前的 left(fixed 后横向位置会丢,需手动设回)
+    var rtLeft = null;
     // reading-tools 占位(fixed 时防左列塌陷)
     var placeholder = null;
     function ensurePlaceholder(){
@@ -76,7 +78,6 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
 
     function onScroll(){
         var st = window.pageYOffset || document.documentElement.scrollTop;
-        // 当 scrollTop 使得元素的视口 y 会 < PIN_TOP 时 → 钉住(否则元素自然在文档流里)
         if(catalog){
             var catPin = st > (catOrigin - PIN_TOP);
             catalog.classList.toggle('fixed', catPin);
@@ -84,6 +85,13 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
         if(rtCol){
             ensurePlaceholder();
             var rtPin = st > (rtOrigin - PIN_TOP);
+            // fixed 前记录 left(文档流位置);fixed 时设回,防止横向跑偏
+            if(!rtPin){
+                rtLeft = rtCol.getBoundingClientRect().left;   // 未 pin 时记录真实 left
+                rtCol.style.left = '';
+            } else if(rtLeft !== null){
+                rtCol.style.left = rtLeft + 'px';              // pin 时锁定 left
+            }
             rtCol.classList.toggle('is-pinned', rtPin);
             if(placeholder){ placeholder.style.display = rtPin ? 'block' : 'none'; }
         }
