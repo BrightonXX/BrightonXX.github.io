@@ -41,5 +41,23 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
         begin:null, end:null, scrollChange:null, padding:80
     });
 });
+
+// Catalog 吸附(relu 行为):不依赖 hux-blog.min.js(它的条件 width>1170 + 选择器时序不可控)。
+// 独立监听 window scroll:滚过文章 header 后 .side-catalog 加 .fixed(钉顶),否则移除。
+// 文章页是 body 滚动(非双列内部滚动),监听 window scroll 正确。
+(function(){
+    var header = document.querySelector('header.intro-header .container');
+    var catalog = document.querySelector('.side-catalog');
+    if(!header || !catalog) return;
+    if(window.innerWidth < 1200) return;   // 窄屏不显示 catalog(bootstrap col-lg),跳过
+    var threshold = header.offsetHeight + 41;   // 老版:header 高 + 41px 缓冲
+    function onScroll(){
+        var st = window.pageYOffset || document.documentElement.scrollTop;
+        if(st > threshold){ catalog.classList.add('fixed'); }
+        else { catalog.classList.remove('fixed'); }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+})();
 </script>
 {{ end }}
