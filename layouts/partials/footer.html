@@ -42,36 +42,48 @@ $.getScript("{{ `js/jquery.nav.js` | relURL }}", function(){
     });
 });
 
-// Catalog + Reading-tools 吸附:滚过文章 header 后钉顶。
-// catalog(右列):直接 .side-catalog 加 .fixed(fixed,右列留白不影响正文)。
-// reading-tools(左列):fixed 会塌陷左列→正文崩。用 placeholder 占位:fixed 时插入等宽占位元素。
+// Catalog + Reading-tools 吸附:各自由"即将滚出视口顶"时钉住,钉在 top:36px。
+// 这样两个元素触发时机各自精确,钉住时不跳变(连贯)。
+// catalog(右列):.fixed。reading-tools(左列):.is-pinned + placeholder 占位防塌陷。
 (function(){
     if(window.innerWidth < 1200) return;
-    var header = document.querySelector('header.intro-header .container');
     var catalog = document.querySelector('.side-catalog');
-    var readingToolsCol = document.querySelector('.reading-tools-container');
-    if(!header) return;
+    var rtCol = document.querySelector('.reading-tools-container');
+    if(!catalog && !rtCol) return;
 
-    // 给 reading-tools 列建一个占位(fixed 时填进去,防止左列塌陷)
+    // 给 reading-tools 列建占位(fixed 时填进去,防左列塌陷)
     var placeholder = null;
     function ensurePlaceholder(){
-        if(!readingToolsCol || placeholder) return;
+        if(!rtCol || placeholder) return;
         placeholder = document.createElement('div');
-        placeholder.style.width = window.getComputedStyle(readingToolsCol).width;
-        placeholder.style.height = readingToolsCol.offsetHeight + 'px';
+        placeholder.style.width = window.getComputedStyle(rtCol).width;
+        placeholder.style.height = rtCol.offsetHeight + 'px';
         placeholder.style.display = 'none';
-        readingToolsCol.parentNode.insertBefore(placeholder, readingToolsCol);
+        rtCol.parentNode.insertBefore(placeholder, rtCol);
     }
 
-    var threshold = header.offsetHeight + 20;
+    // 每个元素各自算:当它的视口 y ≤ 36px(即将到顶)时钉住
+    // 用 getBoundingClientRect 实时算,不依赖 header 高度(更精确,不受布局变化影响)
     function onScroll(){
-        var st = window.pageYOffset || document.documentElement.scrollTop;
-        var fixed = st > threshold;
-        if(catalog){ catalog.classList.toggle('fixed', fixed); }
-        if(readingToolsCol){
+        var pinTop = 36;
+        if(catalog){
+            var catY = catalog.getBoundingClientRect().top;
+            // catalog 没加 fixed 时才量(避免 fixed 后 rect 是视口 top:36,恒满足)
+            if(!catalog.classList.contains('fixed')){
+                catalog._triggerY = catY;  // 记住它当前的文档流位置
+            }
+            var shouldPin = window.pageYOffset > 0 && catY <= pinTop;
+            catalog.classList.toggle('fixed', shouldPin);
+        }
+        if(rtCol){
             ensurePlaceholder();
-            readingToolsCol.classList.toggle('is-pinned', fixed);
-            if(placeholder){ placeholder.style.display = fixed ? 'block' : 'none'; }
+            if(!rtCol.classList.contains('is-pinned')){
+                var rtY = rtCol.getBoundingClientRect().top;
+                rtCol._triggerY = rtY;
+            }
+            var rtPin = window.pageYOffset > 0 && rtCol.getBoundingClientRect().top <= pinTop;
+            rtCol.classList.toggle('is-pinned', rtPin);
+            if(placeholder){ placeholder.style.display = rtPin ? 'block' : 'none'; }
         }
     }
     window.addEventListener('scroll', onScroll, {passive:true});
