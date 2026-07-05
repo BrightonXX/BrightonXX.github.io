@@ -84,7 +84,7 @@ thumbnail: "img/mbdtf.jpg"
 
 {{< album-review
     image="img/in-the-court-of-the-crimson-king.jpg"
-    score="9+"
+    score="9"
     artist="King Crimson"
     album="In the Court of the Crimson King"
     year="1969"
@@ -134,7 +134,7 @@ thumbnail: "img/mbdtf.jpg"
 
 {{< album-review
     image="img/imaginal-disk.jpg"
-    score="8.5"
+    score="9"
     artist="Magdalena Bay"
     album="Imaginal Disk"
     year="2024"

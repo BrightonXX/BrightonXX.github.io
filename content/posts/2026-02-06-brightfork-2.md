@@ -24,7 +24,7 @@ thumbnail: "img/billie-wildflower.jpg"
 
 {{< album-review
     image="img/kendrick-luther.jpg"
-    score="7.0"
+    score="7"
     artist="Kendrick Lamar"
     album="Luther"
 >}}
@@ -37,7 +37,7 @@ thumbnail: "img/billie-wildflower.jpg"
 
 {{< album-review
     image="img/bad-bunny-dtmf.jpg"
-    score="8.5"
+    score="8"
     artist="Bad Bunny"
     album="DeBÍ TiRAR MáS FOToS"
     year="2025"
@@ -69,7 +69,7 @@ thumbnail: "img/billie-wildflower.jpg"
 
 {{< album-review
     image="img/yes-fly-from-here.jpg"
-    score="8.0"
+    score="8"
     artist="Yes"
     album="Fly From Here"
     year="2011"
@@ -81,7 +81,7 @@ thumbnail: "img/billie-wildflower.jpg"
 
 {{< album-review
     image="img/camel-moonmadness.jpg"
-    score="8.0"
+    score="8"
     artist="Camel"
     album="Moonmadness"
     year="1976"
@@ -93,7 +93,7 @@ thumbnail: "img/billie-wildflower.jpg"
 
 {{< album-review
     image="img/strokes-new-abnormal.jpg"
-    score="9.0"
+    score="9"
     artist="The Strokes"
     album="The New Abnormal"
     year="2020"

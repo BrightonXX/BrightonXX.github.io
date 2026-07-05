@@ -38,7 +38,7 @@ thumbnail: "img/illinois.jpg"
 
 {{< album-review
     image="img/michigan.jpg"
-    score="7.0"
+    score="8"
     artist="Sufjan Stevens"
     album="Michigan"
     year="2003"
@@ -64,7 +64,7 @@ Weezy 巅峰，听完搜索说唱最伟大的专辑排名。
 
 {{< album-review
     image="img/carter-5.jpg"
-    score="7.5"
+    score="8"
     artist="Lil Wayne"
     album="Tha Carter V"
     year="2018"
@@ -78,7 +78,7 @@ Weezy 巅峰，听完搜索说唱最伟大的专辑排名。
 
 {{< album-review
     image="img/bully.jpg"
-    score="8.0"
+    score="8"
     artist="Kanye West"
     album="Bully"
     year="2026"
