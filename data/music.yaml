@@ -1,0 +1,309 @@
+# Brighton 的专辑墙数据。
+# 字段:
+#   artist / album / score(字符串,沿用 BrightFork 评分体系) / year / genre
+#   image    — static/img/ 下的封面路径
+#   track    — 最爱曲目
+#   audio    — static/ 下的 mp3 路径,可空(无则点击只转不响)
+#   post     — 对应乐评文章链接,可空
+#   order    — 排序用的数值(11→11, "10"→10, "9+"→9.5, "9.5"→9.5, "9"→9 ...),
+#              模板按 order 降序排。同分按 album 名次序。
+#
+# 去重规则:同一专辑在多篇文章出现时,取最新一次评分(按文章发布时间)。
+# 数据源:4 篇 BrightFork 文章(#0 2025总结 / #1 / #2 / #3)正文 album-review shortcode。
+
+- artist: "MC赵小六"
+  album: "新手另类"
+  score: "11"
+  order: 11.0
+  year: 2024
+  genre: "Rap"
+  image: "img/xin-shou-lie-lei.jpg"
+  track: "弹舌"
+  youtube: "ETYxXJhRJ1g"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Kanye West"
+  album: "My Beautiful Dark Twisted Fantasy"
+  score: "9.5"
+  order: 9.5
+  year: 2010
+  genre: "Hip Hop"
+  image: "img/mbdtf.jpg"
+  track: "Devil in a New Dress"
+  youtube: "sk3rpYkiHe8"
+  # 注: brightfork-1 评 10,brightfork-3(更新)评 9.5,取最新。
+  post: "/posts/2026-06-18-brightfork-3/"
+
+- artist: "Sufjan Stevens"
+  album: "Illinois"
+  score: "10"
+  order: 10.0
+  year: 2005
+  genre: "Indie Folk"
+  image: "img/illinois.jpg"
+  track: "Come on! Feel the Illnoise!"
+  youtube: "rmJwraC4p5A"
+  # 注: brightfork-2025 评 9(拼 Illinoise),brightfork-3(更新)评 10,取最新。
+  post: "/posts/2026-06-18-brightfork-3/"
+
+- artist: "Yes"
+  album: "Close to the Edge"
+  score: "10"
+  order: 10.0
+  year: 1972
+  genre: "Progressive Rock"
+  image: "img/close-to-the-edge.jpg"
+  track: "Close to the Edge"
+  youtube: "86JKqpkljlQ"
+  post: "/posts/2026-01-21-brightfork-2025/"
+
+- artist: "Billie Eilish"
+  album: "Wildflower"
+  score: "9.5"
+  order: 9.5
+  genre: "Pop"
+  image: "img/billie-wildflower.jpg"
+  track: ""
+  youtube: "l08Zw-RY__Q"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "King Crimson"
+  album: "In the Court of the Crimson King"
+  score: "9"
+  order: 9.0
+  year: 1969
+  genre: "Progressive Rock"
+  image: "img/in-the-court-of-the-crimson-king.jpg"
+  track: "In the Court of the Crimson King"
+  youtube: "ukgraQ-xkp4"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Kanye West"
+  album: "The Life of Pablo"
+  score: "9"
+  order: 9.0
+  year: 2016
+  genre: "Hip Hop"
+  image: "img/the-life-of-pablo.jpg"
+  track: "Saint Pablo"
+  youtube: "w9rzz4pDFwA"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Kanye West"
+  album: "Graduation"
+  score: "9"
+  order: 9.0
+  year: 2007
+  genre: "Hip Hop"
+  image: "img/graduation.jpg"
+  track: "Flashing Lights"
+  youtube: "ZAz3rnLGthg"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Kanye West"
+  album: "Late Registration"
+  score: "9"
+  order: 9.0
+  year: 2005
+  genre: "Hip Hop"
+  image: "img/late-registration.jpg"
+  track: "Diamonds From Sierra Leone"
+  youtube: "92FCRmggNqQ"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Tyler, the Creator"
+  album: "IGOR"
+  score: "9"
+  order: 9.0
+  year: 2019
+  genre: "Hip Hop/R&B"
+  image: "img/igor.jpg"
+  track: "IGOR'S THEME"
+  youtube: "6S20mJvr4vs"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "The Strokes"
+  album: "The New Abnormal"
+  score: "9"
+  order: 9.0
+  year: 2020
+  genre: "Indie Rock"
+  image: "img/strokes-new-abnormal.jpg"
+  track: "Ode to the Mets"
+  youtube: "BjC0KUxiMhc"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "Lana Del Rey"
+  album: "Norman Fucking Rockwell!"
+  score: "8.5"
+  order: 8.5
+  year: 2019
+  genre: "Alternative"
+  image: "img/norman-fucking-rockwell.jpg"
+  track: "Venice Bitch"
+  youtube: "Qg3DxELVPj4"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Magdalena Bay"
+  album: "Imaginal Disk"
+  score: "9"
+  order: 9.0
+  year: 2024
+  genre: "Synth-pop"
+  image: "img/imaginal-disk.jpg"
+  track: "Cry for Me"
+  youtube: "Xcq3xMCcGlI"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Bad Bunny"
+  album: "DeBÍ TiRAR MáS FOToS"
+  score: "8"
+  order: 8.0
+  year: 2025
+  genre: "Reggaeton"
+  image: "img/bad-bunny-dtmf.jpg"
+  track: "DtMF"
+  youtube: "v9T_MGfzq7I"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "Grover Washington Jr."
+  album: "Winelight"
+  score: "8.5"
+  order: 8.5
+  year: 1980
+  genre: "Jazz"
+  image: "img/winelight-grover-washington.jpg"
+  track: "Just the Two of Us"
+  youtube: "6POZlJAZsok"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "The Avalanches"
+  album: "We Will Always Love You"
+  score: "8.5"
+  order: 8.5
+  year: 2020
+  genre: "Electronic"
+  image: "img/avalanches-wwaly.jpg"
+  track: "Take Care in Your Dreaming"
+  youtube: "8yTtE-B7NpM"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "Lil Wayne"
+  album: "Tha Carter III"
+  score: "8.5"
+  order: 8.5
+  year: 2008
+  genre: "Hip Hop"
+  image: "img/carter-3.jpg"
+  track: "Got Money"
+  youtube: "1ohYsK5Y8Dc"
+  post: "/posts/2026-06-18-brightfork-3/"
+
+- artist: "Billie Eilish"
+  album: "Hit Me Hard and Soft"
+  score: "8.5"
+  order: 8.5
+  year: 2024
+  genre: "Alternative Pop"
+  image: "img/hit-me-hard-and-soft.jpg"
+  track: "The Greatest"
+  youtube: "ivXhRQA-iiI"
+  post: "/posts/2026-01-21-brightfork-2025/"
+
+- artist: "Steve Lacy"
+  album: "Gemini Rights"
+  score: "8"
+  order: 8.0
+  year: 2022
+  genre: "R&B"
+  image: "img/gemini-rights.jpg"
+  track: "Mercury"
+  youtube: "OHaQyv9Plv4"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Black Country, New Road"
+  album: "Ants From Up There"
+  score: "8"
+  order: 8.0
+  year: 2022
+  genre: "Indie Rock"
+  image: "img/ants-from-up-there.jpg"
+  track: "The Place Where He Inserted the Blade"
+  youtube: "YPrs3DqraWM"
+  post: "/posts/2026-01-29-brightfork-1/"
+
+- artist: "Yes"
+  album: "Fly From Here"
+  score: "8"
+  order: 8.0
+  year: 2011
+  genre: "Progressive Rock"
+  image: "img/yes-fly-from-here.jpg"
+  track: "Into The Storm"
+  youtube: "QqkNksEq2bo"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "Camel"
+  album: "Moonmadness"
+  score: "8"
+  order: 8.0
+  year: 1976
+  genre: "Progressive Rock"
+  image: "img/camel-moonmadness.jpg"
+  track: "Air Born"
+  youtube: "JR4aCz-JZrY"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "Kanye West"
+  album: "Bully"
+  score: "8"
+  order: 8.0
+  year: 2026
+  genre: "Hip Hop"
+  image: "img/bully.jpg"
+  track: "ALL THE LOVE"
+  youtube: "WFPidj_t828"
+  post: "/posts/2026-06-18-brightfork-3/"
+
+- artist: "Olivia Rodrigo"
+  album: "you seem pretty sad for a girl so in love"
+  score: "7.5"
+  order: 7.5
+  year: 2026
+  genre: "Pop"
+  image: "img/olivia-yspsfag.jpg"
+  track: "stupid song"
+  youtube: "Rt9tW3cMLhI"
+  post: "/posts/2026-06-18-brightfork-3/"
+
+- artist: "Lil Wayne"
+  album: "Tha Carter V"
+  score: "8"
+  order: 8.0
+  year: 2018
+  genre: "Hip Hop"
+  image: "img/carter-5.jpg"
+  track: "Let It All Work Out"
+  youtube: "TKJJiF8QJRc"
+  post: "/posts/2026-06-18-brightfork-3/"
+
+- artist: "Kendrick Lamar"
+  album: "Luther"
+  score: "7"
+  order: 7.0
+  genre: "Hip Hop"
+  image: "img/kendrick-luther.jpg"
+  track: ""
+  youtube: "sNY_2TEmzho"
+  post: "/posts/2026-02-06-brightfork-2/"
+
+- artist: "Sufjan Stevens"
+  album: "Michigan"
+  score: "8"
+  order: 8.0
+  year: 2003
+  genre: "Indie Folk"
+  image: "img/michigan.jpg"
+  track: "All Good Naysayers, Speak Up or Forever Hold Your Peace"
+  youtube: "5BFO2FmJ_2I"
+  post: "/posts/2026-06-18-brightfork-3/"

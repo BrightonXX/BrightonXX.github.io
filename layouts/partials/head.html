@@ -189,19 +189,7 @@
       }
     }
 
-    .navbar-custom .navbar-nav>li>a.theme-toggle-nav {
-      padding-left: 10px;
-      padding-right: 10px;
-      font-size: 16px;
-      line-height: 20px;
-    }
-
-    .navbar-custom .navbar-nav>li>a.theme-toggle-nav .theme-toggle-glyph {
-      display: block;
-      width: 17px;
-      height: 17px;
-      opacity: 0.96;
-    }
+    /* 主题切换按钮样式统一由 override.css 的 .navbar-icon-group 接管 */
 
     .navbar-custom .navbar-brand.navbar-home-brand {
       width: 42px;
@@ -1007,11 +995,10 @@
       if (!toggleBtn) return;
 
       function updateToggleButton(theme) {
-        const icon = toggleBtn.querySelector('.theme-toggle-glyph');
+        const icon = toggleBtn.querySelector('[data-theme-icon]');
         if (icon) {
-          icon.src = theme === 'dark'
-            ? '{{ "img/icons/theme-moon.svg" | relURL }}'
-            : '{{ "img/icons/theme-sun.svg" | relURL }}';
+          // 切换 Font Awesome 图标类:dark 显示月亮,light 显示太阳
+          icon.className = theme === 'dark' ? 'fa fa-moon' : 'fa fa-sun';
         }
         const nextLabel = theme === 'dark' ? 'light' : 'dark';
         toggleBtn.setAttribute('aria-label', 'Switch to ' + nextLabel + ' mode');
@@ -1432,7 +1419,10 @@
       });
 
       // Add lightbox to article images
+      // ⚠️ 排除专辑墙封面(.album-tile 内的 img)——它们是交互元素(点击播放黑胶),
+      //    被 lightbox 包进 <a> 会破坏 <button> 结构(button 内不能嵌 a)并劫持点击。
       document.querySelectorAll('.post-container img, .album-cover img').forEach(function (img) {
+        if (img.closest('.album-tile')) return;   // 跳过 /music/ 专辑墙封面
         if (!img.closest('a')) { // Only if not already wrapped in link
           const src = img.src;
           const alt = img.alt || 'Image';

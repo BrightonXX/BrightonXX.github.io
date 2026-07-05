@@ -1,0 +1,285 @@
+{{ define "header" }}{{ end }}
+
+{{ define "main" }}
+{{ $albums := sort .Site.Data.music "order" "desc" }}
+
+<div data-pagefind-ignore="all" class="container home-posts">
+    <div class="row">
+        <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container
+        ">
+            {{ partial "page-intro.html" . }}
+
+            <div class="page-body">
+                <header class="page-head">
+                    <span class="page-head__kicker">Music</span>
+                    <p class="page-head__sub">{{ len $albums }} albums · rated &amp; spinning · click to play</p>
+                </header>
+
+                <div class="album-wall">
+                {{ range $albums }}
+                    {{ $color := partial "music/score-color.html" .score }}
+                    <article class="album-tile"
+                        data-youtube="{{ .youtube }}"
+                        data-title="{{ .artist }} — {{ with .track }}{{ . }}{{ else }}{{ .album }}{{ end }}"
+                        data-cover="{{ .image | relURL }}">
+                        <button type="button" class="album-tile__cover" aria-label="Play {{ .album }}">
+                            <img src="{{ .image | relURL }}" alt="{{ .album }} cover" loading="lazy">
+                            {{/* 播放/暂停按钮 overlay */}}
+                            <span class="album-tile__play" aria-hidden="true">
+                                <span class="album-tile__play-icon"></span>
+                            </span>
+                            {{/* 分数徽章 */}}
+                            <span class="album-tile__score" style="color:{{ $color }};border-color:{{ $color }};">{{ .score }}</span>
+                        </button>
+                        <div class="album-tile__meta">
+                            <span class="album-tile__artist">{{ .artist }}</span>
+                            <span class="album-tile__album">{{ .album }}</span>
+                            {{ with .track }}<span class="album-tile__track">▸ {{ . }}</span>{{ end }}
+                        </div>
+                    </article>
+                {{ end }}
+                </div>
+            </div>
+        </div>
+        {{ partial "sidebar.html" . }}
+    </div>
+</div>
+
+{{/* YouTube IFrame Player 容器:隐藏,只用来出声(API 控制播放) */}}
+<div data-yt-player-wrap hidden>
+  <div id="yt-player"></div>
+</div>
+
+{{/* now-playing mini player bar */}}
+<div class="now-playing" data-now-playing hidden>
+    <img class="now-playing__cover" data-now-playing-cover alt="" aria-hidden="true">
+    <div class="now-playing__text">
+        <span class="now-playing__label">NOW PLAYING</span>
+        <span class="now-playing__title" data-now-playing-title>—</span>
+        <div class="now-playing__progress">
+            <div class="now-playing__progress-fill" data-now-playing-progress></div>
+            <input type="range" class="now-playing__seek" data-now-playing-seek min="0" max="100" value="0" step="0.1" aria-label="Seek">
+        </div>
+    </div>
+    <button type="button" class="now-playing__playpause" data-now-playing-toggle aria-label="Pause">
+        <span class="now-playing__playpause-icon" data-now-playing-icon></span>
+    </button>
+    <div class="now-playing__volume">
+        <span class="now-playing__volume-icon" aria-hidden="true"></span>
+        <input type="range" class="now-playing__volume-slider" data-now-playing-volume min="0" max="100" value="35" aria-label="Volume">
+    </div>
+    <button type="button" class="now-playing__close" data-now-playing-close aria-label="Close">
+        <span class="now-playing__close-icon">×</span>
+    </button>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+(function(){
+  var tiles = document.querySelectorAll('.album-tile');
+  if (!tiles.length) return;
+
+  var npRoot = document.querySelector('[data-now-playing]');
+  var npTitle = document.querySelector('[data-now-playing-title]');
+  var npCover = document.querySelector('[data-now-playing-cover]');
+  var npPause = document.querySelector('[data-now-playing-pause]');
+  var npProgress = document.querySelector('[data-now-playing-progress]');
+
+  var player = null;          // YT.Player 实例
+  var playerReady = false;    // API 就绪标志
+  var pendingPlay = null;     // API 就绪前缓存的待播请求 {videoId, tile}
+  var current = null;         // 当前播放的 .album-tile
+  var isPaused = false;       // 是否暂停中(暂停≠停止:圆盘仍圆,可继续播)
+  var progressTimer = null;   // 进度条轮询
+  var seeking = false;        // 用户正拖动进度条,暂停自动更新
+  var DEFAULT_VOLUME = 35;    // 默认音量(0-100)
+
+  var npRoot = document.querySelector('[data-now-playing]');
+  var npTitle = document.querySelector('[data-now-playing-title]');
+  var npCover = document.querySelector('[data-now-playing-cover]');
+  var npToggle = document.querySelector('[data-now-playing-toggle]');  // 播放/暂停切换钮
+  var npIcon = document.querySelector('[data-now-playing-icon]');
+  var npClose = document.querySelector('[data-now-playing-close]');    // 关闭(完全停止)
+  var npProgress = document.querySelector('[data-now-playing-progress]');
+  var npSeek = document.querySelector('[data-now-playing-seek]');      // 可拖动进度条
+  var npVolume = document.querySelector('[data-now-playing-volume]');  // 音量条
+
+  // YouTube API 就绪后回调(全局函数名固定)
+  window.onYouTubeIframeAPIReady = function(){
+    player = new YT.Player('yt-player', {
+      height: '1',
+      width: '1',
+      playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1, 'rel': 0 },
+      events: {
+        'onReady': function(){
+          playerReady = true;
+          if (player.setVolume) player.setVolume(DEFAULT_VOLUME);
+          flushPending();
+        },
+        'onStateChange': function(e){
+          // 播放结束(0)→ 完全停止,圆盘退回方形
+          if (e.data === 0) stopCurrent();
+          // 播放中(1)→ 图标变暂停符号
+          if (e.data === 1) setIcon('pause');
+          // 暂停(2)→ 图标变播放符号
+          if (e.data === 2) setIcon('play');
+        }
+      }
+    });
+  };
+
+  // 图标切换:暂停态显示▶(可继续播),播放态显示❚❚(可暂停)
+  function setIcon(state){
+    if (!npIcon) return;
+    if (state === 'play'){
+      // ▶ 三角
+      npIcon.className = 'now-playing__playpause-icon now-playing__playpause-icon--play';
+    } else {
+      // ❚❚ 两竖
+      npIcon.className = 'now-playing__playpause-icon now-playing__playpause-icon--pause';
+    }
+  }
+
+  function flushPending(){
+    if (pendingPlay && playerReady){
+      var p = pendingPlay; pendingPlay = null;
+      loadAndPlay(p.videoId);
+    }
+  }
+
+  function loadAndPlay(videoId){
+    player.loadVideoById(videoId);
+    player.playVideo();
+    startProgress();
+  }
+
+  function startProgress(){
+    stopProgress();
+    progressTimer = setInterval(function(){
+      if (!playerReady || !player.getCurrentTime || seeking) return;
+      var cur = player.getCurrentTime() || 0;
+      var dur = player.getDuration() || 0;
+      if (dur > 0){
+        var pct = Math.min(100, (cur / dur) * 100);
+        if (npProgress) npProgress.style.width = pct + '%';
+        if (npSeek) npSeek.value = pct;
+      }
+    }, 500);
+  }
+  function stopProgress(){
+    if (progressTimer){ clearInterval(progressTimer); progressTimer = null; }
+    if (npProgress) npProgress.style.width = '0%';
+    if (npSeek) npSeek.value = 0;
+  }
+
+  // 暂停(不停):圆盘保持圆形但停转,音频暂停,可继续播。
+  // ⚠️ 不移除 is-spinning(它控制圆形),改用 is-paused 叠加 + animation-play-state:paused 停转。
+  //    若移除 is-spinning 再加 is-paused,两步之间有一帧空窗(两个 class 都不在),
+  //    img 退回 border-radius:0 被 transition 动画到方形 = 暂停退方块 bug。
+  function pauseCurrent(){
+    if (!current) return;
+    isPaused = true;
+    current.classList.add('is-paused');         // 叠加:停转,但 is-spinning 仍在=圆形
+    if (playerReady && player.pauseVideo) player.pauseVideo();
+    setIcon('play');
+  }
+  // 继续:去掉 is-paused,is-spinning 的 animation 自动恢复转动
+  function resumeCurrent(){
+    if (!current) return;
+    isPaused = false;
+    current.classList.remove('is-paused');
+    if (playerReady && player.playVideo) player.playVideo();
+    setIcon('pause');  // 显示❚❚(可暂停)
+  }
+
+  // 完全停止:圆盘退回方形,now-playing 条隐藏
+  function stopCurrent(){
+    if (current){
+      current.classList.remove('is-spinning', 'is-paused');
+      current = null;
+    }
+    isPaused = false;
+    if (playerReady && player.pauseVideo) player.pauseVideo();
+    stopProgress();
+    if (npRoot) npRoot.hidden = true;
+  }
+
+  function playTile(tile){
+    var videoId = tile.getAttribute('data-youtube');
+    var title = tile.getAttribute('data-title') || '';
+    var cover = tile.getAttribute('data-cover') || '';
+
+    // 点正在播的同一张:
+    //   暂停中 → 继续;播放中 → 暂停
+    if (current === tile){
+      if (isPaused) resumeCurrent();
+      else pauseCurrent();
+      return;
+    }
+    // 切到新专辑:完全停旧的
+    stopCurrent();
+    current = tile;
+    tile.classList.add('is-spinning');
+
+    if (npTitle) npTitle.textContent = title;
+    if (npCover) npCover.src = cover;
+    if (npRoot) npRoot.hidden = false;
+    setIcon('pause');
+
+    if (!videoId) return;
+    if (!playerReady){
+      pendingPlay = { videoId: videoId };
+    } else {
+      loadAndPlay(videoId);
+    }
+  }
+
+  tiles.forEach(function(tile){
+    var btn = tile.querySelector('.album-tile__cover');
+    if (btn) btn.addEventListener('click', function(){ playTile(tile); });
+  });
+
+  // now-playing 的播放/暂停切换
+  if (npToggle) npToggle.addEventListener('click', function(){
+    if (!current) return;
+    if (isPaused) resumeCurrent();
+    else pauseCurrent();
+  });
+  // 关闭钮:完全停止
+  if (npClose) npClose.addEventListener('click', stopCurrent);
+
+  // 进度条拖动:拖时暂停自动更新,松手 seek
+  if (npSeek){
+    npSeek.addEventListener('input', function(){
+      seeking = true;
+      if (npProgress) npProgress.style.width = npSeek.value + '%';
+    });
+    npSeek.addEventListener('change', function(){
+      if (playerReady && player.getDuration && player.seekTo){
+        var dur = player.getDuration() || 0;
+        player.seekTo((npSeek.value / 100) * dur, true);
+      }
+      seeking = false;
+    });
+  }
+
+  // 音量条
+  if (npVolume){
+    npVolume.value = DEFAULT_VOLUME;
+    npVolume.addEventListener('input', function(){
+      if (playerReady && player.setVolume) player.setVolume(parseInt(npVolume.value, 10));
+    });
+  }
+
+  // 页面隐藏时暂停(切标签页/最小化)——暂停不是停止,回来可继续
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden && current && !isPaused) pauseCurrent();
+  });
+})();
+</script>
+{{ end }}

@@ -253,6 +253,25 @@ html {
   transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
 }
 
+/* 首页卡片 staggered fade-up 入场(脚本给每张卡设 --enter-i 做延迟)。
+   视觉与无限滚动新卡复用同一组 token(.post-preview-entering / .is-revealed 在 head.html),
+   这里只补 transition-delay + 卡片浮起时的 hover 让位(避免入场途中被 hover 抢镜)。 */
+.home-posts .post-preview.post-preview-entering {
+  opacity: 0;
+  transform: translateY(22px) scale(.985);
+  filter: blur(2px);
+}
+.home-posts .post-preview.post-preview-entering.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity 280ms cubic-bezier(.22, 1, .36, 1),
+    transform 420ms cubic-bezier(.16, 1, .3, 1),
+    filter 340ms cubic-bezier(.16, 1, .3, 1);
+  transition-delay: calc(var(--enter-i, 0) * 40ms);
+}
+
 .post-container .js-post-stream .post-preview:hover {
   transform: translateY(-4px);
   /* hover:阴影加深 + accent 色调,抬升感明显但保持柔和(spread 负值收边) */
@@ -1224,11 +1243,43 @@ html[data-theme="dark"] .post-cover--placeholder {
   text-shadow: 0 1px 6px rgba(0, 0, 0, .42)
 }
 
-/* 文章页导航栏(非 invert)是白字压在深色封面图上;昼夜切换图标是 teal SVG,
-   在深色图上看不见。仅在该状态把图标滤成白色,与白字导航一致。
-   滚动后变 is-fixed(白底深字)或 invert 页(浅底)时保持原 teal 色。 */
-.navbar-custom:not(.invert):not(.is-fixed) .theme-toggle-glyph {
-  filter: brightness(0) invert(1)
+/* 文章页导航栏(非 invert)是白字压在深色封面图上。
+   Font Awesome 图标颜色继承文字色,深色封面图上导航文字是白色 → 图标自然白色,
+   无需再滤色(旧 SVG teal 色版本需要 filter,FA 版本继承色不需要)。
+   滚动后变 is-fixed(白底)或 invert 页(浅底)时,图标随文字变深色。 */
+
+/* 右侧图标按钮:三个独立的小圆角框(主题/音乐/搜索),每个图标各自一个胶囊背景。
+   用 flex 居中图标到框的中心 → 三个框的对齐一致,不用逐个图标调视觉重心。 */
+.navbar-custom .navbar-nav.navbar-right {
+  display: flex;                /* flex 布局让 li 能垂直居中对齐 */
+  align-items: center;          /* 所有 li(含文字菜单和图标框)垂直居中到 navbar 中线 */
+  padding-right: 20px;          /* 整组离视口右边缘留 20px 呼吸空间 */
+}
+.navbar-custom .navbar-nav > li > a.icon-nav {
+  display: inline-flex;
+  align-items: center;          /* 图标垂直居中到框中线 */
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin-left: 6px;             /* 框间间距 */
+  font-size: 13px;
+  line-height: 1;
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: 8px;           /* 小圆角方框 */
+  background: var(--surface-2);
+  opacity: .78;
+  transition: opacity .2s var(--ease), border-color .2s var(--ease),
+              background .2s var(--ease);
+}
+.navbar-custom .navbar-nav > li > a.icon-nav:hover {
+  opacity: 1;
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+.navbar-custom .navbar-nav > li > a.icon-nav > i {
+  display: inline-block;
 }
 
 .post-article {
@@ -1422,4 +1473,474 @@ html[data-theme="dark"] .post-cover--placeholder {
   border: 0;
   border-top: 1px solid var(--border);
   margin: 36px 0 8px
+}
+
+/* ==========================================================================
+   /music/ 专辑墙
+   不套卡片模板——专辑是"靠墙斜摆的实体唱片":
+   封面带透视(上窄下宽,像往后仰)+ 独立投影,直接坐落在页面背景上。
+   点击封面 → 透视展平 + 封面圆切成黑胶盘旋转 + 站内 mp3 播放。
+   ========================================================================== */
+
+.album-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 30px 22px;            /* 行距大:给透视倾斜 + 投影留空间 */
+  margin-top: 30px;
+  perspective: 1400px;       /* 父级透视,子元素 rotateX 才有立体感 */
+}
+
+/* 单个专辑:不是卡片,是一个网格单元(封面 + 文字),无背景无边框 */
+.album-tile {
+  position: relative;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  /* 主题给所有 article 加了 overflow:hidden(见 handoff),会切掉透视后上沿超出容器的封面。
+     专辑不是卡片,封面要完整显示——显式打开。 */
+  overflow: visible;
+  /* 给底部投影留呼吸空间(投影会落到下面) */
+  padding-bottom: 6px;
+}
+
+/* 封面:实体唱片。透视倾斜(往后仰:上沿远、下沿近),自带投影。 */
+.album-tile__cover {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  overflow: visible;   /* 旋转态 img scale 放大后可能略超出,不裁 */
+  transform-style: preserve-3d;
+  transform: perspective(1400px) rotateX(13deg) scale(1.02);   /* 往后仰:上沿收远,略放大撑满 */
+  transform-origin: center bottom;                 /* 锚底沿:倾斜像从底部翻开 */
+  transition: transform .45s var(--ease);
+}
+.album-tile__cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* 覆盖主题 .post-container img { margin: 1.5em auto 1.6em } ——
+     那是给文章正文图片加的上下留白,会穿透进专辑墙,造成封面上下白边。 */
+  margin: 0;
+  /* ⚠️ transform-origin 必须和父级 cover 一致(center bottom)。
+     cover 锚底部 scale,img 默认锚 center——两者 origin 不同时,hover scale 会让
+     img 相对 cover 各边偏移(drop-shadow 跟随 cover 形状,与 img 错位 = 右下漏边)。 */
+  transform-origin: center bottom;
+  transition: transform .45s var(--ease), border-radius .5s var(--ease), filter .45s var(--ease);
+  /* 投影用 drop-shadow 而非父级 box-shadow:drop-shadow 跟随元素实际形状
+     (含 3D transform 后的梯形轮廓),不会像 box-shadow 那样画成矩形导致右下漏边。 */
+  filter: drop-shadow(0 14px 18px rgba(13, 40, 55, .28));
+}
+/* hover:唱片"立起来"(倾斜减小)+ 上浮,像被抽出来看。
+   ⚠️ 用 :not(.is-spinning) 限定——旋转态的 tile 不触发这套 hover 投影/翻起,
+      否则点击后鼠标停在封面上,hover 的加重阴影会一直挂着不消失。
+   投影用 img 的 drop-shadow(跟随封面实际形状),不用 cover 的 box-shadow(画矩形会漏边)。 */
+.album-tile:not(.is-spinning) .album-tile__cover:hover {
+  transform: perspective(1400px) rotateX(4deg) translateY(-8px) scale(1.04);
+}
+.album-tile:not(.is-spinning) .album-tile__cover:hover img {
+  /* ⚠️ 不给 img 独立 scale——cover 的 scale(1.04) 会连带放大 img。
+     若 img 再单独 scale,会双重放大且不受 cover 透视收缩,导致 img 边缘超出 cover,
+     drop-shadow 跟随 cover(更小),img 右下露出无 shadow 的边。 */
+  filter: drop-shadow(0 22px 26px rgba(0, 133, 161, .32));
+}
+
+/* 分数徽章:右上角圆角小标,色阶跟随评分。
+   color/border-color 由内联 style 注入(来自 partial 算出的色值),用 currentColor 跟随。 */
+.album-tile__score {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  background: rgba(255, 255, 255, .92);
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+}
+html[data-theme="dark"] .album-tile__score {
+  background: rgba(22, 27, 34, .82);
+}
+
+/* 播放按钮 overlay:hover 时中央浮现 */
+.album-tile__play {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(6, 20, 28, 0) 40%, rgba(6, 20, 28, .38));
+  opacity: 0;
+  transition: opacity .3s var(--ease);
+  border-radius: inherit;
+}
+.album-tile__cover:hover .album-tile__play { opacity: 1; }
+.album-tile__play-icon {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 16px solid #fff;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  margin-left: 4px;   /* 视觉居中(三角形重心偏左) */
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .4));
+}
+/* 播放中:暂停图标(两根竖条) */
+.album-tile.is-spinning .album-tile__play-icon {
+  width: 14px;
+  height: 18px;
+  margin-left: 0;
+  border: 0;
+  background: linear-gradient(to right, #fff 0 4px, transparent 4px 10px, #fff 10px 14px);
+}
+
+/* === 黑胶:点击后封面展平 + 圆切成盘自己转 ===
+   is-spinning:取消透视倾斜(唱片被拿出来平放),封面圆切 + 旋转。
+   ⚠️ hover 投影已在基础规则用 :not(.is-spinning) 排除旋转态,这里不再需要覆盖。
+   ⚠️ 投影统一用 img 的 drop-shadow:圆形 img 转动时,drop-shadow 跟随圆形轮廓,
+      不会像 box-shadow 那样画成 cover 的矩形导致漏方角。 */
+.album-tile.is-spinning .album-tile__cover {
+  transform: perspective(1400px) rotateX(0deg) scale(1.02);   /* 展平,保持缩放一致 */
+}
+.album-tile.is-spinning .album-tile__cover img {
+  border-radius: 50%;
+  animation: album-vinyl-spin 14s linear infinite;
+  transform-origin: center;
+  /* 圆形投影:drop-shadow 跟随 border-radius:50% 的圆形轮廓 */
+  filter: drop-shadow(0 12px 22px rgba(13, 40, 55, .30));
+  transition: border-radius .5s var(--ease);
+}
+@keyframes album-vinyl-spin {
+  to { transform: rotate(360deg); }
+}
+/* 旋转态:play overlay 淡出。
+   ⚠️ 这个 overlay 是方形(border-radius:inherit=0)盖在圆形 img 上,且带底部深色渐变。
+   若保持 opacity:1,方形 overlay 的底部渐变会盖在圆形转盘下方,看起来像"方形阴影不消失"。
+   旋转时不需要常驻播放图标(now-playing 条已显示状态),淡出最干净。 */
+.album-tile.is-spinning .album-tile__play { opacity: 0; }
+
+/* 暂停态(用户点暂停钮):保持圆形但停转。
+   is-paused 和 is-spinning 共存——is-spinning 控制圆形(全程不移除),
+   is-paused 只用 animation-play-state:paused 停转。
+   ⚠️ 不能用 animation:none 重置(会丢 keyframe 状态)也不能移除 is-spinning(会退方形)。 */
+.album-tile.is-paused.is-spinning .album-tile__cover img {
+  animation-play-state: paused;
+}
+.album-tile.is-paused.is-spinning .album-tile__play { opacity: 0; }
+
+/* 元信息:封面下方,无框,左对齐 */
+.album-tile__meta {
+  padding: 12px 2px 0;       /* 顶部留白接投影,无侧 padding 贴齐封面左缘 */
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.35;
+}
+.album-tile__artist {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.album-tile__album {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.album-tile__track {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* === 底部 now-playing 迷你播放器 === */
+.now-playing {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px 9px 9px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  max-width: calc(100vw - 32px);
+}
+/* 封面缩略图(圆角方形) */
+.now-playing__cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+/* 备用:无封面时的黑胶小盘 */
+.now-playing__disc {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background:
+    repeating-radial-gradient(circle at center,
+      #0a0a0a 0, #0a0a0a 1px, #161616 1px, #161616 2px),
+    #050505;
+  position: relative;
+  animation: album-vinyl-spin 14s linear infinite;
+  display: none;   /* 默认隐藏,有封面时用封面 */
+}
+.now-playing__disc::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 30%; height: 30%;
+  transform: translate(-50%, -50%);
+  background: var(--accent);
+  border-radius: 50%;
+}
+.now-playing__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.now-playing__label {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--text-4);
+}
+.now-playing__title {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+/* 进度条容器:进度填充层 + 透明可拖动 input range 叠在上面 */
+.now-playing__progress {
+  position: relative;
+  width: 220px;
+  height: 14px;       /* 加大点击/拖动热区 */
+  display: flex;
+  align-items: center;
+}
+.now-playing__progress-fill {
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  height: 3px;
+  width: 0;
+  background: var(--accent);
+  border-radius: 999px;
+  pointer-events: none;
+  transition: width .5s linear;
+}
+/* 可拖动 input range:透明覆盖在进度条上,负责交互 */
+.now-playing__seek {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 100%;
+  height: 14px;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+}
+.now-playing__seek::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 999px;
+}
+.now-playing__seek::-moz-range-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 999px;
+}
+.now-playing__seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-top: -4.5px;   /* 居中对齐 3px track */
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+.now-playing__seek::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+
+/* 播放/暂停切换钮 */
+.now-playing__playpause {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s var(--ease);
+}
+.now-playing__playpause:hover { background: var(--accent-2); }
+/* 暂停图标 ❚❚ */
+.now-playing__playpause-icon--pause {
+  display: block;
+  width: 10px;
+  height: 12px;
+  background: linear-gradient(to right, #fff 0 3px, transparent 3px 7px, #fff 7px 10px);
+}
+/* 播放图标 ▶ */
+.now-playing__playpause-icon--play {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 11px solid #fff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  margin-left: 3px;   /* 视觉居中 */
+}
+
+/* 音量控制 */
+.now-playing__volume {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.now-playing__volume-icon {
+  width: 14px;
+  height: 14px;
+  background: var(--text-3);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M8 1.5v13L4 11H1.5V5H4L8 1.5zm3 2a4 4 0 010 9' fill='none' stroke='black' stroke-width='1.5'/></svg>") center/contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M8 1.5v13L4 11H1.5V5H4L8 1.5zm3 2a4 4 0 010 9' fill='none' stroke='black' stroke-width='1.5'/></svg>") center/contain no-repeat;
+}
+.now-playing__volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 70px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  outline: none;
+}
+.now-playing__volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.now-playing__volume-slider::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* 关闭钮:完全停止,圆盘退回方形 */
+.now-playing__close {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color .2s var(--ease), background .2s var(--ease);
+}
+.now-playing__close:hover {
+  color: var(--text-1);
+  background: var(--border);
+}
+
+/* YouTube IFrame 容器:隐藏,只用来出声 */
+[data-yt-player-wrap] {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  left: -9999px;
+  overflow: hidden;
+}
+
+/* 移动端:迷你播放器紧凑化(隐藏音量条,缩小进度) */
+@media (max-width: 720px) {
+  .now-playing { gap: 8px; padding: 8px; }
+  .now-playing__volume { display: none; }
+  .now-playing__progress { width: 120px; }
+  .now-playing__title { max-width: 120px; }
+}
+
+/* 移动端:专辑墙 2-3 列,行距仍要给透视投影留空间 */
+@media (max-width: 560px) {
+  .album-wall { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 26px 14px; }
+}
+
+/* 尊重 reduced-motion:不转、不倾斜(直接平铺) */
+@media (prefers-reduced-motion: reduce) {
+  .album-tile__cover { transform: none !important; }
+  .album-tile.is-spinning .album-tile__cover img,
+  .now-playing__disc { animation: none; }
 }
