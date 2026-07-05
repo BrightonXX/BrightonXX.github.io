@@ -168,3 +168,27 @@
         {{ partial "sidebar.html" . }}
 	</div>
 </div>
+
+<script>
+// 首页初始卡片瀑布式 fade-up 入场。
+// 只作用于首页 server-rendered 的卡片(通常 5 张);无限滚动新加载的卡片
+// 由 post_load_more_js 自带动画,互不干扰。
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var previews = document.querySelectorAll('.home-posts .js-post-stream .post-preview');
+  if (!previews.length) return;
+
+  var CAP = 7;
+  previews.forEach(function(el, i){
+    el.style.setProperty('--enter-i', Math.min(i, CAP));
+    el.classList.add('post-preview-entering');
+  });
+
+  // 下一帧加 is-revealed 触发 CSS transition,stagger 由 transition-delay 排队。
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      previews.forEach(function(el){ el.classList.add('is-revealed'); });
+    });
+  });
+})();
+</script>
