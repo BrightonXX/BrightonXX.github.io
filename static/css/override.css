@@ -715,7 +715,12 @@ html {
     min-width: 0;
     height: 100%;
     overflow-y: auto;
-    padding: 4px 44px 56px 0;
+    /* 左右对称 padding:给卡片阴影(0 6px 30px)晕开空间。
+       之前左 0 右 44,卡片左阴影被 .post-container 左边缘截断(卡片贴边),
+       右阴影也只有 44px。改成左右都 44,阴影能对称晕开。
+       注意:overflow-y:auto 会隐含 overflow-x:auto,横向溢出仍被 container 截,
+       所以只能靠 padding 内部给空间,不能让阴影超出 container。 */
+    padding: 4px 44px 56px 44px;
     scrollbar-width: none
   }
 
