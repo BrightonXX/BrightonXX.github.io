@@ -1256,11 +1256,15 @@ html[data-theme="dark"] .post-cover--placeholder {
    滚动后变 is-fixed(白底)或 invert 页(浅底)时,图标随文字变深色。 */
 
 /* 右侧图标按钮:三个独立的小圆角框(主题/音乐/搜索),每个图标各自一个胶囊背景。
-   用 flex 居中图标到框的中心 → 三个框的对齐一致,不用逐个图标调视觉重心。 */
-.navbar-custom .navbar-nav.navbar-right {
-  display: flex;                /* flex 布局让 li 能垂直居中对齐 */
-  align-items: center;          /* 所有 li(含文字菜单和图标框)垂直居中到 navbar 中线 */
-  padding-right: 20px;          /* 整组离视口右边缘留 20px 呼吸空间 */
+   用 flex 居中图标到框的中心 → 三个框的对齐一致,不用逐个图标调视觉重心。
+   ⚠️ 必须限定 ≥768px:移动端(<768px)汉堡菜单展开是 170px 窄面板,菜单项需垂直
+   堆叠(主题默认 block)。flex 会把 li 横向排列撑爆窄面板,导致溢出。 */
+@media (min-width: 768px) {
+  .navbar-custom .navbar-nav.navbar-right {
+    display: flex;              /* flex 布局让 li 能垂直居中对齐 */
+    align-items: center;        /* 所有 li(含文字菜单和图标框)垂直居中到 navbar 中线 */
+    padding-right: 20px;        /* 整组离视口右边缘留 20px 呼吸空间 */
+  }
 }
 .navbar-custom .navbar-nav > li > a.icon-nav {
   display: inline-flex;
