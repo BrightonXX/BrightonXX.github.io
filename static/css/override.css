@@ -247,11 +247,13 @@ html {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r);
-  /* 四周均匀弥散的柔影:小 offset + 大 blur + 极低 opacity。
-     之前 0 6px 30px -8px 让阴影集中在卡片正下方,在 28px 间距里堆成一道
-     实体横条(宽度=卡片宽,卡在两卡中间,很怪)。改成几乎无偏移的大 blur 弥散,
-     阴影环绕卡片四周自然过渡,不在底部堆积。 */
-  box-shadow: 0 2px 12px -2px rgba(13, 40, 55, .08);
+  /* 四周对称弥散的柔影:offset 几乎为 0 + 中等 blur + 适中 opacity。
+     关键是 offsetY≈0,让阴影均匀环绕卡片四周(左右上下都有),而不是只往下投。
+     之前 0 6px 30px 把阴影堆在卡片正下方形成夹缝横条;后来改 0 2px 12px .08
+     又太轻(左右阴影几乎看不见)。这版用 offsetY 1 + blur 16 + opacity 0.1,
+     四周都能看到柔和晕开,底部不会堆成实体条(blur 16 < 28px 间距)。
+     .post-container overflow:auto 会截断超出 44px padding 的部分,但 blur 16 < 44 够用。 */
+  box-shadow: 0 1px 16px -3px rgba(13, 40, 55, .10);
   transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
 }
 
@@ -276,8 +278,8 @@ html {
 
 .post-container .js-post-stream .post-preview:hover {
   transform: translateY(-4px);
-  /* hover:阴影加深 + accent 色调,抬升感明显但保持柔和(spread 负值收边) */
-  box-shadow: 0 12px 40px -8px rgba(0, 133, 161, .18);
+  /* hover:四周阴影加深 + accent 色调,对称弥散(和静态阴影同思路:offsetY 小) */
+  box-shadow: 0 6px 24px -4px rgba(0, 133, 161, .20);
   border-color: var(--border-strong)
 }
 
@@ -1954,4 +1956,21 @@ html[data-theme="dark"] .album-tile__score {
   .album-tile__cover { transform: none !important; }
   .album-tile.is-spinning .album-tile__cover img,
   .now-playing__disc { animation: none; }
+}
+
+/* 移动端汉堡菜单:三个图标(主题/音乐/搜索)横排成一行 + 放大好点击。
+   桌面端它们是独立 30×30 圆角框横排在 nav 右侧;
+   移动端收缩面板里默认垂直堆叠(各自一行),改成横排节省纵向空间。
+   三个 li 是连续且在最后,用 :has 选中 + inline-flex 横排。 */
+@media (max-width: 767px) {
+  .navbar-custom .navbar-nav.navbar-right > li:has(> a.icon-nav) {
+    display: inline-flex;        /* 横排:三个 li 并排成一行 */
+    align-items: center;
+  }
+  .navbar-custom .navbar-nav.navbar-right > li > a.icon-nav {
+    width: 40px;                 /* 放大:30→40,更好点击 */
+    height: 40px;
+    font-size: 16px;
+    margin: 6px 6px 6px 0;       /* 框间间距 + 上下留白 */
+  }
 }
